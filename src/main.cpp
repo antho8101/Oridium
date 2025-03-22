@@ -1,12 +1,24 @@
 #include "blockchain.h"
+#include <iostream>
 
 int main() {
-    Blockchain blockchain;
+    std::cout << "🚀 Oridium Blockchain starting...\n";
 
-    blockchain.addBlock("Transaction 1");
-    blockchain.addBlock("Transaction 2");
-    blockchain.addBlock("Transaction 3");
+    Blockchain oridiumChain;
 
-    blockchain.printChain();
+    oridiumChain.addBlock({"Alice -> Bob : 50 ORI"});
+    oridiumChain.addBlock({"Bob -> Charlie : 25 ORI", "Charlie -> Dave : 10 ORI"});
+    oridiumChain.addBlock({"Dave -> Eve : 15 ORI"});
+
+    oridiumChain.printChain();
+
+    if (oridiumChain.isChainValid()) {
+        std::cout << "✅ Blockchain is VALID.\n";
+    } else {
+        std::cout << "❌ Blockchain is INVALID.\n";
+    }
+
+    std::cout << "\n🚀 Execution finished. Press any key to exit...\n";
+    system("pause");
     return 0;
 }

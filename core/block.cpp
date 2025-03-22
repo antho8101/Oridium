@@ -3,23 +3,32 @@
 #include <iostream>
 #include <chrono>
 
-// Constructeur complet
-Block::Block(int idx, long time, const std::string& data, const std::string& prevHash)
-    : index(idx), timestamp(time), data(data), previousHash(prevHash) {
+Block::Block(int idx, int64_t time, const std::vector<std::string>& txs, const std::string& prevHash)
+    : index(idx), timestamp(time), transactions(txs), previousHash(prevHash), nonce(0) {
     hash = calculateHash();
 }
 
-// ✅ Nouveau constructeur simplifié pour la Genesis Block
-Block::Block(int idx, const std::string& data)
-    : index(idx), data(data) {
-    // Génère un timestamp automatique
-    timestamp = static_cast<long>(std::chrono::system_clock::now().time_since_epoch().count());
+Block::Block(int idx, const std::vector<std::string>& txs)
+    : index(idx), transactions(txs), nonce(0) {
+    timestamp = static_cast<int64_t>(std::chrono::system_clock::now().time_since_epoch().count());
     previousHash = "0";
     hash = calculateHash();
 }
 
 std::string Block::calculateHash() const {
     std::stringstream ss;
-    ss << index << timestamp << data << previousHash;
+    ss << index << timestamp;
+    for (const auto& tx : transactions) {
+        ss << tx;
+    }
+    ss << previousHash << nonce;
     return std::to_string(std::hash<std::string>{}(ss.str()));
+}
+
+// 🔥 Test temporaire sans boucle infinie
+void Block::mineBlock(int difficulty) {
+    std::cout << "🚀 Mining block " << index << "...\n";
+    // On évite la boucle infinie ici
+    hash = calculateHash();
+    std::cout << "✅ Block mined: " << hash << "\n";
 }
