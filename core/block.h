@@ -1,4 +1,4 @@
-// Oridium Project - (c) 2025 Tony - MIT License
+// Oridium Project - (c) 2025 Oridium - MIT License
 #ifndef BLOCK_H
 #define BLOCK_H
 

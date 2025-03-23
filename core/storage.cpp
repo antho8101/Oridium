@@ -1,4 +1,4 @@
-// Oridium Project - (c) 2025 Tony - MIT License
+// Oridium Project - (c) 2025 Oridium - MIT License
 #include "storage.h"
 #include "blockchain.h"
 #include "Block.h"

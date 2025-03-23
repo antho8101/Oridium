@@ -1,9 +1,10 @@
-// Oridium Project - (c) 2025 Tony - MIT License
+// Oridium Project - (c) 2025 Oridium - MIT License
 #ifndef BLOCKCHAIN_H
 #define BLOCKCHAIN_H
 
 #include "Block.h"
 #include "Transaction.h"
+#include "storage.h"
 #include <vector>
 #include <iostream>
 
@@ -17,18 +18,27 @@ public:
     // Ajoute un bloc déjà construit (utile pour le chargement depuis un fichier)
     void addBlock(const Block& block);
 
+    // ✅ Ajout au mempool
+    void addTransaction(const Transaction& tx);
+
+    // ✅ Mine les transactions du mempool
+    void minePendingTransactions();
+
     void printChain() const;
     bool isChainValid() const;
 
-    // Getter sécurisé pour accéder à la blockchain (lecture seule)
+    // Getter sécurisé
     const std::vector<Block>& getChain() const { return chain; }
 
-    // Reset sécurisé de la blockchain
+    // Reset sécurisé
     void clearChain() { chain.clear(); }
 
 private:
     std::vector<Block> chain;
-    const int difficulty = 2;  // Difficulté de la Proof of Work
+    std::vector<Transaction> mempool;   // ✅ Mempool pour les transactions en attente
+    const int difficulty = 2;           // Difficulté de la Proof of Work
+
+    void save() const;  // ✅ Sauvegarde automatique
 };
 
 #endif // BLOCKCHAIN_H

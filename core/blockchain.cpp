@@ -1,13 +1,14 @@
-// Oridium Project - (c) 2025 Tony - MIT License
+// Oridium Project - (c) 2025 Oridium - MIT License
 #include "blockchain.h"
 #include <iostream>
 #include <chrono>
 
-// ✅ Constructeur de la Blockchain avec Genesis Block
+// ✅ Constructeur avec Genesis Block
 Blockchain::Blockchain() {
     std::cout << "✅ Initialisation de la blockchain avec le Genesis Block\n";
     std::vector<Transaction> genesisTx = { Transaction("System", "Genesis", 0.0) };
     chain.emplace_back(0, genesisTx);
+    save();  // ✅ Sauvegarde du Genesis Block
 }
 
 // ✅ Ajout d'un nouveau bloc par vector<Transaction>
@@ -26,11 +27,31 @@ void Blockchain::addBlock(const std::vector<Transaction>& transactions) {
     newBlock.mineBlock(difficulty);
 
     chain.push_back(newBlock);
+    save();  // ✅ Sauvegarde après ajout
 }
 
 // ✅ Ajout d'un bloc existant (pour la désérialisation JSON)
 void Blockchain::addBlock(const Block& block) {
     chain.push_back(block);
+    save();  // ✅ Sauvegarde après ajout
+}
+
+// ✅ Ajout d'une transaction dans le mempool
+void Blockchain::addTransaction(const Transaction& tx) {
+    mempool.push_back(tx);
+    std::cout << "✅ Transaction ajoutée au mempool : " << tx.toString() << "\n";
+}
+
+// ✅ Minage des transactions du mempool
+void Blockchain::minePendingTransactions() {
+    if (mempool.empty()) {
+        std::cout << "⚠️ Aucun transaction à miner.\n";
+        return;
+    }
+    std::cout << "✅ Minage des " << mempool.size() << " transactions du mempool...\n";
+    addBlock(mempool);
+    mempool.clear();
+    std::cout << "✅ Mempool vidé après minage.\n";
 }
 
 // ✅ Affichage de la Blockchain
@@ -63,4 +84,9 @@ bool Blockchain::isChainValid() const {
     }
     std::cout << "✅ Blockchain valide\n";
     return true;
+}
+
+// ✅ Sauvegarde automatique de la blockchain sur disque
+void Blockchain::save() const {
+    Storage::saveBlockchain(*this, "blockchain.json");
 }

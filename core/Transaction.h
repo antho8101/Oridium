@@ -1,4 +1,4 @@
-// Oridium Project - (c) 2025 Tony - MIT License
+// Oridium Project - (c) 2025 Oridium - MIT License
 #ifndef TRANSACTION_H
 #define TRANSACTION_H
 

@@ -1,10 +1,11 @@
-// Oridium Project - (c) 2025 Tony - MIT License
+// Oridium Project - (c) 2025 Oridium - MIT License
 #ifndef STORAGE_H
 #define STORAGE_H
 
-#include "Blockchain.h"
-#include "Transaction.h"
 #include <string>
+
+// ✅ Forward declaration
+class Blockchain;
 
 class Storage {
 public:
