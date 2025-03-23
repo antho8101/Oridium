@@ -32,17 +32,23 @@ int main() {
         oridiumChain.addBlock({ Transaction("System", "Genesis", 0.0) });
     }
 
-    // ✅ Mempool dynamique
     std::vector<Transaction> mempool;
     auto lastMineTime = std::chrono::steady_clock::now();
 
     while (true) {
-        std::cout << "\n✏️ Enter transaction (sender receiver amount) or 'mine' to force mining:\n> ";
+        std::cout << "\n✏️ Enter transaction (sender receiver amount), 'mine', or 'balance <address>':\n> ";
         std::string input;
         std::getline(std::cin, input);
 
+        // ✅ Balance check
+        if (input.rfind("balance ", 0) == 0) {
+            std::string address = input.substr(8);
+            double balance = oridiumChain.getBalance(address);
+            std::cout << "💰 Balance of " << address << ": " << balance << "\n";
+            continue;
+        }
+
         if (input == "mine") {
-            // Minage forcé par l'utilisateur
             if (!mempool.empty()) {
                 std::cout << "⛏️ Manual mining triggered with " << mempool.size() << " transaction(s).\n";
                 oridiumChain.addBlock(mempool);
@@ -65,7 +71,6 @@ int main() {
             continue;
         }
 
-        // ✅ Mining automatique si 3 transactions ou 30 secondes passées
         auto now = std::chrono::steady_clock::now();
         auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(now - lastMineTime).count();
 

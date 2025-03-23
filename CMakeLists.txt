@@ -9,6 +9,7 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY ${CMAKE_BINARY_DIR}/bin)
 # 📂 Répertoires include
 include_directories(${PROJECT_SOURCE_DIR}/core)
 include_directories(${PROJECT_SOURCE_DIR}/external/json/single_include)
+include_directories(${CMAKE_SOURCE_DIR}/external)
 
 # 📍 OpenSSL (Windows - MSVC)
 set(OPENSSL_ROOT_DIR "C:/Program Files/OpenSSL-Win64")

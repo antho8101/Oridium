@@ -1,6 +1,7 @@
 // Oridium Project - (c) 2025 Oridium - MIT License
 #ifndef STORAGE_H
 #define STORAGE_H
+#include <nlohmann/json.hpp>
 
 #include <string>
 

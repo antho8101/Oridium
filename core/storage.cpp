@@ -12,8 +12,7 @@ using json = nlohmann::json;
 namespace fs = std::filesystem;
 
 bool Storage::saveBlockchain(const Blockchain& blockchain, const std::string& filename) {
-    // ✅ Crée le dossier data si nécessaire
-    fs::create_directories("data");
+    fs::create_directories("data"); // ✅ Assure que le dossier data existe
 
     json j_chain = json::array();
     const auto& chainData = blockchain.getChain();

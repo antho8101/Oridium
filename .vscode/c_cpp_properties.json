@@ -1,16 +1,18 @@
 {
     "configurations": [
         {
-            "name": "Win64",
+            "name": "Windows",
             "includePath": [
                 "${workspaceFolder}/core",
-                "${workspaceFolder}/include",
-                "${workspaceFolder}/external/json/single_include",
+                "${workspaceFolder}/src",
+                "${workspaceFolder}/external",
+                "${workspaceFolder}/external",
                 "C:/Program Files/OpenSSL-Win64/include"
             ],
             "defines": [],
+            "windowsSdkVersion": "10.0.26100.0",
             "compilerPath": "C:/Program Files/Microsoft Visual Studio/2022/Community/VC/Tools/MSVC/14.43.34808/bin/Hostx64/x64/cl.exe",
-            "cStandard": "c17",
+            "cStandard": "c11",
             "cppStandard": "c++20",
             "intelliSenseMode": "windows-msvc-x64"
         }

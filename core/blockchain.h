@@ -7,38 +7,29 @@
 #include "storage.h"
 #include <vector>
 #include <iostream>
+#include <string>
 
 class Blockchain {
 public:
     Blockchain();
 
-    // Ajoute un bloc construit depuis des transactions
     void addBlock(const std::vector<Transaction>& transactions);
-
-    // Ajoute un bloc déjà construit (utile pour le chargement depuis un fichier)
     void addBlock(const Block& block);
-
-    // ✅ Ajout au mempool
     void addTransaction(const Transaction& tx);
-
-    // ✅ Mine les transactions du mempool
     void minePendingTransactions();
+    double getBalance(const std::string& address) const;  // ✅ Nouveau : calcul du solde
 
     void printChain() const;
     bool isChainValid() const;
-
-    // Getter sécurisé
     const std::vector<Block>& getChain() const { return chain; }
-
-    // Reset sécurisé
     void clearChain() { chain.clear(); }
 
 private:
     std::vector<Block> chain;
-    std::vector<Transaction> mempool;   // ✅ Mempool pour les transactions en attente
-    const int difficulty = 2;           // Difficulté de la Proof of Work
+    std::vector<Transaction> mempool;
+    const int difficulty = 2;
 
-    void save() const;  // ✅ Sauvegarde automatique
+    void save() const;
 };
 
 #endif // BLOCKCHAIN_H

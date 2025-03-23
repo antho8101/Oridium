@@ -86,6 +86,18 @@ bool Blockchain::isChainValid() const {
     return true;
 }
 
+// ✅ Calcul du solde d'une adresse
+double Blockchain::getBalance(const std::string& address) const {
+    double balance = 0.0;
+    for (const auto& block : chain) {
+        for (const auto& tx : block.transactions) {
+            if (tx.sender == address) balance -= tx.amount;
+            if (tx.receiver == address) balance += tx.amount;
+        }
+    }
+    return balance;
+}
+
 // ✅ Sauvegarde automatique de la blockchain sur disque
 void Blockchain::save() const {
     Storage::saveBlockchain(*this, "blockchain.json");
