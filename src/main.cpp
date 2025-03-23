@@ -7,56 +7,74 @@
 #include <thread>
 #include <chrono>
 #include <filesystem>
+#include <vector>
+#include <sstream>
 
 int main() {
-    // ✅ Fix UTF-8 pour la console Windows
     SetConsoleOutputCP(CP_UTF8);
     SetDllDirectoryA("E:\\Oridium\\external\\openssl\\");
-
-    std::cout << "🚀 Le programme démarre bien.\n";
+    std::cout << "🚀 Oridium Node started.\n";
 
     Blockchain oridiumChain;
     const std::string blockchainFile = "blockchain.json";
 
-    // ✅ Chargement si la blockchain existe déjà
     if (std::filesystem::exists("data/" + blockchainFile)) {
-        std::cout << "📂 Fichier blockchain détecté. Chargement...\n";
+        std::cout << "📂 Loading blockchain...\n";
         if (Storage::loadBlockchain(oridiumChain, blockchainFile)) {
-            std::cout << "✅ Blockchain chargée avec succès.\n";
+            std::cout << "✅ Blockchain loaded.\n";
         } else {
-            std::cerr << "❌ Erreur lors du chargement de la blockchain.\n";
+            std::cerr << "❌ Failed to load blockchain.\n";
             return 1;
         }
     } else {
-        std::cout << "📄 Aucun fichier blockchain trouvé. Création de la blockchain...\n";
+        std::cout << "📄 No blockchain found. Creating genesis block...\n";
         std::filesystem::create_directories("./data");
+        oridiumChain.addBlock({ Transaction("System", "Genesis", 0.0) });
     }
 
-    // ✅ Ajout de transactions dans le mempool
-    oridiumChain.addTransaction(Transaction("Alice", "Bob", 50.0));
-    oridiumChain.addTransaction(Transaction("Bob", "Charlie", 25.0));
-    oridiumChain.addTransaction(Transaction("Charlie", "Dave", 10.0));
-    oridiumChain.addTransaction(Transaction("Dave", "Eve", 15.0));
+    // ✅ Mempool dynamique
+    std::vector<Transaction> mempool;
+    auto lastMineTime = std::chrono::steady_clock::now();
 
-    // ✅ Minage des transactions en attente
-    oridiumChain.minePendingTransactions();
-
-    // ✅ Affichage de la blockchain
-    oridiumChain.printChain();
-
-    // ✅ Vérification de la validité
-    if (oridiumChain.isChainValid()) {
-        std::cout << "✅ Blockchain is VALID.\n";
-    } else {
-        std::cout << "❌ Blockchain is INVALID.\n";
-    }
-
-    std::cout << "\n🚀 Execution finished. Mining loop running... Press CTRL+C to exit.\n";
-
-    // ✅ Boucle infinie avec heartbeat toutes les 5 secondes
     while (true) {
-        std::cout << "⛏️ Node is running...\n";
-        std::this_thread::sleep_for(std::chrono::seconds(5));
+        std::cout << "\n✏️ Enter transaction (sender receiver amount) or 'mine' to force mining:\n> ";
+        std::string input;
+        std::getline(std::cin, input);
+
+        if (input == "mine") {
+            // Minage forcé par l'utilisateur
+            if (!mempool.empty()) {
+                std::cout << "⛏️ Manual mining triggered with " << mempool.size() << " transaction(s).\n";
+                oridiumChain.addBlock(mempool);
+                mempool.clear();
+                lastMineTime = std::chrono::steady_clock::now();
+            } else {
+                std::cout << "⚠️ Mempool empty, nothing to mine.\n";
+            }
+            continue;
+        }
+
+        std::istringstream iss(input);
+        std::string sender, receiver;
+        double amount;
+        if (iss >> sender >> receiver >> amount) {
+            mempool.emplace_back(sender, receiver, amount);
+            std::cout << "✅ Transaction added to mempool: " << sender << " -> " << receiver << " : " << amount << "\n";
+        } else {
+            std::cout << "❌ Invalid format. Example: Alice Bob 50\n";
+            continue;
+        }
+
+        // ✅ Mining automatique si 3 transactions ou 30 secondes passées
+        auto now = std::chrono::steady_clock::now();
+        auto elapsed = std::chrono::duration_cast<std::chrono::seconds>(now - lastMineTime).count();
+
+        if (mempool.size() >= 3 || elapsed >= 30) {
+            std::cout << "⛏️ Auto-mining " << mempool.size() << " transaction(s)...\n";
+            oridiumChain.addBlock(mempool);
+            mempool.clear();
+            lastMineTime = std::chrono::steady_clock::now();
+        }
     }
 
     return 0;
