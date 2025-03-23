@@ -1,4 +1,6 @@
 E:\Oridium\src\main.cpp;E:\Oridium\build\oridium.dir\Release\main.obj
-E:\Oridium\src\util.cpp;E:\Oridium\build\oridium.dir\Release\util.obj
+E:\Oridium\core\util.cpp;E:\Oridium\build\oridium.dir\Release\util.obj
+E:\Oridium\core\Transaction.cpp;E:\Oridium\build\oridium.dir\Release\Transaction.obj
 E:\Oridium\core\block.cpp;E:\Oridium\build\oridium.dir\Release\block.obj
 E:\Oridium\core\blockchain.cpp;E:\Oridium\build\oridium.dir\Release\blockchain.obj
+E:\Oridium\core\storage.cpp;E:\Oridium\build\oridium.dir\Release\storage.obj

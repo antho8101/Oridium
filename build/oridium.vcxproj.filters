@@ -4,13 +4,19 @@
     <ClCompile Include="E:\Oridium\src\main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="E:\Oridium\src\util.cpp">
+    <ClCompile Include="E:\Oridium\core\util.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\Oridium\core\Transaction.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="E:\Oridium\core\block.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="E:\Oridium\core\blockchain.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="E:\Oridium\core\storage.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

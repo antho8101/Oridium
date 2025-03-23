@@ -5,6 +5,7 @@
             "includePath": [
                 "${workspaceFolder}/core",
                 "${workspaceFolder}/include",
+                "${workspaceFolder}/external/json/single_include",
                 "C:/Program Files/OpenSSL-Win64/include"
             ],
             "defines": [],

@@ -1,13 +1,17 @@
+// Oridium Project - (c) 2025 Tony - MIT License
 #include "blockchain.h"
 #include <iostream>
 #include <chrono>
 
+// ✅ Constructeur de la Blockchain avec Genesis Block
 Blockchain::Blockchain() {
     std::cout << "✅ Initialisation de la blockchain avec le Genesis Block\n";
-    chain.emplace_back(0, std::vector<std::string>{"Genesis Block"});
+    std::vector<Transaction> genesisTx = { Transaction("System", "Genesis", 0.0) };
+    chain.emplace_back(0, genesisTx);
 }
 
-void Blockchain::addBlock(const std::vector<std::string>& transactions) {
+// ✅ Ajout d'un nouveau bloc par vector<Transaction>
+void Blockchain::addBlock(const std::vector<Transaction>& transactions) {
     std::cout << "✅ Tentative d'ajout d'un bloc avec " << transactions.size() << " transaction(s)\n";
 
     const Block& prev = chain.back();
@@ -19,23 +23,29 @@ void Blockchain::addBlock(const std::vector<std::string>& transactions) {
     );
 
     std::cout << "⚙️ Début du minage du bloc " << newBlock.index << " avec une difficulté de " << difficulty << "\n";
-    newBlock.mineBlock(difficulty);  // ✅ UN SEUL APPEL ICI
+    newBlock.mineBlock(difficulty);
 
-    std::cout << "✅ Bloc " << newBlock.index << " miné avec succès. Hash : " << newBlock.hash << "\n";
     chain.push_back(newBlock);
 }
 
+// ✅ Ajout d'un bloc existant (pour la désérialisation JSON)
+void Blockchain::addBlock(const Block& block) {
+    chain.push_back(block);
+}
+
+// ✅ Affichage de la Blockchain
 void Blockchain::printChain() const {
     std::cout << "📝 Affichage de la blockchain :\n";
     for (const auto& block : chain) {
         std::cout << "Index: " << block.index << "\n";
         for (const auto& tx : block.transactions) {
-            std::cout << "Transaction: " << tx << "\n";
+            std::cout << "Transaction: " << tx.toString() << "\n";
         }
         std::cout << "Hash: " << block.hash << "\n\n";
     }
 }
 
+// ✅ Vérification de la validité de la Blockchain
 bool Blockchain::isChainValid() const {
     std::cout << "🛠️ Vérification de la validité de la blockchain...\n";
     for (size_t i = 1; i < chain.size(); ++i) {
