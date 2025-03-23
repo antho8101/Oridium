@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Oridium Wallet</title>
+
+    <link rel="stylesheet" type="text/css" href="styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/ethers@5.4.7/dist/ethers.umd.min.js"></script>
+    <script src="wallet.js"></script>
+</head>
+<body>
+    <div class="container">
+        <h1>Oridium Wallet</h1>
+
+        <!-- Input pour la phrase mnémotechnique -->
+        <input type="text" id="mnemonic" placeholder="Enter mnemonic" />
+
+        <!-- Input pour le mot de passe -->
+        <input type="password" id="password" placeholder="Enter password" />
+
+        <button id="generateWalletBtn">Create Wallet</button>
+
+        <!-- Infos sur le wallet, initialement cachées -->
+        <div id="walletInfo" style="display:none;">
+            <p><strong>Address:</strong> <span id="address"></span></p>
+            <p><strong>Private Key:</strong> <span id="privateKey"></span></p>
+        </div>
+
+        <!-- Bouton pour télécharger le wallet -->
+        <button id="downloadWalletBtn" style="display:none;">Download Wallet</button>
+    </div>
+
+    <script>
+        document.getElementById('generateWalletBtn').addEventListener('click', function () {
+            generateWallet();
+        });
+
+        document.getElementById('downloadWalletBtn').addEventListener('click', function () {
+            downloadWallet();
+        });
+
+        function generateWallet() {
+            const mnemonic = document.getElementById('mnemonic').value;
+            const password = document.getElementById('password').value;
+            
+            // Validation de la phrase mnémotechnique
+            if (!ethers.utils.isValidMnemonic(mnemonic)) {
+                alert("Invalid mnemonic. Please enter a valid mnemonic phrase.");
+                return;
+            }
+
+            // Création du wallet
+            const wallet = ethers.Wallet.fromMnemonic(mnemonic);
+
+            // Affichage de l'adresse et de la clé privée
+            document.getElementById('address').innerText = wallet.address;
+            document.getElementById('privateKey').innerText = wallet.privateKey;
+
+            // Affichage du wallet info
+            document.getElementById('walletInfo').style.display = 'block';
+
+            // Affichage du bouton pour télécharger le wallet
+            document.getElementById('downloadWalletBtn').style.display = 'inline-block';
+        }
+
+        function downloadWallet() {
+            const mnemonic = document.getElementById('mnemonic').value;
+            const wallet = ethers.Wallet.fromMnemonic(mnemonic);
+
+            const walletData = {
+                mnemonic: mnemonic,
+                address: wallet.address,
+                privateKey: wallet.privateKey
+            };
+
+            const blob = new Blob([JSON.stringify(walletData, null, 2)], { type: 'application/json' });
+            const link = document.createElement('a');
+            link.href = URL.createObjectURL(blob);
+            link.download = 'oridium_wallet.json';
+            link.click();
+        }
+    </script>
+</body>
+</html>

@@ -1,0 +1,74 @@
+/* CSS de base pour une mise en page verticale et responsive */
+body {
+    font-family: Arial, sans-serif;
+    background-color: #f4f7fa;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    height: 100vh;
+    margin: 0;
+}
+
+.container {
+    background: white;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+    width: 100%;
+    max-width: 300px; /* Limite la largeur à 300px */
+}
+
+h1 {
+    font-size: 24px;
+    margin-bottom: 20px;
+    text-align: center;
+    color: #333;
+}
+
+input {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    font-size: 14px;
+    box-sizing: border-box; /* Inclut padding et bordure dans la largeur */
+}
+
+button {
+    width: 100%;
+    padding: 12px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    font-size: 16px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+
+p {
+    text-align: center;
+    font-size: 14px;
+    color: #333;
+    margin-top: 10px;
+}
+
+/* Ajout de styles pour les informations de wallet */
+#walletInfo p {
+    font-size: 14px;
+    color: #333;
+    margin-top: 10px;
+    word-wrap: break-word; /* Permet de gérer les longues clés sans les casser */
+}
+
+#walletInfo strong {
+    font-weight: bold;
+}
+
+#walletInfo {
+    margin-top: 20px;
+}
