@@ -1,10 +1,12 @@
-// Oridium Project - (c) 2025 Tony - MIT License
+// Oridium Project - (c) 2025 Oridium - MIT License
 #include "blockchain.h"
 #include "transaction.h"
+#include "storage.h"   // ✅ Ajout pour la sauvegarde/chargement
 #include <iostream>
 #include <windows.h>
 #include <thread>      // ✅ Pour sleep
 #include <chrono>      // ✅ Pour chrono
+#include <filesystem>  // ✅ Pour vérifier l'existence du fichier et créer les dossiers
 
 int main() {
     // ✅ Fix UTF-8 pour la console Windows
@@ -13,26 +15,43 @@ int main() {
     // ✅ Indique à l'exécutable où trouver les DLL OpenSSL
     SetDllDirectoryA("E:\\Oridium\\external\\openssl\\");
 
-    std::cout << "🚀 Le programme démarre bien." << std::endl;
+    std::cout << "🚀 Le programme démarre bien.\n";
 
     Blockchain oridiumChain;
+    const std::string blockchainFile = "blockchain.json";  // ✅ NE PAS mettre le chemin ici
 
-    // ✅ Ajout des blocs avec des objets Transaction
-    oridiumChain.addBlock({
-        Transaction("Alice", "Bob", 50.0)
-    });
+    // ✅ Chargement si la blockchain existe déjà
+    if (std::filesystem::exists("data/" + blockchainFile)) {
+        std::cout << "📂 Fichier blockchain détecté. Chargement...\n";
+        if (Storage::loadBlockchain(oridiumChain, blockchainFile)) {
+            std::cout << "✅ Blockchain chargée avec succès.\n";
+        } else {
+            std::cerr << "❌ Erreur lors du chargement de la blockchain.\n";
+            return 1;
+        }
+    } else {
+        std::cout << "📄 Aucun fichier blockchain trouvé. Création de la blockchain...\n";
 
-    oridiumChain.addBlock({
-        Transaction("Bob", "Charlie", 25.0),
-        Transaction("Charlie", "Dave", 10.0)
-    });
+        // ✅ Ajout des blocs avec des objets Transaction
+        oridiumChain.addBlock({ Transaction("Alice", "Bob", 50.0) });
+        oridiumChain.addBlock({ Transaction("Bob", "Charlie", 25.0), Transaction("Charlie", "Dave", 10.0) });
+        oridiumChain.addBlock({ Transaction("Dave", "Eve", 15.0) });
 
-    oridiumChain.addBlock({
-        Transaction("Dave", "Eve", 15.0)
-    });
+        // ✅ Création du dossier data si nécessaire
+        std::filesystem::create_directories("./data");
 
+        // ✅ Sauvegarde initiale
+        if (Storage::saveBlockchain(oridiumChain, blockchainFile)) {
+            std::cout << "✅ Blockchain initiale sauvegardée avec succès.\n";
+        } else {
+            std::cerr << "❌ Erreur lors de la sauvegarde initiale.\n";
+        }
+    }
+
+    // ✅ Affichage de la blockchain
     oridiumChain.printChain();
 
+    // ✅ Vérification de la validité
     if (oridiumChain.isChainValid()) {
         std::cout << "✅ Blockchain is VALID.\n";
     } else {

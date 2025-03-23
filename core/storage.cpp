@@ -6,12 +6,16 @@
 #include <fstream>
 #include <nlohmann/json.hpp>
 #include <iostream>
+#include <filesystem>
 
 using json = nlohmann::json;
+namespace fs = std::filesystem;
 
 bool Storage::saveBlockchain(const Blockchain& blockchain, const std::string& filename) {
-    json j_chain = json::array();
+    // ✅ Crée le dossier data si nécessaire
+    fs::create_directories("data");
 
+    json j_chain = json::array();
     const auto& chainData = blockchain.getChain();
 
     for (const auto& block : chainData) {
@@ -22,7 +26,6 @@ bool Storage::saveBlockchain(const Blockchain& blockchain, const std::string& fi
         j_block["hash"] = block.hash;
         j_block["nonce"] = block.nonce;
 
-        // Sérialisation des transactions
         json j_txs = json::array();
         for (const auto& tx : block.transactions) {
             json j_tx;
@@ -33,25 +36,25 @@ bool Storage::saveBlockchain(const Blockchain& blockchain, const std::string& fi
             j_txs.push_back(j_tx);
         }
         j_block["transactions"] = j_txs;
-
         j_chain.push_back(j_block);
     }
 
-    std::ofstream file(filename);
+    std::ofstream file("data/" + filename);
     if (!file.is_open()) {
-        std::cerr << "❌ Impossible d'ouvrir le fichier de sauvegarde.\n";
+        std::cerr << "❌ Erreur : Impossible d'ouvrir data/" << filename << " en écriture.\n";
         return false;
     }
+
     file << j_chain.dump(4);
     file.close();
-    std::cout << "✅ Blockchain sauvegardée dans " << filename << "\n";
+    std::cout << "✅ Blockchain sauvegardée dans data/" << filename << "\n";
     return true;
 }
 
 bool Storage::loadBlockchain(Blockchain& blockchain, const std::string& filename) {
-    std::ifstream file(filename);
+    std::ifstream file("data/" + filename);
     if (!file.is_open()) {
-        std::cerr << "❌ Fichier non trouvé : " << filename << "\n";
+        std::cerr << "❌ Erreur : Fichier data/" << filename << " introuvable.\n";
         return false;
     }
 
@@ -82,9 +85,9 @@ bool Storage::loadBlockchain(Blockchain& blockchain, const std::string& filename
         block.hash = j_block["hash"].get<std::string>();
         block.nonce = j_block["nonce"].get<int>();
 
-        blockchain.addBlock(block); // ✅ Appel du bon addBlock(Block&)
+        blockchain.addBlock(block);
     }
 
-    std::cout << "✅ Blockchain chargée depuis " << filename << "\n";
+    std::cout << "✅ Blockchain chargée depuis data/" << filename << "\n";
     return true;
 }
