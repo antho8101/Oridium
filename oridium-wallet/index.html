@@ -4,39 +4,68 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Oridium Wallet</title>
-    <link rel="stylesheet" type="text/css" href="styles.css">
+
+    <!-- Feuilles de style -->
+    <link rel="stylesheet" href="styles/base/fonts.css">
+    <link rel="stylesheet" href="styles/base/layout/styles.css">
+
+    <!-- Librairie ethers.js -->
     <script src="https://cdn.jsdelivr.net/npm/ethers@5.4.7/dist/ethers.umd.min.js"></script>
 </head>
 <body>
-    <!-- Conteneur principal avec padding et gap -->
+
+    body {
+        user-select: none;
+    }    
+
     <div class="main-container">
-        <!-- Section du menu -->
+
+        <!-- Menu latéral -->
         <div class="menu">
-            <!-- Conteneur du logo et des boutons du menu -->
             <div class="menu-top">
-                <div id="logo-container">
-                    <h1 id="logo">Oridium</h1>
-                    <p id="wallet-version">Oridium Wallet 1.0</p>
+                <div class="logo-section">
+                    <h1 class="logo">Oridium</h1>
+                    <p class="text wallet-version">Oridium Wallet 1.0</p>
                 </div>
-                
-                <!-- Ajoute ici ton logo et les boutons du menu -->
-            </div>
+            
+                <div class="wallet-balance">
+                    <img src="assets/images/icons/ph_hand-coins.svg" alt="Wallet Icon" class="wallet-icon">
+                    <span class="text balance-amount">10.0002 ($ORID)</span>
+                </div>
+                <div class="menu-separator"></div>
 
-            <!-- Conteneur pour le bouton "Connect my Wallet" -->
+                <div class="menu-bottom">
+                    <button class="button button-menu">Home</button>
+                </div> 
+
+                <div class="menu-bottom">
+                    <button class="button button-menu">Create Wallet</button>
+                </div> 
+
+                <div class="menu-bottom">
+                    <button class="button button-menu">Restore Wallet</button>
+                </div> 
+
+                <div class="menu-bottom">
+                    <button class="button button-menu">Help</button>
+                </div>
+
+                <div class="menu-bottom">
+                    <button class="button button-menu">Settings</button>
+                </div> 
+
+            </div>
             <div class="menu-bottom">
-                <button id="connectWalletBtn">Connect My Wallet</button>
-            </div>
+                <button class="button button-menu">Connect my wallet</button>
+            </div>                    
         </div>
 
-        <!-- Section principale (contenu des pages) -->
+        <!-- Contenu principal -->
         <div class="content">
-            <h2>Content</h2>
-            <!-- Ajoute ici les éléments principaux du wallet -->
+            <h2 class="title">Content</h2>
+            <p class="text">Welcome to your Oridium Wallet.</p>
         </div>
-    </div>
 
-    <script>
-        // Ton code JavaScript ici, si nécessaire
-    </script>
+    </div>
 </body>
 </html>
