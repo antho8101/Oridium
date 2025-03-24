@@ -4,82 +4,39 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Oridium Wallet</title>
-
     <link rel="stylesheet" type="text/css" href="styles.css">
     <script src="https://cdn.jsdelivr.net/npm/ethers@5.4.7/dist/ethers.umd.min.js"></script>
-    <script src="wallet.js"></script>
 </head>
 <body>
-    <div class="container">
-        <h1>Oridium Wallet</h1>
+    <!-- Conteneur principal avec padding et gap -->
+    <div class="main-container">
+        <!-- Section du menu -->
+        <div class="menu">
+            <!-- Conteneur du logo et des boutons du menu -->
+            <div class="menu-top">
+                <div id="logo-container">
+                    <h1 id="logo">Oridium</h1>
+                    <p id="wallet-version">Oridium Wallet 1.0</p>
+                </div>
+                
+                <!-- Ajoute ici ton logo et les boutons du menu -->
+            </div>
 
-        <!-- Input pour la phrase mnémotechnique -->
-        <input type="text" id="mnemonic" placeholder="Enter mnemonic" />
-
-        <!-- Input pour le mot de passe -->
-        <input type="password" id="password" placeholder="Enter password" />
-
-        <button id="generateWalletBtn">Create Wallet</button>
-
-        <!-- Infos sur le wallet, initialement cachées -->
-        <div id="walletInfo" style="display:none;">
-            <p><strong>Address:</strong> <span id="address"></span></p>
-            <p><strong>Private Key:</strong> <span id="privateKey"></span></p>
+            <!-- Conteneur pour le bouton "Connect my Wallet" -->
+            <div class="menu-bottom">
+                <button id="connectWalletBtn">Connect My Wallet</button>
+            </div>
         </div>
 
-        <!-- Bouton pour télécharger le wallet -->
-        <button id="downloadWalletBtn" style="display:none;">Download Wallet</button>
+        <!-- Section principale (contenu des pages) -->
+        <div class="content">
+            <h2>Content</h2>
+            <!-- Ajoute ici les éléments principaux du wallet -->
+        </div>
     </div>
 
     <script>
-        document.getElementById('generateWalletBtn').addEventListener('click', function () {
-            generateWallet();
-        });
-
-        document.getElementById('downloadWalletBtn').addEventListener('click', function () {
-            downloadWallet();
-        });
-
-        function generateWallet() {
-            const mnemonic = document.getElementById('mnemonic').value;
-            const password = document.getElementById('password').value;
-            
-            // Validation de la phrase mnémotechnique
-            if (!ethers.utils.isValidMnemonic(mnemonic)) {
-                alert("Invalid mnemonic. Please enter a valid mnemonic phrase.");
-                return;
-            }
-
-            // Création du wallet
-            const wallet = ethers.Wallet.fromMnemonic(mnemonic);
-
-            // Affichage de l'adresse et de la clé privée
-            document.getElementById('address').innerText = wallet.address;
-            document.getElementById('privateKey').innerText = wallet.privateKey;
-
-            // Affichage du wallet info
-            document.getElementById('walletInfo').style.display = 'block';
-
-            // Affichage du bouton pour télécharger le wallet
-            document.getElementById('downloadWalletBtn').style.display = 'inline-block';
-        }
-
-        function downloadWallet() {
-            const mnemonic = document.getElementById('mnemonic').value;
-            const wallet = ethers.Wallet.fromMnemonic(mnemonic);
-
-            const walletData = {
-                mnemonic: mnemonic,
-                address: wallet.address,
-                privateKey: wallet.privateKey
-            };
-
-            const blob = new Blob([JSON.stringify(walletData, null, 2)], { type: 'application/json' });
-            const link = document.createElement('a');
-            link.href = URL.createObjectURL(blob);
-            link.download = 'oridium_wallet.json';
-            link.click();
-        }
+        // Ton code JavaScript ici, si nécessaire
     </script>
 </body>
 </html>

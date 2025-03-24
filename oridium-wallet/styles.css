@@ -1,74 +1,101 @@
-/* CSS de base pour une mise en page verticale et responsive */
+/* Global font settings */
+@import url('https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@300..700&display=swap');
+
 body {
-    font-family: Arial, sans-serif;
-    background-color: #f4f7fa;
+    font-family: 'Space Grotesk', sans-serif;
+    background-color: #191A21; /* Deep Black background */
+    color: #FFFFFF; /* Pure White text */
+    margin: 0;
+    padding: 0;
+    user-select: none;
+}
+
+/* Conteneur principal avec un padding autour et un gap horizontal entre les sections */
+.main-container {
+    display: flex;
+    gap: 20px; /* Espacement horizontal entre les deux sections */
+    padding: 20px; /* Padding autour de l'ensemble de la page */
+    height: 100vh; /* Pour que la hauteur de l'écran soit prise en compte */
+    box-sizing: border-box; /* Assure que le padding est pris en compte */
+}
+
+/* Style pour la section du menu */
+.menu {
+    display: flex;
+    flex-direction: column; /* Disposer les éléments verticalement */
+    flex: 0 0 250px; /* Le menu prendra une largeur fixe de 250px */
+    color: #FFFFFF;
+    border-radius: 10px;
+    justify-content: space-between; /* Répartir l'espace entre les éléments */
+}
+
+/* Conteneur pour le logo et les boutons du menu */
+.menu-top {
+    display: flex;
+    flex-direction: column; /* Disposer les éléments du logo et des boutons verticalement */
+    margin-bottom: auto; /* S'assurer que la partie "Connect my Wallet" est en bas */
+}
+
+/* Conteneur pour le bouton "Connect My Wallet" */
+.menu-bottom {
     display: flex;
     justify-content: center;
-    align-items: center;
-    height: 100vh;
-    margin: 0;
+    margin-top: auto; /* Place le bouton en bas de la section */
 }
 
-.container {
-    background: white;
-    border-radius: 8px;
-    padding: 20px;
-    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+/* Style du bouton "Connect My Wallet" */
+#connectWalletBtn {
     width: 100%;
-    max-width: 300px; /* Limite la largeur à 300px */
-}
-
-h1 {
-    font-size: 24px;
-    margin-bottom: 20px;
-    text-align: center;
-    color: #333;
-}
-
-input {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 20px;
-    border: 1px solid #ddd;
-    border-radius: 4px;
-    font-size: 14px;
-    box-sizing: border-box; /* Inclut padding et bordure dans la largeur */
-}
-
-button {
-    width: 100%;
-    padding: 12px;
-    background-color: #4CAF50;
-    color: white;
-    border: none;
-    border-radius: 4px;
-    font-size: 16px;
+    padding: 10px 10px;
+    background-color: #282A36; /* Clear Black */
+    color: #EBE6D9; /* Oridium text color */
+    border: 1px solid #DCCB92; /* Oridium color */
+    border-radius: 99px;
     cursor: pointer;
+    transition: background-color 0.3s;
 }
 
-button:hover {
-    background-color: #45a049;
+#connectWalletBtn:hover {
+    background-color: #DCCB92;
+    color: #191A21; /* Deep Black */
 }
 
-p {
+/* Style pour la section principale (contenu des pages) */
+.content {
+    flex: 1; /* Prend tout l'espace restant */
+    background-color: #282A36;
+    border: 1px solid #DCCB92; /* Deep Black */
+    color: white;;
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.5); ;
+}
+
+/* Styles spécifiques pour les textes du logo */
+#logo-container {
     text-align: center;
-    font-size: 14px;
-    color: #333;
-    margin-top: 10px;
 }
 
-/* Ajout de styles pour les informations de wallet */
-#walletInfo p {
-    font-size: 14px;
-    color: #333;
-    margin-top: 10px;
-    word-wrap: break-word; /* Permet de gérer les longues clés sans les casser */
+#logo {
+    color: #DCCB92;
+    padding-top: 0;  /* Enlève le padding en haut */
+    padding-bottom: 0;  /* Enlève le padding en bas */
+    margin-top: 0;  /* Enlève le margin au-dessus */
+    margin-bottom: 0;
+    font-size: 48px; /* Taille du logo */
+    font-weight: 700;
+    text-align: left; /* Bold */
+    text-shadow: 0 0 4px rgba(255, 255, 255, 0.5); /* Glow effect for the text */
 }
 
-#walletInfo strong {
-    font-weight: bold;
-}
-
-#walletInfo {
-    margin-top: 20px;
+#wallet-version {
+    color: #DCCB92;
+    padding-top: 0;  /* Enlève le padding en haut */
+    padding-bottom: 0;  /* Enlève le padding en bas */
+    margin-top: 0;
+    text-align: left;  /* Enlève le margin au-dessus */
+    margin-bottom: 0;
+    font-size: 14px; /* Taille du texte */
+    font-weight: 400; /* Regular */
+    text-shadow: 0 0 4px rgba(255, 255, 255, 0.5); /* Glow effect for the text */
 }
