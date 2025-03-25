@@ -42,6 +42,30 @@ html, body {
     width: 100%;
 }
 
+.button-menu-main:hover {
+    background-color: #282A36;
+    border: 1px solid #DCCB92;
+    border-radius: 99px;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 1);
+    color: #EBE6D9;
+    cursor: pointer;
+    padding: 10px;
+    transition: background-color 0.3s;
+    width: 100%;
+}
+
+.button-menu-main:active {
+    background-color: #191A21;
+    border: 1px solid #DCCB92;
+    border-radius: 99px;
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
+    color: #908f8b;
+    cursor: pointer;
+    padding: 10px;
+    transition: background-color 0.1s;
+    width: 100%;
+}
+
 .button-gold {
     background-color: #DCCB92;
     border: 1px solid #DCCB92;
@@ -56,8 +80,26 @@ html, body {
     width: 220px;
   }
   
-.button-gold:hover {
-    background-color: #c9b979;
+  .button-gold:hover {
+    background-color: #DCCB92;
+    border: 1px solid #DCCB92;
+    border-radius: 99px;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 1);
+    color: #282A36;
+    cursor: pointer;
+    padding: 10px;
+    transition: background-color 0.3s;
+}
+
+.button-gold:active {
+    background-color: #928762;
+    border: 1px solid #DCCB92;
+    border-radius: 99px;
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
+    color: #282A36;
+    cursor: pointer;
+    padding: 10px;
+    transition: background-color 0.1s;
 }
 
 .button-menu:hover {
@@ -114,6 +156,7 @@ html, body {
     display: flex;
     flex: 1;
     flex-direction: column;
+    gap: 30px;
 }
 
 .key-display {
@@ -176,7 +219,6 @@ html, body {
     border-radius: 1px;
     box-shadow: 0 0 4px rgba(255, 255, 255, 0.25);
     height: 2px;
-    margin: 20px 0;
     width: 100%;
 }
 
