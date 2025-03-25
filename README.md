@@ -91,12 +91,3 @@ Feel free to fork the project, open pull requests, or suggest improvements.
   <img src="https://img.shields.io/badge/License-MIT-yellow?style=flat-square" />
   <img src="https://img.shields.io/badge/Made%20with-%E2%9D%A4-red?style=flat-square" />
 </p>
-
-📱 [Live Wallet Preview - Coming Soon]
-
-<p align="center">
-  <img src="https://img.shields.io/badge/C%2B%2B-20-blue?style=flat-square" />
-  <img src="https://img.shields.io/badge/CMake-Build-green?style=flat-square" />
-  <img src="https://img.shields.io/badge/License-MIT-yellow?style=flat-square" />
-  <img src="https://img.shields.io/badge/Made%20with-%E2%9D%A4-red?style=flat-square" />
-</p>
