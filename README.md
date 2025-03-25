@@ -1,6 +1,21 @@
+![image](https://github.com/user-attachments/assets/f96c89c1-9980-4be0-abc0-42891f0881eb)
+
 # 💎 Oridium - The Digital Gold of Tomorrow
 
+🚀 Project Status: Early Development Phase 🚧
+
 Oridium is a **modern, high-performance blockchain** designed as a rare and precious digital asset — inspired by Bitcoin's principles but optimized for the future. Built with **C++20 and Qt5**, it provides a solid foundation for decentralized applications, digital payments, and secure peer-to-peer transactions.
+
+📖 **[Read our White Paper (v1 - March 2025)](https://ac-global-business.notion.site/Oridium-Whitepaper-1c12085e713e803aaaa8f832f0366dfb?pvs=4)** — Learn about the Oridium vision and architecture.
+
+## 📚 Table of Contents
+- [Project Highlights](#-project-highlights)
+- [Key Features](#-key-features)
+- [Oridium Wallet (Web)](#-oridium-wallet-web-version)
+- [Build Instructions](#-build-instructions-windows--visual-studio-2022)
+- [License](#-license)
+- [Contributing](#-contributing)
+- [Whitepaper](#-whitepaper)
 
 ## 🌟 Project Highlights
 - **Language:** C++20  
@@ -67,6 +82,13 @@ Feel free to fork the project, open pull requests, or suggest improvements.
 
 ---
 
-🚀 Project Status: Early Development Phase 🚧
-
 🌐 Official Website: (Coming Soon)
+
+📱 [Live Wallet Preview - Coming Soon]
+
+<p align="center">
+  <img src="https://img.shields.io/badge/C%2B%2B-20-blue?style=flat-square" />
+  <img src="https://img.shields.io/badge/CMake-Build-green?style=flat-square" />
+  <img src="https://img.shields.io/badge/License-MIT-yellow?style=flat-square" />
+  <img src="https://img.shields.io/badge/Made%20with-%E2%9D%A4-red?style=flat-square" />
+</p>
