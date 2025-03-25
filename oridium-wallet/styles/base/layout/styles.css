@@ -1,41 +1,113 @@
 * {
+    box-sizing: border-box;
     margin: 0;
     padding: 0;
-    box-sizing: border-box;
 }
 
 html, body {
-    width: 100%;
-    min-height: 100vh;
     background-color: #191A21;
+    min-height: 100vh;
     overflow-x: hidden;
     overflow-y: hidden;
     user-select: none;
+    width: 100%;
+}
+
+.balance-amount {
+    color: #DCCB92;
+}
+
+.button-menu {
+    background-color: #282A36;
+    border: 1px solid #DCCB92;
+    border-radius: 99px;
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
+    color: #EBE6D9;
+    cursor: pointer;
+    padding: 10px;
+    transition: background-color 0.3s;
+    width: 100%;
+}
+
+.button-menu:hover {
+    background-color: #282A36;
+    border: 1px solid #DCCB92;
+    border-radius: 99px;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 1);
+    color: #EBE6D9;
+    cursor: pointer;
+    padding: 10px;
+    transition: background-color 0.3s;
+    width: 100%;
+}
+
+.button-menu:active {
+    background-color: #191A21;
+    border: 1px solid #DCCB92;
+    border-radius: 99px;
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
+    color: #908f8b;
+    cursor: pointer;
+    padding: 10px;
+    transition: background-color 0.1s;
+    width: 100%;
+}
+
+.content {
+    background-color: #282A36;
+    border: 1px solid #DCCB92;
+    border-radius: 10px;
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
+    color: white;
+    display: flex;
+    flex-direction: row;
+    flex: 1;
+    padding: 30px;
+}
+
+.content-left {
+    display: flex;
+    flex-direction: column;
+    flex: none;
+    gap: 20px;
+    width: 350px;
+}
+
+.content-right {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+}
+
+.logo {
+    color: #DCCB92;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    text-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
+}
+
+.logo-section {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
 }
 
 .main-container {
+    background-color: #191A21;
     display: flex;
     gap: 20px;
-    height: 100dvh;   /* ✅ Au lieu de min-height ou height */
-    box-sizing: border-box;
-    background-color: #191A21;
+    height: 100dvh;
     padding: 20px;
 }
 
-/* Menu */
 .menu {
-    display: flex;
-    flex-direction: column;
-    flex: 0 0 250px;
-    color: #FFFFFF;
     border-radius: 10px;
-    justify-content: space-between;
-}
-
-.menu-top {
+    color: #FFFFFF;
     display: flex;
+    flex: 0 0 250px;
     flex-direction: column;
-    margin-bottom: auto;
+    justify-content: space-between;
 }
 
 .menu-bottom {
@@ -44,108 +116,104 @@ html, body {
     margin-top: auto;
 }
 
-/* Bouton */
-.button-menu {
+.menu-separator {
+    background-color: #575449;
+    border-radius: 1px;
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.25);
+    height: 2px;
+    margin: 20px 0;
     width: 100%;
-    padding: 10px;
-    background-color: #282A36;
-    color: #EBE6D9;
-    border: 1px solid #DCCB92;
-    border-radius: 99px;
-    cursor: pointer;
-    box-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
-    transition: background-color 0.3s;
-}
-
-.button-menu:hover {
-    width: 100%;
-    padding: 10px;
-    background-color: #282A36;
-    color: #EBE6D9;
-    border: 1px solid #DCCB92;
-    border-radius: 99px;
-    cursor: pointer;
-    box-shadow: 0 0 8px rgba(255, 255, 255, 100);
-    transition: background-color 0.3s;
-}
-
-.button-menu:active {
-    width: 100%;
-    padding: 10px;
-    background-color: #191A21;
-    color: #908f8b;
-    border: 1px solid #DCCB92;
-    border-radius: 99px;
-    cursor: pointer;
-    box-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
-    transition: background-color 0.1s;
-}
-
-/* Contenu principal */
-.content {
-    flex: 1;
-    background-color: #282A36;
-    border: 1px solid #DCCB92;
-    color: white;
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
-}
-
-/* Logo */
-.logo {
-    color: #DCCB92;
-    padding: 0;
-    margin: 0;
-    text-align: left;
-    text-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
-}
-
-/* Sous-titre */
-.wallet-version {
-    color: #DCCB92;
-    padding: 0;
-    margin: 0;
-    text-align: left;
-    text-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
-}
-
-.wallet-balance {
-    display: flex;
-    align-items: center;
-    background-color: #282A36;
-    padding: 5px 15px;
-    border-radius: 99px;
-    color: #DCCB92;
-}
-
-.wallet-icon {
-    width: 16px;
-    height: 16px;
-    margin-right: 8px;
-}
-
-.balance-amount {
-    color: #DCCB92;
 }
 
 .menu-top {
     display: flex;
     flex-direction: column;
-    gap: 20px; /* Applique l'espacement entre wallet-balance et logo-section */
+    gap: 20px;
+    margin-bottom: auto;
 }
 
-.logo-section {
+.transaction-amount {
+    color: #DCCB92;
+    font-weight: 500;
+}
+
+.transaction-container {
+    border-radius: 10px;
     display: flex;
+    flex: 1;
     flex-direction: column;
-    gap: 0; /* Pas de gap entre le logo et le sous-titre */
+    height: 100%;
 }
 
-.menu-separator {
-    width: 100%;
-    height: 2px;
-    background-color: #575449; /* Couleur dorée Oridium */
-    margin: 20px 0; /* Espace avant et après la ligne */
+.transaction-container h2 {
+    margin-bottom: 20px;
+}
+
+.transaction-desc {
+    color: #EBE6D9;
+}
+
+.transaction-list {
+    border-radius: 8px;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+}
+
+.transaction-list::-webkit-scrollbar {
+    width: 8px;
+}
+
+.transaction-list::-webkit-scrollbar-thumb {
+    background-color: #DCCB92;
+    border-radius: 6px;
+}
+
+.transaction-row {
+    align-items: center;
+    display: flex;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    height: 40px;
+    justify-content: space-between;
+    padding: 0 15px;
+}
+
+.transaction-row:nth-child(odd) {
+    background-color: #282A36;
+}
+
+.transaction-row:nth-child(even) {
+    background-color: #191A21;
+}
+
+.vertical-separator {
+    background-color: #575449;
     border-radius: 1px;
     box-shadow: 0 0 4px rgba(255, 255, 255, 0.25);
+    margin: 0 30px;
+    width: 2px;
+}
+
+.wallet-balance {
+    align-items: center;
+    background-color: #282A36;
+    border-radius: 99px;
+    color: #DCCB92;
+    display: flex;
+    padding: 5px 15px;
+}
+
+.wallet-icon {
+    height: 16px;
+    margin-right: 8px;
+    width: 16px;
+}
+
+.wallet-version {
+    color: #DCCB92;
+    margin: 0;
+    padding: 0;
+    text-align: left;
+    text-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
 }
