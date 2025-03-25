@@ -15,7 +15,6 @@ Oridium is a **modern, high-performance blockchain** designed as a rare and prec
 - [Build Instructions](#-build-instructions-windows--visual-studio-2022)
 - [License](#-license)
 - [Contributing](#-contributing)
-- [Whitepaper](#-whitepaper)
 
 ## 🌟 Project Highlights
 - **Language:** C++20  
