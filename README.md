@@ -65,12 +65,6 @@ Oridium is an open-source project released under the MIT license. See the LICENS
 We welcome community contributions!
 Feel free to fork the project, open pull requests, or suggest improvements.
 
-- Fork the repo
-
-- Open pull requests
-
-- Suggest improvements
-
 ---
 
 🚀 Project Status: Early Development Phase 🚧
