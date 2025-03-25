@@ -10,8 +10,6 @@
   <link rel="stylesheet" href="styles/base/fonts.css">
   <link rel="stylesheet" href="styles/base/layout/styles.css">
 
-  <!-- Librairie ethers.js -->
-  <script src="https://cdn.jsdelivr.net/npm/ethers@5.4.7/dist/ethers.umd.min.js"></script>
 </head>
 
 <body>
@@ -197,13 +195,21 @@
                 <div class="text">Today</div>
               </div>
             </div>
-          </div>                           
-        <!-- Public key, balances, chart, mining controls -->
-      </div>
+          </div>  
+          
+          <div class="menu-separator"></div>
+
+          <div class="chart-container">
+            <div id="priceChart"></div>
+          </div>
+        </div>
 
     </div> <!-- FIN .content -->
 
-  </div> <!-- FIN .main-container -->
+  </div>
+  
+  <script src="https://unpkg.com/lightweight-charts@4.1.1/dist/lightweight-charts.standalone.production.js"></script>
+  <script src="scripts/chart.js"></script>
 
 </body>
 
