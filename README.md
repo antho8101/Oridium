@@ -91,5 +91,3 @@ Feel free to fork the project, open pull requests, or suggest improvements.
   <img src="https://img.shields.io/badge/License-MIT-yellow?style=flat-square" />
   <img src="https://img.shields.io/badge/Made%20with-%E2%9D%A4-red?style=flat-square" />
 </p>
-
-Coucou
