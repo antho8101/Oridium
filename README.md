@@ -2,7 +2,7 @@
 
 # 💎 Oridium - The Digital Gold of Tomorrow
 
-🚀 Project Status: Early Development Phase 🚧
+🚀 Project Status: Early Development Phase 🚧 [#######---------] 40% Complete
 
 Oridium is a **modern, high-performance blockchain** designed as a rare and precious digital asset — inspired by Bitcoin's principles but optimized for the future. Built with **C++20 and Qt5**, it provides a solid foundation for decentralized applications, digital payments, and secure peer-to-peer transactions.
 
