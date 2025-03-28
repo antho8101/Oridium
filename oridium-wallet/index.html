@@ -202,6 +202,25 @@
           <div class="chart-container">
             <div id="priceChart"></div>
           </div>
+
+          <div class="mining-bar">
+            <div class="mining-left text">
+              <button id="mining-toggle" class="mining-btn">
+                <svg id="icon-play" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#FFFFFF" viewBox="0 0 16 16">
+                  <path d="M4.5 3.5v9l7-4.5-7-4.5z" />
+                </svg>
+                <svg id="icon-pause" xmlns="http://www.w3.org/2000/svg" width="20" height="20" fill="#FFFFFF" viewBox="0 0 16 16" style="display: none;">
+                  <path d="M5 3h2v10H5V3zm4 0h2v10H9V3z" />
+                </svg>
+              </button>              
+              <span class="mining-right-text text">Mining is currently paused...</span>
+            </div>
+            <div class="mining-right-text text">
+              <span>Run time: <span id="runtime">00:00</span></span> |
+              <span>Oridium mined: <span id="mined-count">0</span></span>
+            </div>
+          </div>                    
+          
         </div>
 
     </div> <!-- FIN .content -->
