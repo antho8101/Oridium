@@ -1,3 +1,0 @@
-E:/Oridium/build/CMakeFiles/oridium.dir
-E:/Oridium/build/CMakeFiles/ALL_BUILD.dir
-E:/Oridium/build/CMakeFiles/ZERO_CHECK.dir
