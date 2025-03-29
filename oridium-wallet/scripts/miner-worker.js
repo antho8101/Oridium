@@ -1,15 +1,12 @@
 self.Module = {
-    locateFile: function(path) {
-        return "../wasm/" + path;
-    },
-    onRuntimeInitialized: function() {
-        postMessage({type: 'ready'});
+    onRuntimeInitialized: function () {
+        postMessage({ type: 'ready' });
     }
 };
 
-importScripts("../wasm/mining.js");
+importScripts("../wasm/mining.js"); // <- importe mining.js APRÈS la déclaration Module ci-dessus
 
-onmessage = function(e) {
+onmessage = function (e) {
     if (e.data === 'start') {
         mine();
     } else if (e.data === 'stop') {
@@ -19,7 +16,7 @@ onmessage = function(e) {
 
 function mine() {
     while (true) {
-        const result = Module.ccall('mine', 'string', [], []);
-        postMessage({type: 'result', data: result});
+        const result = self.Module.ccall('mine', 'string', [], []);
+        self.postMessage({ type: 'result', data: result });
     }
 }
