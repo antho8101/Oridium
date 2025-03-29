@@ -12,7 +12,7 @@ using json = nlohmann::json;
 namespace fs = std::filesystem;
 
 bool Storage::saveBlockchain(const Blockchain& blockchain, const std::string& filename) {
-    fs::create_directories("data"); // ✅ Assure que le dossier data existe
+    fs::create_directories("data"); // ✅ Make sure the 'data' folder exists
 
     json j_chain = json::array();
     const auto& chainData = blockchain.getChain();
@@ -40,20 +40,20 @@ bool Storage::saveBlockchain(const Blockchain& blockchain, const std::string& fi
 
     std::ofstream file("data/" + filename);
     if (!file.is_open()) {
-        std::cerr << "❌ Erreur : Impossible d'ouvrir data/" << filename << " en écriture.\n";
+        std::cerr << "❌ Error: Cannot open data/" << filename << " for writing.\n";
         return false;
     }
 
     file << j_chain.dump(4);
     file.close();
-    std::cout << "✅ Blockchain sauvegardée dans data/" << filename << "\n";
+    std::cout << "✅ Blockchain saved to data/" << filename << "\n";
     return true;
 }
 
 bool Storage::loadBlockchain(Blockchain& blockchain, const std::string& filename) {
     std::ifstream file("data/" + filename);
     if (!file.is_open()) {
-        std::cerr << "❌ Erreur : Fichier data/" << filename << " introuvable.\n";
+        std::cerr << "❌ Error: File data/" << filename << " not found.\n";
         return false;
     }
 
@@ -61,7 +61,7 @@ bool Storage::loadBlockchain(Blockchain& blockchain, const std::string& filename
     file >> j_chain;
     file.close();
 
-    blockchain.clearChain(); // ✅ Reset sécurisé
+    blockchain.clearChain(); // ✅ Safe reset
 
     for (const auto& j_block : j_chain) {
         std::vector<Transaction> transactions;
@@ -87,6 +87,6 @@ bool Storage::loadBlockchain(Blockchain& blockchain, const std::string& filename
         blockchain.addBlock(block);
     }
 
-    std::cout << "✅ Blockchain chargée depuis data/" << filename << "\n";
+    std::cout << "✅ Blockchain loaded from data/" << filename << "\n";
     return true;
 }

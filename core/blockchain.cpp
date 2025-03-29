@@ -3,17 +3,17 @@
 #include <iostream>
 #include <chrono>
 
-// ✅ Constructeur avec Genesis Block
+// ✅ Constructor with Genesis Block
 Blockchain::Blockchain() {
-    std::cout << "✅ Initialisation de la blockchain avec le Genesis Block\n";
+    std::cout << "✅ Blockchain initialized with Genesis Block\n";
     std::vector<Transaction> genesisTx = { Transaction("System", "Genesis", 0.0) };
     chain.emplace_back(0, genesisTx);
-    save();  // ✅ Sauvegarde du Genesis Block
+    save();  // ✅ Save after Genesis Block
 }
 
-// ✅ Ajout d'un nouveau bloc par vector<Transaction>
+// ✅ Add a new block from a vector of transactions
 void Blockchain::addBlock(const std::vector<Transaction>& transactions) {
-    std::cout << "✅ Tentative d'ajout d'un bloc avec " << transactions.size() << " transaction(s)\n";
+    std::cout << "✅ Attempting to add a block with " << transactions.size() << " transaction(s)\n";
 
     const Block& prev = chain.back();
     Block newBlock(
@@ -23,40 +23,40 @@ void Blockchain::addBlock(const std::vector<Transaction>& transactions) {
         prev.hash
     );
 
-    std::cout << "⚙️ Début du minage du bloc " << newBlock.index << " avec une difficulté de " << difficulty << "\n";
+    std::cout << "⚙️  Mining block " << newBlock.index << " with difficulty " << difficulty << "...\n";
     newBlock.mineBlock(difficulty);
 
     chain.push_back(newBlock);
-    save();  // ✅ Sauvegarde après ajout
+    save();  // ✅ Save after adding block
 }
 
-// ✅ Ajout d'un bloc existant (pour la désérialisation JSON)
+// ✅ Add a block (for JSON deserialization)
 void Blockchain::addBlock(const Block& block) {
     chain.push_back(block);
-    save();  // ✅ Sauvegarde après ajout
+    save();  // ✅ Save after adding
 }
 
-// ✅ Ajout d'une transaction dans le mempool
+// ✅ Add transaction to mempool
 void Blockchain::addTransaction(const Transaction& tx) {
     mempool.push_back(tx);
-    std::cout << "✅ Transaction ajoutée au mempool : " << tx.toString() << "\n";
+    std::cout << "✅ Transaction added to mempool: " << tx.toString() << "\n";
 }
 
-// ✅ Minage des transactions du mempool
+// ✅ Mine all transactions in the mempool
 void Blockchain::minePendingTransactions() {
     if (mempool.empty()) {
-        std::cout << "⚠️ Aucun transaction à miner.\n";
+        std::cout << "⚠️  Mempool empty, nothing to mine.\n";
         return;
     }
-    std::cout << "✅ Minage des " << mempool.size() << " transactions du mempool...\n";
+    std::cout << "✅ Mining " << mempool.size() << " pending transaction(s)...\n";
     addBlock(mempool);
     mempool.clear();
-    std::cout << "✅ Mempool vidé après minage.\n";
+    std::cout << "✅ Mempool cleared after mining.\n";
 }
 
-// ✅ Affichage de la Blockchain
+// ✅ Print the entire blockchain
 void Blockchain::printChain() const {
-    std::cout << "📝 Affichage de la blockchain :\n";
+    std::cout << "📝 Printing blockchain:\n";
     for (const auto& block : chain) {
         std::cout << "Index: " << block.index << "\n";
         for (const auto& tx : block.transactions) {
@@ -66,27 +66,27 @@ void Blockchain::printChain() const {
     }
 }
 
-// ✅ Vérification de la validité de la Blockchain
+// ✅ Validate the blockchain
 bool Blockchain::isChainValid() const {
-    std::cout << "🛠️ Vérification de la validité de la blockchain...\n";
+    std::cout << "🛠️  Validating blockchain integrity...\n";
     for (size_t i = 1; i < chain.size(); ++i) {
         const Block& current = chain[i];
         const Block& previous = chain[i - 1];
 
         if (current.hash != current.calculateHash()) {
-            std::cerr << "❌ Invalid hash at block " << i << std::endl;
+            std::cerr << "❌ Invalid hash at block " << i << "\n";
             return false;
         }
         if (current.previousHash != previous.hash) {
-            std::cerr << "❌ Invalid previous hash at block " << i << std::endl;
+            std::cerr << "❌ Invalid previous hash at block " << i << "\n";
             return false;
         }
     }
-    std::cout << "✅ Blockchain valide\n";
+    std::cout << "✅ Blockchain is valid.\n";
     return true;
 }
 
-// ✅ Calcul du solde d'une adresse
+// ✅ Get the balance of an address
 double Blockchain::getBalance(const std::string& address) const {
     double balance = 0.0;
     for (const auto& block : chain) {
@@ -98,7 +98,7 @@ double Blockchain::getBalance(const std::string& address) const {
     return balance;
 }
 
-// ✅ Sauvegarde automatique de la blockchain sur disque
+// ✅ Save the blockchain to disk
 void Blockchain::save() const {
     Storage::saveBlockchain(*this, "blockchain.json");
 }
