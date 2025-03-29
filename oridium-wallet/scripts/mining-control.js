@@ -7,11 +7,26 @@ function startMining() {
     if (!miningRunning) {
         console.log("Mining started...");
         miningRunning = true;
-        miningInterval = setInterval(updateMiningStats, 1000); // Mise à jour toutes les secondes
-        Module._mine(); // Appel de la fonction du module WebAssembly pour démarrer le minage
-        document.getElementById("mining-status").innerText = "Mining is running..."; // Mise à jour du texte à l'écran
-        document.getElementById("icon-play").style.display = "none"; // Changer l'icône play
-        document.getElementById("icon-pause").style.display = "inline-block"; // Afficher l'icône pause
+
+        miningInterval = setInterval(() => {
+            if (typeof Module !== 'undefined' && typeof Module._mine === 'function') {
+                const mined = Module._mine(); // Appel réel à la fonction WebAssembly
+                if (typeof mined === 'number') {
+                    minedOridium += mined;
+                } else {
+                    console.warn("⚠️ _mine() did not return a number");
+                }
+            } else {
+                console.warn("⚠️ Module or _mine() is not defined yet.");
+            }
+
+            miningTime++;
+            updateMiningStats();
+        }, 1000); // Toutes les secondes
+
+        document.getElementById("mining-status").innerText = "Mining is running...";
+        document.getElementById("icon-play").style.display = "none";
+        document.getElementById("icon-pause").style.display = "inline-block";
     }
 }
 
@@ -19,18 +34,15 @@ function stopMining() {
     if (miningRunning) {
         console.log("Mining stopped.");
         miningRunning = false;
-        clearInterval(miningInterval); // Arrêter l'intervalle
+        clearInterval(miningInterval);
+
         document.getElementById("mining-status").innerText = "Mining is paused...";
-        document.getElementById("icon-play").style.display = "inline-block"; // Afficher l'icône play
-        document.getElementById("icon-pause").style.display = "none"; // Cacher l'icône pause
+        document.getElementById("icon-play").style.display = "inline-block";
+        document.getElementById("icon-pause").style.display = "none";
     }
 }
 
 function updateMiningStats() {
-    miningTime++;
-    minedOridium += 0.0001; // Augmenter la quantité d'Oridium miné (c'est un exemple)
-
-    // Mettre à jour les éléments de l'interface avec le temps et l'Oridium miné
     document.getElementById("runtime").innerText = formatTime(miningTime);
     document.getElementById("oridium-earned").innerText = minedOridium.toFixed(4) + " ORID";
 }
@@ -41,7 +53,7 @@ function formatTime(seconds) {
     return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
 }
 
-document.getElementById("mining-toggle").addEventListener("click", function() {
+document.getElementById("mining-toggle").addEventListener("click", function () {
     if (miningRunning) {
         stopMining();
     } else {
