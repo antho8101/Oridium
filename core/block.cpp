@@ -4,13 +4,13 @@
 #include <sstream>
 #include <iostream>
 
-// Constructor complet avec timestamp
+// Full constructor with timestamp
 Block::Block(int idx, int64_t time, const std::vector<Transaction>& txs, const std::string& prevHash)
     : index(idx), timestamp(time), transactions(txs), previousHash(prevHash), nonce(0) {
     hash = calculateHash();
 }
 
-// Constructor Genesis Block sans timestamp
+// Genesis Block constructor without timestamp
 Block::Block(int idx, const std::vector<Transaction>& txs)
     : index(idx), timestamp(0), transactions(txs), previousHash("0"), nonce(0) {
     hash = calculateHash();
@@ -20,7 +20,7 @@ std::string Block::calculateHash() const {
     std::stringstream ss;
     ss << index << timestamp;
 
-    // Concatène toutes les transactions sous forme texte
+    // Concatenate all transactions as text
     for (const auto& tx : transactions) {
         ss << tx.toString();
     }
@@ -36,5 +36,5 @@ void Block::mineBlock(int difficulty) {
         hash = calculateHash();
     } while (hash.substr(0, difficulty) != target);
 
-    std::cout << "✅ Bloc " << index << " miné avec succès. Hash : " << hash << "\n";
+    std::cout << "✅ Block " << index << " successfully mined. Hash: " << hash << "\n";
 }
