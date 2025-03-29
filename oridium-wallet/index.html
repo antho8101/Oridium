@@ -234,25 +234,6 @@
   <script src="scripts/chart.js"></script>
   <script src="./scripts/mining-control.js"></script>
 
-  <script>
-  window.onload = function() {
-  let script = document.createElement("script");
-  script.src = "../wasm/mining.js";  // Assure-toi que le chemin est correct
-  
-  script.onload = function() {
-    console.log("mining.js chargé !");
-    // Maintenant, le module WebAssembly est disponible
-  };
-  
-  script.onerror = function() {
-    console.error("Erreur lors du chargement de mining.js !");
-  };
-  
-  console.log("Ajout du script...");
-  document.body.appendChild(script);
-};
-  </script>  
-
 </body>
 
 </html>
