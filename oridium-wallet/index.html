@@ -4,11 +4,14 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
   <title>Oridium Wallet</title>
 
   <!-- Feuilles de style -->
   <link rel="stylesheet" href="styles/base/fonts.css">
   <link rel="stylesheet" href="styles/base/layout/styles.css">
+
+  <script src="../wasm/mining.js"></script>
 
 </head>
 
@@ -161,7 +164,7 @@
               <div class="key-display">
                 <h2 class="title">My public key</h2>
                 <span class="keycode">0xE6501047Bb20Af40A8486ebD73D6e455500f92a8</span>
-                <img src="assets\images\icons\ph_copy.svg" alt="Copy Icon" class="copy-icon">
+                <img src="assets/images/icons/ph_copy.svg" alt="Copy Icon" class="copy-icon">
               </div>
             </div>
           
@@ -213,13 +216,13 @@
                   <path d="M5 3h2v10H5V3zm4 0h2v10H9V3z" />
                 </svg>
               </button>              
-              <span class="mining-right-text text">Mining is currently paused...</span>
+              <span id="mining-status" class="mining-right-text text">Mining is currently paused...</span>
             </div>
             <div class="mining-right-text text">
               <span>Run time: <span id="runtime">00:00</span></span> |
-              <span>Oridium mined: <span id="mined-count">0</span></span>
+              <span>Oridium mined: <span id="oridium-earned">0.00 ORID</span></span>
             </div>
-          </div>                    
+          </div>                              
           
         </div>
 
@@ -229,6 +232,26 @@
   
   <script src="https://unpkg.com/lightweight-charts@4.1.1/dist/lightweight-charts.standalone.production.js"></script>
   <script src="scripts/chart.js"></script>
+  <script src="./scripts/mining-control.js"></script>
+
+  <script>
+  window.onload = function() {
+  let script = document.createElement("script");
+  script.src = "../wasm/mining.js";  // Assure-toi que le chemin est correct
+  
+  script.onload = function() {
+    console.log("mining.js chargé !");
+    // Maintenant, le module WebAssembly est disponible
+  };
+  
+  script.onerror = function() {
+    console.error("Erreur lors du chargement de mining.js !");
+  };
+  
+  console.log("Ajout du script...");
+  document.body.appendChild(script);
+};
+  </script>  
 
 </body>
 
