@@ -1,50 +1,47 @@
 let miningRunning = false;
 let miningInterval;
-let minedOridium = 0.00;
+let minedOridium = 0.0000;
 let miningTime = 0;
+let minerWorker;
 
 function startMining() {
     if (!miningRunning) {
-        console.log("Mining started...");
         miningRunning = true;
+        miningInterval = setInterval(updateMiningStats, 1000);
+        logStatus("Initializing mining worker ⚙️");
+        toggleIcons(true);
 
-        miningInterval = setInterval(() => {
-            if (typeof Module !== 'undefined' && typeof Module._mine === 'function') {
-                const mined = Module._mine(); // Appel réel à la fonction WebAssembly
-                if (typeof mined === 'number') {
-                    minedOridium += mined;
-                } else {
-                    console.warn("⚠️ _mine() did not return a number");
-                }
-            } else {
-                console.warn("⚠️ Module or _mine() is not defined yet.");
+        minerWorker = new Worker('scripts/miner-worker.js');
+
+        minerWorker.onmessage = function(e) {
+            if(e.data.type === 'ready') {
+                logStatus("Mining started ⚒️");
+                minerWorker.postMessage('start');
+            } else if(e.data.type === 'result') {
+                let [nonce, hash] = e.data.data.split(";");
+                console.log(`Block mined! Nonce: ${nonce}, Hash: ${hash}`);
+                minedOridium += 0.0001;
+                document.getElementById("oridium-earned").innerText = minedOridium.toFixed(4) + " ORID";
+                logStatus("One Oridium Mined ! 🚀");
             }
-
-            miningTime++;
-            updateMiningStats();
-        }, 1000); // Toutes les secondes
-
-        document.getElementById("mining-status").innerText = "Mining is running...";
-        document.getElementById("icon-play").style.display = "none";
-        document.getElementById("icon-pause").style.display = "inline-block";
+        };
     }
 }
 
 function stopMining() {
     if (miningRunning) {
-        console.log("Mining stopped.");
         miningRunning = false;
         clearInterval(miningInterval);
-
-        document.getElementById("mining-status").innerText = "Mining is paused...";
-        document.getElementById("icon-play").style.display = "inline-block";
-        document.getElementById("icon-pause").style.display = "none";
+        logStatus("Mining paused ⏸️");
+        toggleIcons(false);
+        minerWorker.postMessage('stop');
+        minerWorker.terminate();
     }
 }
 
 function updateMiningStats() {
+    miningTime++;
     document.getElementById("runtime").innerText = formatTime(miningTime);
-    document.getElementById("oridium-earned").innerText = minedOridium.toFixed(4) + " ORID";
 }
 
 function formatTime(seconds) {
@@ -53,10 +50,15 @@ function formatTime(seconds) {
     return `${minutes.toString().padStart(2, '0')}:${remainingSeconds.toString().padStart(2, '0')}`;
 }
 
+function logStatus(message) {
+    document.getElementById("mining-status").innerText = message;
+}
+
+function toggleIcons(isMining) {
+    document.getElementById("icon-play").style.display = isMining ? "none" : "inline-block";
+    document.getElementById("icon-pause").style.display = isMining ? "inline-block" : "none";
+}
+
 document.getElementById("mining-toggle").addEventListener("click", function () {
-    if (miningRunning) {
-        stopMining();
-    } else {
-        startMining();
-    }
+    miningRunning ? stopMining() : startMining();
 });
