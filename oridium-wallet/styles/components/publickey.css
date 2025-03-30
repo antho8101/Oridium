@@ -1,0 +1,40 @@
+/* ===== Public Key Section ===== */
+
+.public-key-container {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    width: 100%;
+  }
+  
+  .public-key-info {
+    display: flex;
+    align-items: center;
+    flex: 1;
+    height: 100%;
+    padding: 0 20px;
+    background-color: #282A36;
+    border: 1px solid #DCCB92;
+    border-radius: 99px;
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
+    color: #EBE6D9;
+  }
+  
+  .copy-icon {
+    cursor: pointer;
+    width: 18px;
+    height: 18px;
+  }
+  
+  /* ===== Truncated Public Key Display ===== */
+  
+  .keycode {
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+    color: #EBE6D9;
+    max-width: 100%;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    user-select: text;
+  }  

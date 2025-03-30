@@ -1,0 +1,36 @@
+/* === theme.css === */
+/* Thèmes globaux, couleurs, comportements par défaut */
+
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+  
+  html, body {
+    background-color: #191A21;
+    color: #EBE6D9;
+    width: 100%;
+    min-height: 100vh;
+    overflow-x: hidden;
+    overflow-y: hidden;
+    user-select: none;
+    font-family: 'Space Grotesk', sans-serif;
+  }
+  
+  /* Utilitaires */
+  .hidden {
+    display: none !important;
+  }
+  
+  .input-error {
+    border: 2px solid #e74c3c !important;
+    outline: none;
+  }
+  
+  .error-message {
+    color: #ffa99f;
+    font-size: 14px;
+    margin-top: 6px;
+    padding-right: 30px;
+  }  

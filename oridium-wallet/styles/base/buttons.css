@@ -1,0 +1,144 @@
+.button-gold {
+    background-color: #DCCB92;
+    border: 1px solid #DCCB92;
+    border-radius: 99px;
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
+    color: #282A36;
+    cursor: pointer;
+    padding: 10px;
+    text-align: center;
+    transition: background-color 0.3s;
+    width: 220px;
+}
+
+.button-gold:hover {
+    background-color: #DCCB92;
+    border: 1px solid #DCCB92;
+    border-radius: 99px;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 1);
+    color: #282A36;
+    cursor: pointer;
+    padding: 10px;
+    transition: background-color 0.3s;
+}
+
+.button-gold:active {
+    background-color: #928762;
+    border: 1px solid #DCCB92;
+    border-radius: 99px;
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
+    color: #282A36;
+    cursor: pointer;
+    padding: 10px;
+    transition: background-color 0.1s;
+}
+
+.button-menu {
+    background-color: #282A36;
+    border: 1px solid #DCCB92;
+    border-radius: 99px;
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
+    color: #EBE6D9;
+    cursor: pointer;
+    padding: 10px;
+    transition: background-color 0.3s;
+    width: 100%;
+}
+
+.button-menu:hover {
+    background-color: #282A36;
+    border: 1px solid #DCCB92;
+    border-radius: 99px;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 1);
+    color: #EBE6D9;
+    cursor: pointer;
+    padding: 10px;
+    transition: background-color 0.3s;
+    width: 100%;
+}
+
+.button-menu:active {
+    background-color: #191A21;
+    border: 1px solid #DCCB92;
+    border-radius: 99px;
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
+    color: #908f8b;
+    cursor: pointer;
+    padding: 10px;
+    transition: background-color 0.1s;
+    width: 100%;
+}
+
+.button-menu-fit {
+    background-color: #282A36;
+    border: 1px solid #DCCB92;
+    border-radius: 99px;
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
+    color: #EBE6D9;
+    cursor: pointer;
+    max-width: 220px;
+    padding: 10px 30px;
+    transition: background-color 0.3s;
+    width: fit-content;
+}
+
+.button-menu-fit:hover {
+    background-color: #282A36;
+    border: 1px solid #DCCB92;
+    border-radius: 99px;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 1);
+    color: #EBE6D9;
+    cursor: pointer;
+    padding: 10px 30px;
+    transition: background-color 0.3s;
+    width: fit-content;
+}
+
+.button-menu-fit:active {
+    background-color: #191A21;
+    border: 1px solid #DCCB92;
+    border-radius: 99px;
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
+    color: #908f8b;
+    cursor: pointer;
+    padding: 10px 30px;
+    transition: background-color 0.1s;
+    width: fit-content;
+}
+
+.button-menu-main {
+    background-color: #282A36;
+    border: 1px solid #DCCB92;
+    border-radius: 99px;
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
+    color: #EBE6D9;
+    cursor: pointer;
+    max-width: 220px;
+    padding: 10px;
+    transition: background-color 0.3s;
+    width: 100%;
+}
+
+.button-menu-main:hover {
+    background-color: #282A36;
+    border: 1px solid #DCCB92;
+    border-radius: 99px;
+    box-shadow: 0 0 8px rgba(255, 255, 255, 1);
+    color: #EBE6D9;
+    cursor: pointer;
+    padding: 10px;
+    transition: background-color 0.3s;
+    width: 100%;
+}
+
+.button-menu-main:active {
+    background-color: #191A21;
+    border: 1px solid #DCCB92;
+    border-radius: 99px;
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
+    color: #908f8b;
+    cursor: pointer;
+    padding: 10px;
+    transition: background-color 0.1s;
+    width: 100%;
+}

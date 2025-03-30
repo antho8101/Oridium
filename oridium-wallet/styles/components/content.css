@@ -1,0 +1,52 @@
+/* ===== Layout: Main App Container ===== */
+.main-container {
+    background-color: #191A21;
+    display: flex;
+    gap: 20px;
+    height: 100dvh;
+    padding: 20px;
+  }
+  
+  /* ===== Layout: Main Content Panel ===== */
+  .content {
+    background-color: #282A36;
+    border: 1px solid #DCCB92;
+    border-radius: 30px;
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
+    color: white;
+    display: flex;
+    flex: 1;
+    flex-direction: row;
+    padding: 30px;
+    width: 100%;
+    max-width: 100%;
+    overflow-x: visible;
+  }
+  
+  /* ===== Left Column (Transactions) ===== */
+  .content-left {
+    display: flex;
+    flex: none;
+    flex-direction: column;
+    gap: 20px;
+    width: 350px;
+  }
+  
+  /* ===== Right Column (Stats, Chart, etc.) ===== */
+  .content-right {
+    display: flex;
+    flex: 1;
+    flex-direction: column;
+    gap: 30px;
+    overflow: visible;
+    min-width: 0;
+  }
+  
+  /* ===== Vertical Divider Between Columns ===== */
+  .vertical-separator {
+    background-color: #575449;
+    border-radius: 1px;
+    box-shadow: 0 0 4px rgba(255, 255, 255, 0.25);
+    margin: 0 30px;
+    width: 2px;
+  }  

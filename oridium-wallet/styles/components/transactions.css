@@ -1,0 +1,62 @@
+/* ===== Transaction Container ===== */
+
+.transaction-container {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    height: 100%;
+    border-radius: 10px;
+  }
+  
+  .transaction-container h2 {
+    margin-bottom: 20px;
+  }
+  
+  /* ===== Transaction Rows ===== */
+  
+  .transaction-row {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    height: 40px;
+    padding: 0 15px;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 14px;
+  }
+  
+  .transaction-row:nth-child(odd) {
+    background-color: #282A36;
+  }
+  
+  .transaction-row:nth-child(even) {
+    background-color: #191A21;
+  }
+  
+  /* ===== Transaction List ===== */
+  
+  .transaction-list {
+    border-radius: 8px;
+    flex: 1 1 auto;
+    min-height: 0;
+    overflow-y: auto;
+  }
+  
+  .transaction-list::-webkit-scrollbar {
+    width: 8px;
+  }
+  
+  .transaction-list::-webkit-scrollbar-thumb {
+    background-color: #DCCB92;
+    border-radius: 6px;
+  }
+  
+  /* ===== Transaction Details ===== */
+  
+  .transaction-desc {
+    color: #EBE6D9;
+  }
+  
+  .transaction-amount {
+    color: #DCCB92;
+    font-weight: 500;
+  }  

@@ -9,7 +9,7 @@
 
   <!-- Feuilles de style -->
   <link rel="stylesheet" href="styles/base/fonts.css">
-  <link rel="stylesheet" href="styles/base/layout/styles.css">
+  <link rel="stylesheet" href="styles/styles.css">
 
   <script src="./wasm/mining.js"></script>
 
@@ -39,7 +39,7 @@
         </div>
 
         <div class="menu-bottom">
-          <button class="button button-menu">Create Wallet</button>
+          <button class="button button-menu menu-btn">Create Wallet</button>
         </div>
 
         <div class="menu-bottom">
@@ -81,75 +81,7 @@
               <span class="transaction-desc text">You To Charly</span>
               <span class="transaction-amount text">0.05 ($ORID)</span>
             </div>
-            <div class="transaction-row">
-              <span class="transaction-desc text">Charly To You</span>
-              <span class="transaction-amount text">0.05 ($ORID)</span>
-            </div>
-            <div class="transaction-row">
-              <span class="transaction-desc text">You To Charly</span>
-              <span class="transaction-amount text">0.05 ($ORID)</span>
-            </div>
-            <div class="transaction-row">
-              <span class="transaction-desc text">Charly To You</span>
-              <span class="transaction-amount text">0.05 ($ORID)</span>
-            </div>
-            <div class="transaction-row">
-              <span class="transaction-desc text">You To Charly</span>
-              <span class="transaction-amount text">0.05 ($ORID)</span>
-            </div>
-            <div class="transaction-row">
-              <span class="transaction-desc text">Charly To You</span>
-              <span class="transaction-amount text">0.05 ($ORID)</span>
-            </div>
-            <div class="transaction-row">
-              <span class="transaction-desc text">You To Charly</span>
-              <span class="transaction-amount text">0.05 ($ORID)</span>
-            </div>
-            <div class="transaction-row">
-              <span class="transaction-desc text">Charly To You</span>
-              <span class="transaction-amount text">0.05 ($ORID)</span>
-            </div>
-            <div class="transaction-row">
-              <span class="transaction-desc text">You To Charly</span>
-              <span class="transaction-amount text">0.05 ($ORID)</span>
-            </div>
-            <div class="transaction-row">
-              <span class="transaction-desc text">Charly To You</span>
-              <span class="transaction-amount text">0.05 ($ORID)</span>
-            </div>
-            <div class="transaction-row">
-              <span class="transaction-desc text">You To Charly</span>
-              <span class="transaction-amount text">0.05 ($ORID)</span>
-            </div>
-            <div class="transaction-row">
-              <span class="transaction-desc text">Charly To You</span>
-              <span class="transaction-amount text">0.05 ($ORID)</span>
-            </div>
-            <div class="transaction-row">
-              <span class="transaction-desc text">You To Charly</span>
-              <span class="transaction-amount text">0.05 ($ORID)</span>
-            </div>
-            <div class="transaction-row">
-              <span class="transaction-desc text">Charly To You</span>
-              <span class="transaction-amount text">0.05 ($ORID)</span>
-            </div>
-            <div class="transaction-row">
-              <span class="transaction-desc text">You To Charly</span>
-              <span class="transaction-amount text">0.05 ($ORID)</span>
-            </div>
-            <div class="transaction-row">
-              <span class="transaction-desc text">Charly To You</span>
-              <span class="transaction-amount text">0.05 ($ORID)</span>
-            </div>
-            <div class="transaction-row">
-              <span class="transaction-desc text">You To Charly</span>
-              <span class="transaction-amount text">0.05 ($ORID)</span>
-            </div>
-            <div class="transaction-row">
-              <span class="transaction-desc text">Charly To You</span>
-              <span class="transaction-amount text">0.05 ($ORID)</span>
-            </div>
-            <!-- ➕ Tu peux en rajouter -->
+                        <!-- ➕ Tu peux en rajouter -->
           </div>
         </div>
       </div>
@@ -227,14 +159,61 @@
           
         </div>
 
-    </div> <!-- FIN .content -->
+    </div>
+    
+  </div> <!-- FIN .content -->
 
+  <!-- Wallet Modal -->
+  <div id="wallet-modal" class="modal hidden">
+    <div class="modal-content">
+      <h1 class="logo">Create your Oridium Wallet 🚀</h1>
+
+      <div>
+
+      <div class="key-display seed-container">
+        <label class="text">Secret phrase:</label>
+        <input type="text" id="seed-phrase" placeholder="Enter your secret phrase">
+      </div>
+
+      <div id="seed-error" class="error-message hidden div-button-modale title-thin">Please enter a secret phrase to generate your wallet.</div>
+
+      </div>
+
+      <div class="encrypt-toggle">
+        <input type="checkbox" id="encrypt-toggle">
+        <label class="text">Protect with a password</label>
+      </div>
+      
+      <div class="div-button-modale">
+        <button class="button button-gold" id="generate-wallet">Create my wallet</button>
+      </div>
+
+      <div class="key-display">
+        <label class="text">Public Key:</label>
+        <input id="public-key" readonly>
+        <button class="button button-menu-fit" id="copy-public">Copy</button>
+      </div>
+
+      <div id="password-container" class="hidden">
+        <label class="text">Password:</label>
+        <input type="password" id="wallet-password" placeholder="Enter a strong password">
+      </div>
+
+      <div class="div-button-modale">
+      <button class="button button-gold" id="download-wallet">Download my key</button>
+      <button class="button button-menu-fit" id="close-wallet-modal">Cancel</button>
+      </div>
+
+    </div>
   </div>
-  
-  <script src="https://unpkg.com/lightweight-charts@4.1.1/dist/lightweight-charts.standalone.production.js"></script>
-  <script src="scripts/chart.js"></script>
-  <script src="./scripts/mining-control.js"></script>
+
+</div> <!-- FIN .main-container -->
+
+<!-- Scripts -->
+<script src="https://unpkg.com/lightweight-charts@4.1.1/dist/lightweight-charts.standalone.production.js"></script>
+<script src="scripts/chart.js"></script>
+<script src="./scripts/mining-control.js"></script>
+<script type="module" src="./scripts/wallet-modal.js"></script>
 
 </body>
-
 </html>
