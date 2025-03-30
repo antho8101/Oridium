@@ -1,14 +1,12 @@
-// Génère une paire de clés aléatoires
-export function generateKeyPair() {
+function generateKeyPair() {
     const array = new Uint8Array(32);
     window.crypto.getRandomValues(array);
     const privateKey = Array.from(array).map(b => b.toString(16).padStart(2, '0')).join('');
-    const publicKey = "0x" + privateKey.slice(0, 40); // placeholder
+    const publicKey = "0x" + privateKey.slice(0, 40); // Placeholder
     return { privateKey, publicKey };
   }
   
-  // Génère une paire de clés depuis un "seed" (mot secret)
-  export async function generateKeyPairFromSeed(seed) {
+  async function generateKeyPairFromSeed(seed) {
     const encoder = new TextEncoder();
     const data = encoder.encode(seed);
     const hashBuffer = await crypto.subtle.digest("SHA-256", data);
@@ -16,13 +14,11 @@ export function generateKeyPair() {
     const hex = hashArray.map(b => b.toString(16).padStart(2, '0')).join('');
   
     const privateKey = hex.slice(0, 64);
-    const publicKey = "0x" + hex.slice(64, 104); // encore un placeholder, à remplacer plus tard si besoin
-  
+    const publicKey = "0x" + hex.slice(64, 104); // Placeholder
     return { privateKey, publicKey };
   }
   
-  // Chiffre la clé privée avec un mot de passe
-  export async function encryptPrivateKey(privateKey, password) {
+  async function encryptPrivateKey(privateKey, password) {
     const enc = new TextEncoder();
     const passwordKey = await crypto.subtle.importKey(
       "raw",
@@ -60,9 +56,13 @@ export function generateKeyPair() {
     };
   }
   
-  // Convertit un ArrayBuffer en hexadécimal
   function arrayBufferToHex(buffer) {
     return Array.from(new Uint8Array(buffer))
       .map(b => b.toString(16).padStart(2, "0"))
       .join("");
-  }  
+  }
+  
+  // Expose globally
+  window.generateKeyPair = generateKeyPair;
+  window.generateKeyPairFromSeed = generateKeyPairFromSeed;
+  window.encryptPrivateKey = encryptPrivateKey;  
