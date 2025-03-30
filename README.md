@@ -92,6 +92,7 @@ cmake --build out/build/vs2022 --config Release
 
 ### 📜 License
 This project is open source under the [MIT License](./LICENSE).
+
 Feel free to use, modify, and redistribute with attribution.
 
 ---
@@ -102,12 +103,14 @@ We welcome pull requests and ideas from the community!
 ---
 
 🔗 Read our [Contributing Guide](./CONTRIBUTING.md)
+
 📜 See our [Code of Conduct](./CODE_OF_CONDUCT.md)
 
 ---
 
 ### 💬 Community & Support
 💌 Questions or feedback? Check our [Support Page](./SUPPORT.md)
+
 🛡️ Found a vulnerability? Read our [Security Policy](./SECURITY.md)
 
 ---
