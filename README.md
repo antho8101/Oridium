@@ -71,12 +71,16 @@ Runs 100% locally — works offline and requires **no backend**.
 - QRencode
 - Qt5
 
+  ---
+
 ### ✅ Requirements
 - Visual Studio 2022
 - CMake ≥ 3.21
 - vcpkg
 - Python ≥ 3.10
 - Git
+
+  ---
 
 ### 🧱 Build Commands
 ```bash
@@ -90,17 +94,32 @@ cmake --build out/build/vs2022 --config Release
 This project is open source under the [MIT License](./LICENSE).
 Feel free to use, modify, and redistribute with attribution.
 
+---
+
 ### 🤝 Contributing
 We welcome pull requests and ideas from the community!
+
+---
 
 🔗 Read our [Contributing Guide](./CONTRIBUTING.md)
 📜 See our [Code of Conduct](./CODE_OF_CONDUCT.md)
 
 ---
 
-🌐 Official Website: (Coming Soon)
+### 💬 Community & Support
+💌 Questions or feedback? Check our [Support Page](./SUPPORT.md)
+🛡️ Found a vulnerability? Read our [Security Policy](./SECURITY.md)
 
-📱 [Live Wallet Preview - Coming Soon]
+---
+
+### 📡 Follow the Project
+🔗 [Twitter / X](https://x.com/CryptoOridium)
+💬 [Telegram](https://t.me/oridium_official) & [Discord](https://discord.gg/7GHERXBD)
+🌍 Official website: Coming soon
+🧪 Demo wallet preview: In progress
+
+
+
 
 <p align="center">
   <img src="https://img.shields.io/badge/C%2B%2B-20-blue?style=flat-square" />
