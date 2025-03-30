@@ -1,0 +1,44 @@
+.div-button-modale {
+    display: flex;
+    gap: 20px;
+    justify-content: right;
+}
+
+.hidden {
+    display: none;
+}
+
+input[type="password"],
+input[readonly] {
+    border-radius: 99px;
+    font-family: monospace;
+    height: 40px;
+    padding: 8px;
+    width: 100%;
+}
+
+.key-display {
+    align-items: center;
+    display: flex;
+    flex-wrap: nowrap;
+    gap: 12px;
+    justify-content: space-between;
+    width: 100%;
+}
+
+.key-display input {
+    border: none;
+    border-radius: 999px;
+    flex: 1;
+    font-size: 16px;
+    padding: 10px 16px;
+}
+
+.key-display input:focus {
+    box-shadow: 0 0 0 2px #DCCB92;
+    outline: none;
+}
+
+.key-display label {
+    white-space: nowrap;
+}

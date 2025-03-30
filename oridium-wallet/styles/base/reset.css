@@ -1,0 +1,33 @@
+/* === reset.css === */
+/* Réinitialisation des styles navigateur */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
+  
+  html, body {
+    height: 100%;
+    width: 100%;
+    font-family: sans-serif;
+  }
+  
+  ul, ol {
+    list-style: none;
+  }
+  
+  button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+  }
+  
+  input, textarea, button, select {
+    font: inherit;
+    color: inherit;
+    background: none;
+    border: none;
+    outline: none;
+  }  

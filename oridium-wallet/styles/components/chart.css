@@ -1,0 +1,20 @@
+/* === chart.css === */
+/* Styles pour l'intégration de Lightweight Charts */
+
+.chart-container,
+#priceChart {
+  width: 100%;
+  height: 100%;
+  min-height: 300px;
+}
+
+/* Classe générée automatiquement par Lightweight Charts */
+.tv-lightweight-charts {
+  width: 100%;
+  height: 100%;
+}
+
+.tv-lightweight-charts canvas {
+  width: 100% !important;
+  height: 100% !important;
+}

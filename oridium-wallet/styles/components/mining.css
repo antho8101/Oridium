@@ -1,0 +1,62 @@
+/* ===== Mining Panel: Status Text ===== */
+#mining-status,
+.mining-right-text,
+.mining-stats {
+  color: #282A36;
+}
+
+/* ===== Mining Panel: Container ===== */
+.mining-bar {
+  background-color: #DCCB92;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 5px 30px 5px 5px;
+  border-radius: 99px;
+  margin-top: 20px;
+}
+
+/* ===== Mining Panel: Left Side (Button + Status) ===== */
+.mining-left {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+/* ===== Mining Panel: Right Side (Stats) ===== */
+.mining-right {
+  display: flex;
+  gap: 10px;
+}
+
+.mining-stats {
+  font-size: 14px;
+  margin-top: 8px;
+}
+
+.mining-stats span {
+  margin-right: 10px;
+}
+
+/* ===== Mining Panel: Play/Pause Button ===== */
+.mining-btn {
+  background-color: #282A36;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition: box-shadow 0.3s, background-color 0.3s;
+}
+
+.mining-btn:hover {
+  box-shadow: 0 0 6px rgba(255, 255, 255, 0.4);
+}
+
+.mining-btn:active {
+  background-color: #1a1b20;
+  box-shadow: 0 0 3px rgba(255, 255, 255, 0.3);
+}
