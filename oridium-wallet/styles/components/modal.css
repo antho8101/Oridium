@@ -29,3 +29,10 @@
   color: white;
   box-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
 }
+
+.checkbox-container {
+  display: flex;
+  justify-content: end;
+  gap: 10px;
+  padding-right: 30px;
+}
