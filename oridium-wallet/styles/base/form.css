@@ -4,6 +4,30 @@
     justify-content: right;
 }
 
+.div-noidea-modale {
+    display: flex;
+    justify-content: right;
+    gap: 5px;
+    padding: 5px;
+    padding-right: 30px;
+}
+
+.seed-suggestion {
+    font-size: 0.9rem;
+    margin-top: 6px;
+    color: #888;
+  }
+  
+  .seed-link {
+    color: #f5b940;
+    cursor: pointer;
+    text-decoration: underline;
+  }
+  
+  .seed-link:hover {
+    color: #ffcc55;
+  }
+  
 .hidden {
     display: none;
 }
@@ -11,7 +35,7 @@
 input[type="password"],
 input[readonly] {
     border-radius: 99px;
-    font-family: monospace;
+    background-color: #FFFFFF;
     height: 40px;
     padding: 8px;
     width: 100%;
@@ -27,6 +51,8 @@ input[readonly] {
 }
 
 .key-display input {
+    background-color: #ffffff;
+    color: #191A21;
     border: none;
     border-radius: 999px;
     flex: 1;
@@ -40,5 +66,16 @@ input[readonly] {
 }
 
 .key-display label {
-    white-space: nowrap;
+    white-space: nowrap;;
 }
+
+.input-error-message {
+    color: #e74c3c;
+    font-size: 0.85rem;
+    margin-top: 4px;
+  }
+  
+  .input-error {
+    border: 1px solid #e74c3c !important;
+  }
+  

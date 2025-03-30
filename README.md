@@ -14,6 +14,7 @@ Oridium is a **modern, high-performance blockchain** inspired by Bitcoin’s fun
 ---
 
 ## 📚 Table of Contents
+
 - [🌟 Project Highlights](#-project-highlights)
 - [🔥 Key Features](#-key-features)
 - [🪙 Oridium Wallet (Web)](#-oridium-wallet-web-version)
@@ -62,7 +63,9 @@ Runs 100% locally — works offline and requires **no backend**.
 
 ## 🛠 Build Instructions (Windows / Visual Studio 2022)
 
+
 ### 📦 Dependencies (via `vcpkg`)
+
 - Boost
 - BerkeleyDB
 - ZeroMQ
@@ -74,6 +77,7 @@ Runs 100% locally — works offline and requires **no backend**.
   ---
 
 ### ✅ Requirements
+
 - Visual Studio 2022
 - CMake ≥ 3.21
 - vcpkg
@@ -83,6 +87,7 @@ Runs 100% locally — works offline and requires **no backend**.
   ---
 
 ### 🧱 Build Commands
+
 ```bash
 git clone https://github.com/antho8101/Oridium.git
 cd Oridium
@@ -91,6 +96,7 @@ cmake --build out/build/vs2022 --config Release
 ```
 
 ### 📜 License
+
 This project is open source under the [MIT License](./LICENSE).
 
 Feel free to use, modify, and redistribute with attribution.
@@ -98,6 +104,7 @@ Feel free to use, modify, and redistribute with attribution.
 ---
 
 ### 🤝 Contributing
+
 We welcome pull requests and ideas from the community!
 
 ---
@@ -109,6 +116,7 @@ We welcome pull requests and ideas from the community!
 ---
 
 ### 💬 Community & Support
+
 💌 Questions or feedback? Check our [Support Page](./SUPPORT.md)
 
 🛡️ Found a vulnerability? Read our [Security Policy](./SECURITY.md)
@@ -116,9 +124,15 @@ We welcome pull requests and ideas from the community!
 ---
 
 ### 📡 Follow the Project
+
 🔗 [Twitter / X](https://x.com/CryptoOridium)
-💬 [Telegram](https://t.me/oridium_official) & [Discord](https://discord.gg/7GHERXBD)
+
+💬 [Telegram](https://t.me/oridium_official)
+
+👾 [Discord](https://discord.gg/7GHERXBD)
+
 🌍 Official website: Coming soon
+
 🧪 Demo wallet preview: In progress
 
 
