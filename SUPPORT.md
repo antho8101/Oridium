@@ -10,8 +10,8 @@ If you have questions, issues, or suggestions, here’s how to get support.
 Join the official channels to ask questions, share feedback, or get help from the community:
 
 - [Telegram Channel](https://t.me/oridium_official)
-- [Reddit Community](https://www.reddit.com/r/Oridium/) *(if created)*
-- [X (Twitter)](hhttps://x.com/CryptoOridium) *(for news and updates)*
+- [Reddit Community](https://www.reddit.com/r/Oridium/)
+- [X (Twitter)](hhttps://x.com/CryptoOridium)
 
 ---
 
