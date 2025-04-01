@@ -1,4 +1,4 @@
-var Module = (() => {
+var createMinerModule = (() => {
   var _scriptName = typeof document != 'undefined' ? document.currentScript?.src : undefined;
   
   return (
@@ -13,9 +13,9 @@ var Module=moduleArg;var readyPromiseResolve,readyPromiseReject;var readyPromise
 );
 })();
 if (typeof exports === 'object' && typeof module === 'object') {
-  module.exports = Module;
+  module.exports = createMinerModule;
   // This default export looks redundant, but it allows TS to import this
   // commonjs style module.
-  module.exports.default = Module;
+  module.exports.default = createMinerModule;
 } else if (typeof define === 'function' && define['amd'])
-  define([], () => Module);
+  define([], () => createMinerModule);
