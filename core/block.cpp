@@ -1,6 +1,6 @@
 // Oridium Project - (c) 2025 Oridium - MIT License
 #include "Block.h"
-#include "util.h"
+#include "sha256.h"
 #include <sstream>
 #include <iostream>
 

@@ -1,4 +1,4 @@
-#define EMSCRIPTEN_KEEPALIVE __attribute__((used))
+#define EMSCRIPTEN_KEEPALIVE extern "C" __attribute__((used))
 
 #include <stdint.h>
 #include <stdlib.h>
@@ -6,14 +6,9 @@
 #include <emscripten/emscripten.h>
 #include "sha256.h"
 
-#ifdef __cplusplus
-extern "C" {
-#endif
-
-int EMSCRIPTEN_KEEPALIVE mine(const uint8_t* input, size_t length, uint32_t difficulty, uint32_t* nonceOut, uint8_t* hashOut) {
-    if (length > 512) {
-        return -1;
-    }
+EMSCRIPTEN_KEEPALIVE
+int mine(const uint8_t* input, size_t length, uint32_t difficulty, uint32_t* nonceOut, uint8_t* hashOut) {
+    if (length > 512) return -1;
 
     uint8_t* buffer = (uint8_t*)malloc(length + 4);
     if (!buffer) return -2;
@@ -48,10 +43,6 @@ int EMSCRIPTEN_KEEPALIVE mine(const uint8_t* input, size_t length, uint32_t diff
         }
     }
 }
-
-#ifdef __cplusplus
-}
-#endif
 
 int main() {
     return 0;
