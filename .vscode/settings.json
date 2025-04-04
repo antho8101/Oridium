@@ -6,6 +6,7 @@
         "xstring": "cpp",
         "iostream": "cpp",
         "stdint.h": "c",
-        "stddef.h": "c"
+        "stddef.h": "c",
+        "filesystem": "cpp"
     }
 }

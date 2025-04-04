@@ -1,7 +1,8 @@
 import { getGlobalDifficulty } from "./utils/difficulty.js";
 
+window.addEventListener("DOMContentLoaded", loadMiner);
+
 let worker = null;
-let workerReady = false;
 let runtimeSeconds = 0;
 let oridiumEarned = 0;
 let blockCounter = 0;
@@ -23,37 +24,44 @@ function toggleMining() {
   const statusText = document.getElementById("mining-status");
 
   if (miningActive) {
-    // Stop
     stopMining();
     if (playIcon) playIcon.style.display = "inline";
     if (pauseIcon) pauseIcon.style.display = "none";
     if (statusText) statusText.textContent = "Mining is paused ⏸️";
   } else {
-    // Start
+    startMining();
     if (playIcon) playIcon.style.display = "none";
     if (pauseIcon) pauseIcon.style.display = "inline";
     if (statusText) statusText.textContent = "Mining in progress ⛏️";
-    startMining();
   }
 }
 
 function startMining() {
   miningActive = true;
-  workerReady = false;
+  runtimeSeconds = 0;
+  blockCounter = 0;
+  oridiumEarned = 0;
 
-  const difficulty = getGlobalDifficulty();
-  const inputStr = `Oridium block #${blockCounter++}`;
-
-  worker = new Worker("/oridium-wallet/scripts/miner-worker.js");
+  worker = new Worker("/scripts/miner-worker.js");
 
   worker.onmessage = (e) => {
+    console.log("📩 Message from worker:", e.data);
+
     if (e.data.type === "ready") {
       console.log("✅ Worker ready, launching mining...");
-      workerReady = true;
+
+      const inputStr = `Oridium block #${blockCounter++}`;
+      const difficulty = getGlobalDifficulty();
+
       worker.postMessage({ type: "start", input: inputStr, difficulty });
     }
 
-    if (e.data.type === "result" && e.data.data) {
+    if (e.data.type === "result") {
+      if (e.data.error) {
+        console.warn("⚠️ No valid hash found");
+        return;
+      }
+
       const { nonce, hash } = e.data.data;
       console.log("✅ Mined:", { nonce, hash });
 
@@ -70,9 +78,9 @@ function startMining() {
         }, 2000);
       }
 
-      // Relancer le prochain bloc
       const nextInput = `Oridium block #${blockCounter++}`;
-      worker.postMessage({ type: "start", input: nextInput, difficulty });
+      const nextDifficulty = getGlobalDifficulty();
+      worker.postMessage({ type: "start", input: nextInput, difficulty: nextDifficulty });
     }
   };
 
@@ -83,13 +91,10 @@ function startMining() {
 }
 
 function stopMining() {
+  console.log("🛑 Stopping mining from UI...");
   miningActive = false;
   if (worker) {
-    if (workerReady) {
-      worker.postMessage({ type: "stop" });
-    } else {
-      console.log("⏳ Worker not ready yet, skipping stop message");
-    }
+    worker.postMessage({ type: "stop" });
     worker.terminate();
     worker = null;
   }
