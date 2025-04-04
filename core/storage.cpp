@@ -2,7 +2,6 @@
 #include "storage.h"
 #include "blockchain.h"
 #include "Block.h"
-#include "util.h"
 #include <fstream>
 #include <nlohmann/json.hpp>
 #include <iostream>
