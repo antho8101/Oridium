@@ -7,7 +7,7 @@ export const GENESIS_TIMESTAMP = 1710000000; // Date de lancement
 export const BASE_DIFFICULTY = 13;
 
 export function getGlobalDifficulty() {
-  if (DEV_MODE) return 2;
+  if (DEV_MODE) return 5;
 
   const now = Math.floor(Date.now() / 1000);
   const elapsed = now - GENESIS_TIMESTAMP;

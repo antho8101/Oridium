@@ -1,11 +1,13 @@
-#define EMSCRIPTEN_KEEPALIVE extern "C" __attribute__((used))
-
+// Oridium Project - miner.cpp
 #include <stdint.h>
 #include <stdlib.h>
 #include <string.h>
 #include <emscripten/emscripten.h>
 #include "sha256.h"
 
+extern "C" {
+
+// ✅ Fonction exportée vers WebAssembly
 EMSCRIPTEN_KEEPALIVE
 int mine(const uint8_t* input, size_t length, uint32_t difficulty, uint32_t* nonceOut, uint8_t* hashOut) {
     if (length > 512) return -1;
@@ -17,7 +19,7 @@ int mine(const uint8_t* input, size_t length, uint32_t difficulty, uint32_t* non
     uint32_t nonce = 0;
     uint8_t hash[32];
 
-    while (1) {
+    while (true) {
         memcpy(buffer + length, &nonce, 4);
         sha256(buffer, length + 4, hash);
 
@@ -43,6 +45,8 @@ int mine(const uint8_t* input, size_t length, uint32_t difficulty, uint32_t* non
         }
     }
 }
+
+} // extern "C"
 
 int main() {
     return 0;
