@@ -1,7 +1,5 @@
 import { getGlobalDifficulty } from "./utils/difficulty.js";
 
-window.addEventListener("DOMContentLoaded", loadMiner);
-
 let worker = null;
 let runtimeSeconds = 0;
 let oridiumEarned = 0;
@@ -9,14 +7,17 @@ let blockCounter = 0;
 let miningActive = false;
 let runtimeInterval = null;
 
-export async function loadMiner() {
+window.addEventListener("DOMContentLoaded", () => {
   console.log("⏳ Loading miner worker...");
+
   const toggleBtn = document.getElementById("mining-toggle");
   if (toggleBtn) {
     toggleBtn.addEventListener("click", toggleMining);
     console.log("💡 Ready to mine!");
+  } else {
+    console.warn("❌ No toggle button found!");
   }
-}
+});
 
 function toggleMining() {
   const playIcon = document.getElementById("icon-play");
@@ -42,7 +43,13 @@ function startMining() {
   blockCounter = 0;
   oridiumEarned = 0;
 
-  worker = new Worker("/scripts/miner-worker.js");
+  try {
+    worker = new Worker("./scripts/miner-worker.js");
+    console.log("🚀 Miner worker created");
+  } catch (e) {
+    console.error("❌ Failed to create Worker:", e);
+    return;
+  }
 
   worker.onmessage = (e) => {
     console.log("📩 Message from worker:", e.data);
@@ -109,6 +116,4 @@ function formatRuntime(seconds) {
   return `${m}:${s}`;
 }
 
-// Auto-load
-loadMiner();
 window.toggleMining = toggleMining;

@@ -8,5 +8,6 @@
         "stdint.h": "c",
         "stddef.h": "c",
         "filesystem": "cpp"
-    }
+    },
+    "git.ignoreLimitWarning": true
 }
