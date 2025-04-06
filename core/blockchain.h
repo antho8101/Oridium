@@ -2,7 +2,7 @@
 #ifndef BLOCKCHAIN_H
 #define BLOCKCHAIN_H
 
-#include "Block.h"
+#include "block.h"
 #include "Transaction.h"
 #include "storage.h"
 #include <vector>
@@ -12,6 +12,8 @@
 class Blockchain {
 public:
     Blockchain();
+
+    void rewardMiner(const std::string& minerAddress);
 
     void addBlock(const std::vector<Transaction>& transactions);
     void addBlock(const Block& block);
