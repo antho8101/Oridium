@@ -1,9 +1,12 @@
-const mnemonic = window.bip39.generateMnemonic();
-const isValid = window.bip39.validateMnemonic(mnemonic);
+import { generateKeyPairFromSeed, encryptPrivateKey } from './utils/crypto.js';
+
+window.generateKeyPairFromSeed = generateKeyPairFromSeed;
+window.encryptPrivateKey = encryptPrivateKey;
 
 document.addEventListener("DOMContentLoaded", () => {
   try {
     const modal = document.getElementById("wallet-modal");
+    const modalContent = modal.querySelector(".modal-content");
     const publicKeyInput = document.getElementById("public-key");
     const seedInput = document.getElementById("seed-phrase");
     const encryptToggle = document.getElementById("encrypt-toggle");
@@ -21,9 +24,9 @@ document.addEventListener("DOMContentLoaded", () => {
 
     let currentKeys = null;
 
-    // 🔐 Génération de la seed phrase via bip-39-loader
+    // 🔐 Génération de la seed phrase
     document.getElementById("generate-seed").addEventListener("click", () => {
-      const generatedSeed = window.bip39.generateMnemonic();
+      const generatedSeed = window.bip39.generateMnemonic(window.wordlist);
       seedInput.value = generatedSeed;
       console.log("Generated mnemonic:", generatedSeed);
     });
@@ -37,6 +40,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     document.querySelector(".menu-btn").addEventListener("click", () => {
       modal.classList.remove("hidden");
+      modalContent.classList.remove("fade-out");
+      modalContent.classList.add("fade-in");
 
       passwordContainer.classList.add("hidden");
       publicKeySection.classList.add("hidden");
@@ -65,8 +70,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       let hasError = false;
 
-      // ✅ Validation de la seed via bip-39-loader
-      if (!seed || !validateMnemonic(seed)) {
+      if (!seed || !window.bip39.validateMnemonic(seed, window.wordlist)) {
         seedInput.classList.add("input-error");
         seedError.classList.remove("hidden");
         hasError = true;
@@ -97,7 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
       if (hasError) return;
 
-      currentKeys = await window.generateKeyPairFromSeed(seed);
+      currentKeys = await generateKeyPairFromSeed(seed);
       publicKeyInput.value = currentKeys.publicKey;
 
       publicKeySection.classList.remove("hidden");
@@ -114,7 +118,7 @@ document.addEventListener("DOMContentLoaded", () => {
       let content = { publicKey: currentKeys.publicKey };
 
       if (useEncryption) {
-        const encrypted = await window.encryptPrivateKey(currentKeys.privateKey, password);
+        const encrypted = await encryptPrivateKey(currentKeys.privateKey, password);
         content = {
           ...content,
           privateKeyEncrypted: encrypted.encrypted,
@@ -142,26 +146,38 @@ document.addEventListener("DOMContentLoaded", () => {
       setTimeout(() => (copyBtn.innerText = "Copy"), 1500);
     });
 
-    closeBtn.addEventListener("click", () => {
-      modal.classList.add("hidden");
-      seedInput.value = "";
-      passwordInput.value = "";
-      confirmPasswordInput.value = "";
-      publicKeyInput.value = "";
-      encryptToggle.checked = false;
-      passwordContainer.classList.add("hidden");
-      publicKeySection.classList.add("hidden");
-      downloadBtn.classList.add("hidden");
-      generateBtn.classList.remove("hidden");
-      currentKeys = null;
+    function closeModal() {
+      modal.classList.add("no-blur");
+      modalContent.classList.remove("fade-in");
+      modalContent.classList.add("fade-out");
 
-      seedError.classList.add("hidden");
-      passwordError.classList.add("hidden");
-      seedInput.classList.remove("input-error");
-      passwordInput.classList.remove("input-error");
-      confirmPasswordInput.classList.remove("input-error");
+      setTimeout(() => {
+        modal.classList.add("hidden");
+        modal.classList.remove("no-blur");
+
+        seedInput.value = "";
+        passwordInput.value = "";
+        confirmPasswordInput.value = "";
+        publicKeyInput.value = "";
+        encryptToggle.checked = false;
+        passwordContainer.classList.add("hidden");
+        publicKeySection.classList.add("hidden");
+        downloadBtn.classList.add("hidden");
+        generateBtn.classList.remove("hidden");
+        currentKeys = null;
+
+        seedError.classList.add("hidden");
+        passwordError.classList.add("hidden");
+        seedInput.classList.remove("input-error");
+        passwordInput.classList.remove("input-error");
+        confirmPasswordInput.classList.remove("input-error");
+      }, 300);
+    }
+
+    closeBtn.addEventListener("click", closeModal);
+    modal.addEventListener("click", (e) => {
+      if (e.target === modal) closeModal();
     });
-
   } catch (e) {
     console.error("Wallet modal init error:", e);
   }

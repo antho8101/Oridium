@@ -1,6 +1,10 @@
 {
   "dependencies": {
-    "bip39": "^3.1.0"
+    "@noble/hashes": "^1.7.1",
+    "bip39": "^3.1.0",
+    "crypto-js": "^4.2.0",
+    "elliptic": "^6.6.1",
+    "lightweight-charts": "^5.0.5"
   },
   "name": "oridium",
   "version": "1.0.0",

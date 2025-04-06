@@ -1,24 +1,31 @@
 <!DOCTYPE html>
 <html lang="en">
-
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
   <title>Oridium Wallet</title>
 
   <!-- Feuilles de style -->
-  <link rel="stylesheet" href="styles/base/fonts.css">
-  <link rel="stylesheet" href="styles/base/styles.css">
- 
-  <script type="module" src="./scripts/mining-loader.js"></script>
+  <link rel="stylesheet" href="styles/base/fonts.css" />
+  <link rel="stylesheet" href="styles/base/styles.css" />
 
+  <!-- Librairies externes -->
+  <script type="module">
+    import * as secp from "https://cdn.jsdelivr.net/npm/@noble/secp256k1@1.7.1/+esm";
+    window.nobleSecp256k1 = secp;
+  </script>  
+
+
+  <!-- Scripts internes (non modules) -->
+    <script src="scripts/wallet-logic.js"></script>
+
+  <!-- Modules -->
+  <script type="module" src="scripts/wallet-modal.js"></script>
+  <script type="module" src="scripts/bip39-loader.js"></script>
+  <script type="module" src="scripts/mining-loader.js"></script>
 </head>
-
 <body>
-
-  <script type="module" src="./scripts/bip39-loader.js"></script>
-
   <div class="main-container">
 
     <!-- Menu latéral -->
@@ -26,7 +33,7 @@
       <div class="menu-top">
         <div class="logo-section">
           <h1 class="logo">Oridium</h1>
-          <p class="text wallet-version">Oridium Wallet 1.0</p>
+          <p class="text wall-version">Oridium Wallet 1.0</p>
         </div>
 
         <div class="wallet-balance">
@@ -161,7 +168,7 @@
     
   </div> <!-- FIN .content -->
 
-  <!-- Wallet Modal -->
+  <!-- Create Wallet Modal -->
   <div id="wallet-modal" class="modal hidden">
     <div class="modal-content">
       <h1 class="logo">Create your Oridium Wallet 🚀</h1>
@@ -170,8 +177,7 @@
 
       <div class="key-display seed-container">
         <label class="text">Secret phrase:</label>
-        <input type="text deep-black" id="seed-phrase" placeholder="Enter your secret phrase">
-
+        <input type="text" class="deep-black" id="seed-phrase" placeholder="Enter your secret phrase" />
       </div>
 
       <p class="seed-suggestion div-noidea-modale">
@@ -209,15 +215,98 @@
     </div>
   </div>
 
+
+
+
+<!-- Restore Wallet Modal -->
+<div id="restore-wallet-modal" class="modal hidden">
+  <div class="modal-content">
+    <h1 class="logo">Restore your Oridium Wallet 🛠️</h1>
+    <p class="text title-thin" style="margin-top: -20px;">
+      You can recover access to your wallet using your 12-word seed phrase or your backup file (.json).
+    </p>
+
+    <!-- Tabs -->
+    <div class="restore-tabs">
+      <button class="button button-menu-fit tab-btn active" data-tab="seed">Seed Phrase</button>
+      <button class="button button-menu-fit tab-btn" data-tab="json">Wallet File (.json)</button>
+    </div>
+
+    <!-- Restore via Seed Phrase -->
+<div class="restore-section" id="tab-seed">
+  <div class="key-display seed-container">
+    <label class="text">Enter your seed phrase:</label>
+    <input type="text" class="deep-black" id="restore-seed-phrase-input" placeholder="Enter your 12-word seed phrase" />
+  </div>
+
+  <div id="seed-error" class="error-message hidden title-thin">Invalid seed phrase.</div>
+
+  <!-- Checkbox dans une div dédiée -->
+  <div class="checkbox-container" style="margin-top: 15px;">
+    <input type="checkbox" id="restore-encrypt-toggle">
+    <label class="text">Protect with a password</label>
+  </div>
+
+  <!-- Passwords -->
+  <div id="restore-password-container" class="hidden key-display">
+    <label class="text">Password:</label>
+    <input type="password" id="restore-wallet-password" placeholder="Enter a strong password">
+    <input type="password" id="restore-wallet-password-confirm" placeholder="Confirm password">
+    <p id="restore-password-error" class="input-error-message hidden">Please enter and confirm your password.</p>
+  </div>
+</div>
+
+
+    <!-- Restore via JSON File -->
+<div class="restore-section hidden" id="tab-json">
+  <div class="key-display">
+    <label class="text">Upload your wallet file (.json):</label>
+    <input type="file" id="restore-json-file" accept="application/json" />
+  </div>
+
+  <!-- Séparation claire du champ mot de passe -->
+  <div class="key-display hidden" id="json-password-container">
+    <label class="text">Enter your password:</label>
+    <input type="password" id="json-password" placeholder="If your wallet is encrypted" />
+  </div>
+
+  <div id="json-error" class="error-message hidden title-thin">
+    We couldn’t read your wallet file. Check the format and password.
+  </div>
+</div>
+
+<!-- Private key result (for JSON only) -->
+<div class="key-display hidden" id="private-key-result">
+  <label class="text">Private Key:</label>
+  <input id="restored-private-key" readonly />
+  <button class="button button-menu-fit" id="copy-restored-private">Copy</button>
+</div>
+
+    <!-- Buttons -->
+    <!-- Buttons -->
+<div class="div-button-modale">
+  <button class="button button-gold" id="restore-wallet-confirm">Restore Wallet</button>
+  <button class="button button-gold hidden" id="download-restored-wallet">Download Wallet</button>
+  <button class="button button-menu-fit" id="close-restore-wallet-modal">Cancel</button>
+</div>
+
+  </div>
+</div>
+
+
+
 </div> <!-- FIN .main-container -->
 
 <!-- Scripts -->
+<!-- Librairie externe -->
 <script src="https://unpkg.com/lightweight-charts@4.1.1/dist/lightweight-charts.standalone.production.js"></script>
+
+<!-- Scripts internes -->
 <script src="scripts/chart.js"></script>
-
-<script src="./scripts/wallet-logic.js"></script>
-
-<script type="module" src="./scripts/wallet-modal.js"></script>
+<script src="scripts/wallet-logic.js"></script>
+<script type="module" src="scripts/wallet-modal.js"></script>
+<script type="module" src="scripts/bip39-loader.js"></script>
+<script type="module" src="scripts/restore-wallet-modal.js"></script>
 
 </body>
 </html>

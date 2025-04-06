@@ -36,3 +36,51 @@
   gap: 10px;
   padding-right: 30px;
 }
+
+/* Animation modale */
+@keyframes fadeInUp {
+  from {
+    opacity: 0;
+    transform: translateY(30px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.modal {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  backdrop-filter: blur(2px);
+  background-color: rgba(0, 0, 0, 0.4);
+  transition: backdrop-filter 0.3s ease;
+}
+
+.modal-content {
+  animation: fadeInUp 0.5s cubic-bezier(0.22, 1, 0.36, 1);
+  opacity: 1;
+}
+
+.fade-in {
+  animation: fadeInUp 0.5s cubic-bezier(0.22, 1, 0.36, 1) forwards;
+}
+
+.fade-out {
+  animation: fadeInUp 0.5s reverse forwards;
+}
+
+.modal.no-blur {
+  backdrop-filter: none;
+  background-color: rgba(0, 0, 0, 0); /* fondu doux si tu veux */
+  transition: backdrop-filter 0.2s ease, background-color 0.3s ease;
+}
+
+#json-password-container {
+  margin-top: 16px; /* ou 1rem selon ton système */
+}
+
+#restore-password-container {
+  margin-top: 16px;
+}
