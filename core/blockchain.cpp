@@ -2,6 +2,8 @@
 #include "blockchain.h"
 #include <iostream>
 #include <chrono>
+#pragma message("✅ Compiling blockchain.cpp version avec rewardMiner()")
+
 
 // ✅ Constructor with Genesis Block
 Blockchain::Blockchain() {
@@ -40,6 +42,12 @@ void Blockchain::addBlock(const Block& block) {
 void Blockchain::addTransaction(const Transaction& tx) {
     mempool.push_back(tx);
     std::cout << "✅ Transaction added to mempool: " << tx.toString() << "\n";
+}
+
+void Blockchain::rewardMiner(const std::string& minerAddress) {
+    Transaction reward("System", minerAddress, 50.0);
+    addTransaction(reward);
+    minePendingTransactions();
 }
 
 // ✅ Mine all transactions in the mempool

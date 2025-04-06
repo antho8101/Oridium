@@ -1,7 +1,7 @@
 // Oridium Project - (c) 2025 Oridium - MIT License
 #include "storage.h"
 #include "blockchain.h"
-#include "Block.h"
+#include "block.h"
 #include <fstream>
 #include <nlohmann/json.hpp>
 #include <iostream>
