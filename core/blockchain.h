@@ -13,6 +13,8 @@ class Blockchain {
 public:
     Blockchain();
 
+    void loadFromDisk();
+
     void rewardMiner(const std::string& minerAddress);
 
     void addBlock(const std::vector<Transaction>& transactions);
