@@ -1,4 +1,6 @@
 import { getGlobalDifficulty } from "./utils/difficulty.js";
+import { getConnectedWalletAddress } from './wallet-session.js';
+import { rewardMinerJS, getWalletBalance } from './blockchain-bridge.js';
 
 let worker = null;
 let runtimeSeconds = 0;
@@ -17,12 +19,40 @@ window.addEventListener("DOMContentLoaded", () => {
   } else {
     console.warn("❌ No toggle button found!");
   }
+
+  const address = getConnectedWalletAddress();
+  if (address) {
+    window.walletAddress = address;
+    updateBalance();
+  }
 });
+
+async function updateBalance() {
+  const address = window.walletAddress;
+  if (!address) return;
+
+  try {
+    const balance = await getWalletBalance(address); // 👈 await ici
+    const el = document.querySelector('.balance-amount'); // 👈 span avec classe spécifique
+    if (el && typeof balance === 'number') {
+      el.textContent = `${balance.toFixed(3)} ORID`;
+    }
+  } catch (err) {
+    console.error("❌ Failed to update balance:", err);
+  }
+}
 
 function toggleMining() {
   const playIcon = document.getElementById("icon-play");
   const pauseIcon = document.getElementById("icon-pause");
   const statusText = document.getElementById("mining-status");
+
+  const walletAddress = getConnectedWalletAddress();
+  if (!walletAddress) {
+    alert("Please connect your wallet to start mining.");
+    return;
+  }
+  window.walletAddress = walletAddress;
 
   if (miningActive) {
     stopMining();
@@ -56,10 +86,8 @@ function startMining() {
 
     if (e.data.type === "ready") {
       console.log("✅ Worker ready, launching mining...");
-
       const inputStr = `Oridium block #${blockCounter++}`;
       const difficulty = getGlobalDifficulty();
-
       worker.postMessage({ type: "start", input: inputStr, difficulty });
     }
 
@@ -71,6 +99,12 @@ function startMining() {
 
       const { nonce, hash } = e.data.data;
       console.log("✅ Mined:", { nonce, hash });
+
+      const address = getConnectedWalletAddress();
+      if (address) {
+        rewardMinerJS(address);
+        updateBalance(); // ✅ Juste après la récompense
+      }
 
       oridiumEarned += 0.0001;
       document.getElementById("oridium-earned").textContent = `${oridiumEarned.toFixed(4)} ORID`;
@@ -117,3 +151,11 @@ function formatRuntime(seconds) {
 }
 
 window.toggleMining = toggleMining;
+
+// ✅ Bonus : updateBalance une fois le module WebAssembly prêt
+if (typeof Module !== 'undefined') {
+  Module.onRuntimeInitialized = () => {
+    console.log("✅ WASM runtime initialized");
+    updateBalance();
+  };
+}

@@ -50,3 +50,13 @@
     margin: 0 30px;
     width: 2px;
   }  
+
+  .keycode.copied {
+    color: #4caf50;
+    font-weight: bold;
+  }
+  
+  .copy-icon.hidden {
+    display: none;
+  }
+  

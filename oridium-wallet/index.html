@@ -38,8 +38,8 @@
 
         <div class="wallet-balance">
           <img src="assets/images/icons/ph_hand-coins.svg" alt="Wallet Icon" class="wallet-icon">
-          <span class="text balance-amount">10.0002 ($ORID)</span>
-        </div>
+          <span class="balance-amount">0.000 ORID</span>
+        </div>               
 
         <div class="menu-separator"></div>
 
@@ -61,8 +61,9 @@
       </div>
 
       <div class="menu-bottom">
-        <button class="button button-menu">Connect my wallet</button>
-      </div>
+        <button class="button button-menu" id="connect-wallet-button">Connect my wallet</button>
+        <button class="button button-menu hidden" id="disconnect-wallet-button">Disconnect wallet</button>
+      </div>      
     </div>
 
     <!-- Contenu principal -->
@@ -97,13 +98,14 @@
       <!-- Colonne droite -->
       <div class="content-right">
         <div class="public-key-container">
-            <div class="public-key-info">
-              <div class="key-display">
-                <h2 class="title">My public key</h2>
-                <span class="keycode">0xE6501047Bb20Af40A8486ebD73D6e455500f92a8</span>
-                <img src="assets/images/icons/ph_copy.svg" alt="Copy Icon" class="copy-icon">
-              </div>
+          <div class="public-key-info" id="public-key-box">
+            <div class="key-display">
+              <h2 class="title">My public key</h2>
+              <span class="keycode" id="public-key-display">Connect your wallet to see your public key</span>
+              <img src="assets/images/icons/ph_copy.svg" alt="Copy Icon" class="copy-icon" id="copy-public-key">
             </div>
+          </div>
+          
           
             <button class="button button-menu-main">Send public key</button>
             <button class="button button-gold">Send Oridium</button>
@@ -168,6 +170,14 @@
     
   </div> <!-- FIN .content -->
 
+
+
+
+
+
+
+
+
   <!-- Create Wallet Modal -->
   <div id="wallet-modal" class="modal hidden">
     <div class="modal-content">
@@ -214,6 +224,11 @@
 
     </div>
   </div>
+
+
+
+
+
 
 
 
@@ -295,6 +310,65 @@
 
 
 
+
+
+
+
+
+<!-- Connect Wallet Modal -->
+<div id="connect-wallet-modal" class="modal hidden">
+  <div class="modal-content">
+    <h1 class="logo">Connect your Oridium Wallet 🔗</h1>
+    <p class="text title-thin" style="margin-top: -20px;">
+      Select your wallet file and enter your password if it is encrypted.
+    </p>
+
+    <!-- Upload Wallet File -->
+    <div class="key-display">
+      <label class="text">Upload your wallet file (.json):</label>
+      <input type="file" id="connect-json-file" accept="application/json" />
+    </div>
+
+    <!-- Password Field (only if encrypted) -->
+    <div class="key-display hidden" id="connect-json-password-container">
+      <label class="text">Password:</label>
+      <input type="password" id="connect-json-password" placeholder="Enter your password" />
+      <p id="connect-password-error" class="input-error-message hidden">Invalid password or file format.</p>
+    </div>
+
+    <!-- Connected Info (after success) -->
+    <div class="key-display hidden" id="connect-success-info">
+      <label class="text">Your public key:</label>
+      <input id="connect-public-key" readonly />
+      <button class="button button-menu-fit" id="connect-copy-public">Copy</button>
+    </div>
+
+    <!-- Buttons -->
+    <div class="div-button-modale">
+      <button class="button button-gold" id="connect-wallet-confirm">Connect Wallet</button>
+      <button class="button button-menu-fit" id="close-connect-wallet-modal">Cancel</button>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+<!-- Welcome Overlay -->
+<div id="welcome-overlay" class="modal hidden" style="z-index: 2000;">
+  <div id="welcome-text" class="logo" style="text-align: center;">WELCOME TO ORIDIUM</div>
+</div>
+
+
+
+
+
+
+
+
+
 </div> <!-- FIN .main-container -->
 
 <!-- Scripts -->
@@ -307,6 +381,15 @@
 <script type="module" src="scripts/wallet-modal.js"></script>
 <script type="module" src="scripts/bip39-loader.js"></script>
 <script type="module" src="scripts/restore-wallet-modal.js"></script>
+<script type="module" src="scripts/connect-wallet.js"></script>
+<script type="module" src="scripts/intro.js"></script>
+<script type="module" src="scripts/update-public-key.js"></script>
+<script type="module" src="./wasm/blockchain.js"></script>
+<script type="module" src="scripts/blockchain-bridge.js"></script>
+<script type="module" src="./scripts/main.js"></script>
+
+
+<input type="file" id="connect-wallet-file" accept="application/json" style="display: none;">
 
 </body>
 </html>

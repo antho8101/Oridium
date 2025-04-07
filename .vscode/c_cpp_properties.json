@@ -6,8 +6,11 @@
         "${workspaceFolder}/**",
         "C:/Program Files (x86)/Microsoft Visual Studio/2019/BuildTools/VC/Tools/MSVC/14.29.30133/include",  // Chemin vers les fichiers d'inclusion MSVC
         "C:/Program Files (x86)/windows Kits/10/Include/10.0.17763.0/um",  // Chemin vers Windows SDK (version installée)
-        "C:/Program Files (x86)/Windows Kits/10/Include/10.0.17763.0/shared"  // Autres répertoires SDK
+        "C:/Program Files (x86)/Windows Kits/10/Include/10.0.17763.0/shared",  // Autres répertoires SDK
+        "E:/Oridium/core",
+        "E:/Oridium"
       ],
+
       "defines": [],
       "compilerPath": "C:/Program Files (x86)/Microsoft Visual Studio/2019/BuildTools/VC/Tools/MSVC/14.29.30133/bin/Hostx64/x64/cl.exe",
       "cStandard": "c11",

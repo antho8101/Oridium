@@ -2,15 +2,30 @@
 #include "blockchain.h"
 #include <iostream>
 #include <chrono>
+#include <filesystem>
 #pragma message("✅ Compiling blockchain.cpp version avec rewardMiner()")
 
 
 // ✅ Constructor with Genesis Block
 Blockchain::Blockchain() {
-    std::cout << "✅ Blockchain initialized with Genesis Block\n";
-    std::vector<Transaction> genesisTx = { Transaction("System", "Genesis", 0.0) };
-    chain.emplace_back(0, genesisTx);
-    save();  // ✅ Save after Genesis Block
+    if (std::filesystem::exists("blockchain.json")) {
+        std::cout << "📦 Existing blockchain found, loading...\n";
+        loadFromDisk();
+    } else {
+        std::cout << "✅ Blockchain initialized with Genesis Block\n";
+        std::vector<Transaction> genesisTx = { Transaction("System", "Genesis", 0.0) };
+        chain.emplace_back(0, genesisTx);
+        save();  // ✅ Save after Genesis Block
+    }
+}
+
+void Blockchain::loadFromDisk() {
+    Blockchain temp;
+    if (Storage::loadBlockchain(temp, "blockchain.json")) {
+        chain = temp.getChain(); // Copie la chaîne
+    } else {
+        std::cerr << "❌ Failed to load blockchain from disk.\n";
+    }
 }
 
 // ✅ Add a new block from a vector of transactions
