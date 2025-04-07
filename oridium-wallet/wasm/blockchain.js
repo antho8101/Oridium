@@ -31,10 +31,22 @@ var readyPromise = new Promise((resolve, reject) => {
 // Determine the runtime environment we are in. You can customize this by
 // setting the ENVIRONMENT setting at compile time (see settings.js).
 
-var ENVIRONMENT_IS_WEB = true;
-var ENVIRONMENT_IS_WORKER = false;
-var ENVIRONMENT_IS_NODE = false;
-var ENVIRONMENT_IS_SHELL = false;
+// Attempt to auto-detect the environment
+var ENVIRONMENT_IS_WEB = typeof window == 'object';
+var ENVIRONMENT_IS_WORKER = typeof WorkerGlobalScope != 'undefined';
+// N.b. Electron.js environment is simultaneously a NODE-environment, but
+// also a web environment.
+var ENVIRONMENT_IS_NODE = typeof process == 'object' && typeof process.versions == 'object' && typeof process.versions.node == 'string' && process.type != 'renderer';
+var ENVIRONMENT_IS_SHELL = !ENVIRONMENT_IS_WEB && !ENVIRONMENT_IS_NODE && !ENVIRONMENT_IS_WORKER;
+
+if (ENVIRONMENT_IS_NODE) {
+  // When building an ES module `require` is not normally available.
+  // We need to use `createRequire()` to construct the require()` function.
+  const { createRequire } = await import('module');
+  /** @suppress{duplicate} */
+  var require = createRequire(import.meta.url);
+
+}
 
 // --pre-jses are emitted after the Module integration code, so that they can
 // refer to Module (if they choose; they can also define Module)
@@ -65,6 +77,60 @@ function locateFile(path) {
 // Hooks that are implemented differently in different runtime environments.
 var readAsync, readBinary;
 
+if (ENVIRONMENT_IS_NODE) {
+  if (typeof process == 'undefined' || !process.release || process.release.name !== 'node') throw new Error('not compiled for this environment (did you build to HTML and try to run it not on the web, or set ENVIRONMENT to something - like node - and run it someplace else - like on the web?)');
+
+  var nodeVersion = process.versions.node;
+  var numericVersion = nodeVersion.split('.').slice(0, 3);
+  numericVersion = (numericVersion[0] * 10000) + (numericVersion[1] * 100) + (numericVersion[2].split('-')[0] * 1);
+  var minVersion = 160000;
+  if (numericVersion < 160000) {
+    throw new Error('This emscripten-generated code requires node v16.0.0 (detected v' + nodeVersion + ')');
+  }
+
+  // These modules will usually be used on Node.js. Load them eagerly to avoid
+  // the complexity of lazy-loading.
+  var fs = require('fs');
+  var nodePath = require('path');
+
+  // EXPORT_ES6 + ENVIRONMENT_IS_NODE always requires use of import.meta.url,
+  // since there's no way getting the current absolute path of the module when
+  // support for that is not available.
+  if (!import.meta.url.startsWith('data:')) {
+    scriptDirectory = nodePath.dirname(require('url').fileURLToPath(import.meta.url)) + '/';
+  }
+
+// include: node_shell_read.js
+readBinary = (filename) => {
+  // We need to re-wrap `file://` strings to URLs.
+  filename = isFileURI(filename) ? new URL(filename) : filename;
+  var ret = fs.readFileSync(filename);
+  assert(Buffer.isBuffer(ret));
+  return ret;
+};
+
+readAsync = async (filename, binary = true) => {
+  // See the comment in the `readBinary` function.
+  filename = isFileURI(filename) ? new URL(filename) : filename;
+  var ret = fs.readFileSync(filename, binary ? undefined : 'utf8');
+  assert(binary ? Buffer.isBuffer(ret) : typeof ret == 'string');
+  return ret;
+};
+// end include: node_shell_read.js
+  if (!Module['thisProgram'] && process.argv.length > 1) {
+    thisProgram = process.argv[1].replace(/\\/g, '/');
+  }
+
+  arguments_ = process.argv.slice(2);
+
+  // MODULARIZE will export the module in the proper place outside, we don't need to export here
+
+  quit_ = (status, toThrow) => {
+    process.exitCode = status;
+    throw toThrow;
+  };
+
+} else
 if (ENVIRONMENT_IS_SHELL) {
 
   if ((typeof process == 'object' && typeof require === 'function') || typeof window == 'object' || typeof WorkerGlobalScope != 'undefined') throw new Error('not compiled for this environment (did you build to HTML and try to run it not on the web, or set ENVIRONMENT to something - like node - and run it someplace else - like on the web?)');
@@ -101,8 +167,37 @@ if (ENVIRONMENT_IS_WEB || ENVIRONMENT_IS_WORKER) {
 
   {
 // include: web_or_worker_shell_read.js
-readAsync = async (url) => {
-    assert(!isFileURI(url), "readAsync does not work with file:// URLs");
+if (ENVIRONMENT_IS_WORKER) {
+    readBinary = (url) => {
+      var xhr = new XMLHttpRequest();
+      xhr.open('GET', url, false);
+      xhr.responseType = 'arraybuffer';
+      xhr.send(null);
+      return new Uint8Array(/** @type{!ArrayBuffer} */(xhr.response));
+    };
+  }
+
+  readAsync = async (url) => {
+    // Fetch has some additional restrictions over XHR, like it can't be used on a file:// url.
+    // See https://github.com/github/fetch/pull/92#issuecomment-140665932
+    // Cordova or Electron apps are typically loaded from a file:// url.
+    // So use XHR on webview if URL is a file URL.
+    if (isFileURI(url)) {
+      return new Promise((resolve, reject) => {
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', url, true);
+        xhr.responseType = 'arraybuffer';
+        xhr.onload = () => {
+          if (xhr.status == 200 || (xhr.status == 0 && xhr.response)) { // file URLs can return 0
+            resolve(xhr.response);
+            return;
+          }
+          reject(xhr.status);
+        };
+        xhr.onerror = reject;
+        xhr.send(null);
+      });
+    }
     var response = await fetch(url, { credentials: 'same-origin' });
     if (response.ok) {
       return response.arrayBuffer();
@@ -159,10 +254,6 @@ var JSFILEFS = 'JSFILEFS is no longer included by default; build with -ljsfilefs
 var OPFS = 'OPFS is no longer included by default; build with -lopfs.js';
 
 var NODEFS = 'NODEFS is no longer included by default; build with -lnodefs.js';
-
-assert(!ENVIRONMENT_IS_WORKER, 'worker environment detected but not enabled at build time.  Add `worker` to `-sENVIRONMENT` to enable.');
-
-assert(!ENVIRONMENT_IS_NODE, 'node environment detected but not enabled at build time.  Add `node` to `-sENVIRONMENT` to enable.');
 
 assert(!ENVIRONMENT_IS_SHELL, 'shell environment detected but not enabled at build time.  Add `shell` to `-sENVIRONMENT` to enable.');
 
@@ -674,6 +765,15 @@ async function instantiateArrayBuffer(binaryFile, imports) {
 
 async function instantiateAsync(binary, binaryFile, imports) {
   if (!binary && typeof WebAssembly.instantiateStreaming == 'function'
+      // Don't use streaming for file:// delivered objects in a webview, fetch them synchronously.
+      && !isFileURI(binaryFile)
+      // Avoid instantiateStreaming() on Node.js environment for now, as while
+      // Node.js v18.1.0 implements it, it does not have a full fetch()
+      // implementation yet.
+      //
+      // Reference:
+      //   https://github.com/emscripten-core/emscripten/pull/16917
+      && !ENVIRONMENT_IS_NODE
      ) {
     try {
       var response = fetch(binaryFile, { credentials: 'same-origin' });
@@ -854,6 +954,7 @@ async function createWasm() {
       warnOnce.shown ||= {};
       if (!warnOnce.shown[text]) {
         warnOnce.shown[text] = 1;
+        if (ENVIRONMENT_IS_NODE) text = 'warning: ' + text;
         err(text);
       }
     };
@@ -1076,6 +1177,11 @@ async function createWasm() {
   };
   
   var initRandomFill = () => {
+      // This block is not needed on v19+ since crypto.getRandomValues is builtin
+      if (ENVIRONMENT_IS_NODE) {
+        var nodeCrypto = require('crypto');
+        return (view) => nodeCrypto.randomFillSync(view);
+      }
   
       return (view) => crypto.getRandomValues(view);
     };
@@ -1223,6 +1329,35 @@ async function createWasm() {
   var FS_stdin_getChar = () => {
       if (!FS_stdin_getChar_buffer.length) {
         var result = null;
+        if (ENVIRONMENT_IS_NODE) {
+          // we will read data by chunks of BUFSIZE
+          var BUFSIZE = 256;
+          var buf = Buffer.alloc(BUFSIZE);
+          var bytesRead = 0;
+  
+          // For some reason we must suppress a closure warning here, even though
+          // fd definitely exists on process.stdin, and is even the proper way to
+          // get the fd of stdin,
+          // https://github.com/nodejs/help/issues/2136#issuecomment-523649904
+          // This started to happen after moving this logic out of library_tty.js,
+          // so it is related to the surrounding code in some unclear manner.
+          /** @suppress {missingProperties} */
+          var fd = process.stdin.fd;
+  
+          try {
+            bytesRead = fs.readSync(fd, buf, 0, BUFSIZE);
+          } catch(e) {
+            // Cross-platform differences: on Windows, reading EOF throws an
+            // exception, but on other OSes, reading EOF returns 0. Uniformize
+            // behavior by treating the EOF exception to return 0.
+            if (e.toString().includes('EOF')) bytesRead = 0;
+            else throw e;
+          }
+  
+          if (bytesRead > 0) {
+            result = buf.slice(0, bytesRead).toString('utf-8');
+          }
+        } else
         if (typeof window != 'undefined' &&
           typeof window.prompt == 'function') {
           // Browser.
@@ -1609,6 +1744,13 @@ async function createWasm() {
   write(stream, buffer, offset, length, position, canOwn) {
           // The data buffer should be a typed array view
           assert(!(buffer instanceof ArrayBuffer));
+          // If the buffer is located in main memory (HEAP), and if
+          // memory can grow, we can't hold on to references of the
+          // memory buffer, as they may get invalidated. That means we
+          // need to do copy its contents.
+          if (buffer.buffer === HEAP8.buffer) {
+            canOwn = false;
+          }
   
           if (!length) return 0;
           var node = stream.node;
@@ -3960,14 +4102,83 @@ async function createWasm() {
     ;
   }
 
-  var abortOnCannotGrowMemory = (requestedSize) => {
-      abort(`Cannot enlarge memory arrays to size ${requestedSize} bytes (OOM). Either (1) compile with -sINITIAL_MEMORY=X with X higher than the current value ${HEAP8.length}, (2) compile with -sALLOW_MEMORY_GROWTH which allows increasing the size at runtime, or (3) if you want malloc to return NULL (0) instead of this abort, compile with -sABORTING_MALLOC=0`);
+  var getHeapMax = () =>
+      // Stay one Wasm page short of 4GB: while e.g. Chrome is able to allocate
+      // full 4GB Wasm memories, the size will wrap back to 0 bytes in Wasm side
+      // for any code that deals with heap sizes, which would require special
+      // casing all heap size related code to treat 0 specially.
+      2147483648;
+  
+  var alignMemory = (size, alignment) => {
+      assert(alignment, "alignment argument is required");
+      return Math.ceil(size / alignment) * alignment;
+    };
+  
+  var growMemory = (size) => {
+      var b = wasmMemory.buffer;
+      var pages = ((size - b.byteLength + 65535) / 65536) | 0;
+      try {
+        // round size grow request up to wasm page size (fixed 64KB per spec)
+        wasmMemory.grow(pages); // .grow() takes a delta compared to the previous size
+        updateMemoryViews();
+        return 1 /*success*/;
+      } catch(e) {
+        err(`growMemory: Attempted to grow heap from ${b.byteLength} bytes to ${size} bytes, but got error: ${e}`);
+      }
+      // implicit 0 return to save code size (caller will cast "undefined" into 0
+      // anyhow)
     };
   var _emscripten_resize_heap = (requestedSize) => {
       var oldSize = HEAPU8.length;
       // With CAN_ADDRESS_2GB or MEMORY64, pointers are already unsigned.
       requestedSize >>>= 0;
-      abortOnCannotGrowMemory(requestedSize);
+      // With multithreaded builds, races can happen (another thread might increase the size
+      // in between), so return a failure, and let the caller retry.
+      assert(requestedSize > oldSize);
+  
+      // Memory resize rules:
+      // 1.  Always increase heap size to at least the requested size, rounded up
+      //     to next page multiple.
+      // 2a. If MEMORY_GROWTH_LINEAR_STEP == -1, excessively resize the heap
+      //     geometrically: increase the heap size according to
+      //     MEMORY_GROWTH_GEOMETRIC_STEP factor (default +20%), At most
+      //     overreserve by MEMORY_GROWTH_GEOMETRIC_CAP bytes (default 96MB).
+      // 2b. If MEMORY_GROWTH_LINEAR_STEP != -1, excessively resize the heap
+      //     linearly: increase the heap size by at least
+      //     MEMORY_GROWTH_LINEAR_STEP bytes.
+      // 3.  Max size for the heap is capped at 2048MB-WASM_PAGE_SIZE, or by
+      //     MAXIMUM_MEMORY, or by ASAN limit, depending on which is smallest
+      // 4.  If we were unable to allocate as much memory, it may be due to
+      //     over-eager decision to excessively reserve due to (3) above.
+      //     Hence if an allocation fails, cut down on the amount of excess
+      //     growth, in an attempt to succeed to perform a smaller allocation.
+  
+      // A limit is set for how much we can grow. We should not exceed that
+      // (the wasm binary specifies it, so if we tried, we'd fail anyhow).
+      var maxHeapSize = getHeapMax();
+      if (requestedSize > maxHeapSize) {
+        err(`Cannot enlarge memory, requested ${requestedSize} bytes, but the limit is ${maxHeapSize} bytes!`);
+        return false;
+      }
+  
+      // Loop through potential heap size increases. If we attempt a too eager
+      // reservation that fails, cut down on the attempted size and reserve a
+      // smaller bump instead. (max 3 times, chosen somewhat arbitrarily)
+      for (var cutDown = 1; cutDown <= 4; cutDown *= 2) {
+        var overGrownHeapSize = oldSize * (1 + 0.2 / cutDown); // ensure geometric growth
+        // but limit overreserving (default to capping at +96MB overgrowth at most)
+        overGrownHeapSize = Math.min(overGrownHeapSize, requestedSize + 100663296 );
+  
+        var newSize = Math.min(maxHeapSize, alignMemory(Math.max(requestedSize, overGrownHeapSize), 65536));
+  
+        var replacement = growMemory(newSize);
+        if (replacement) {
+  
+          return true;
+        }
+      }
+      err(`Failed to grow the heap from ${oldSize} bytes to ${newSize} bytes, not enough memory!`);
+      return false;
     };
 
   var ENV = {
@@ -4210,7 +4421,6 @@ async function createWasm() {
       ret = onDone(ret);
       return ret;
     };
-
   
     /**
      * @param {string=} returnType
@@ -4290,7 +4500,6 @@ var _emscripten_stack_get_current = wasmExports['emscripten_stack_get_current']
 // include: postamble.js
 // === Auto-generated postamble setup entry stuff ===
 
-Module['ccall'] = ccall;
 Module['cwrap'] = cwrap;
 var missingLibrarySymbols = [
   'writeI53ToI64',
@@ -4307,8 +4516,6 @@ var missingLibrarySymbols = [
   'setTempRet0',
   'zeroMemory',
   'exitJS',
-  'getHeapMax',
-  'growMemory',
   'inetPton4',
   'inetNtop4',
   'inetPton6',
@@ -4329,7 +4536,6 @@ var missingLibrarySymbols = [
   'callUserCallback',
   'maybeExit',
   'asmjsMangle',
-  'alignMemory',
   'HandleAllocator',
   'getNativeTypeSize',
   'addOnInit',
@@ -4481,7 +4687,8 @@ var unexportedSymbols = [
   'stackRestore',
   'stackAlloc',
   'ptrToString',
-  'abortOnCannotGrowMemory',
+  'getHeapMax',
+  'growMemory',
   'ENV',
   'ERRNO_CODES',
   'strError',
@@ -4494,12 +4701,14 @@ var unexportedSymbols = [
   'jstoi_s',
   'getExecutableName',
   'asyncLoad',
+  'alignMemory',
   'mmapAlloc',
   'wasmTable',
   'noExitRuntime',
   'addOnPreRun',
   'addOnPostRun',
   'getCFunc',
+  'ccall',
   'freeTableIndexes',
   'functionsInTableMap',
   'setValue',

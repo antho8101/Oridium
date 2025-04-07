@@ -3,10 +3,16 @@
 #include <iostream>
 #include <chrono>
 #include <filesystem>
+#include <emscripten/emscripten.h>
+#ifdef __EMSCRIPTEN__
+#include <emscripten/emscripten.h>
+#else
+#define EMSCRIPTEN_KEEPALIVE
+#endif
+
 #pragma message("✅ Compiling blockchain.cpp version avec rewardMiner()")
 
-
-// ✅ Constructor with Genesis Block
+// ✅ Constructeur avec Genesis Block
 Blockchain::Blockchain() {
     if (std::filesystem::exists("blockchain.json")) {
         std::cout << "📦 Existing blockchain found, loading...\n";
@@ -28,7 +34,6 @@ void Blockchain::loadFromDisk() {
     }
 }
 
-// ✅ Add a new block from a vector of transactions
 void Blockchain::addBlock(const std::vector<Transaction>& transactions) {
     std::cout << "✅ Attempting to add a block with " << transactions.size() << " transaction(s)\n";
 
@@ -47,13 +52,11 @@ void Blockchain::addBlock(const std::vector<Transaction>& transactions) {
     save();  // ✅ Save after adding block
 }
 
-// ✅ Add a block (for JSON deserialization)
 void Blockchain::addBlock(const Block& block) {
     chain.push_back(block);
     save();  // ✅ Save after adding
 }
 
-// ✅ Add transaction to mempool
 void Blockchain::addTransaction(const Transaction& tx) {
     mempool.push_back(tx);
     std::cout << "✅ Transaction added to mempool: " << tx.toString() << "\n";
@@ -65,7 +68,6 @@ void Blockchain::rewardMiner(const std::string& minerAddress) {
     minePendingTransactions();
 }
 
-// ✅ Mine all transactions in the mempool
 void Blockchain::minePendingTransactions() {
     if (mempool.empty()) {
         std::cout << "⚠️  Mempool empty, nothing to mine.\n";
@@ -77,7 +79,6 @@ void Blockchain::minePendingTransactions() {
     std::cout << "✅ Mempool cleared after mining.\n";
 }
 
-// ✅ Print the entire blockchain
 void Blockchain::printChain() const {
     std::cout << "📝 Printing blockchain:\n";
     for (const auto& block : chain) {
@@ -89,7 +90,6 @@ void Blockchain::printChain() const {
     }
 }
 
-// ✅ Validate the blockchain
 bool Blockchain::isChainValid() const {
     std::cout << "🛠️  Validating blockchain integrity...\n";
     for (size_t i = 1; i < chain.size(); ++i) {
@@ -109,7 +109,6 @@ bool Blockchain::isChainValid() const {
     return true;
 }
 
-// ✅ Get the balance of an address
 double Blockchain::getBalance(const std::string& address) const {
     double balance = 0.0;
     for (const auto& block : chain) {
@@ -121,7 +120,24 @@ double Blockchain::getBalance(const std::string& address) const {
     return balance;
 }
 
-// ✅ Save the blockchain to disk
 void Blockchain::save() const {
     Storage::saveBlockchain(*this, "blockchain.json");
 }
+
+// ✅ Partie exposée à JavaScript via WebAssembly
+extern "C" {
+
+    // Marquer la fonction comme utilisée et gardée par Emscripten
+    EMSCRIPTEN_KEEPALIVE
+    void mine_reward(const char* address) {
+        static Blockchain blockchain;
+        blockchain.rewardMiner(std::string(address));
+    }
+    
+    EMSCRIPTEN_KEEPALIVE
+    double get_balance(const char* address) {
+        static Blockchain blockchain;
+        return blockchain.getBalance(std::string(address));
+    }
+    
+    }    
