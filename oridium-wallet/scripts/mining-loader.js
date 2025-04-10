@@ -1,6 +1,6 @@
 import { getGlobalDifficulty } from "./utils/difficulty.js";
 import { getConnectedWalletAddress } from './wallet-session.js';
-import { initBlockchainWasm, rewardMinerJS, getWalletBalance, debugBalance } from './blockchain-bridge.js';
+import { submitBlock, getBalance } from './orid-network.js';
 
 let worker = null;
 let runtimeSeconds = 0;
@@ -10,8 +10,6 @@ let miningActive = false;
 let runtimeInterval = null;
 
 window.addEventListener("DOMContentLoaded", async () => {
-  await initBlockchainWasm();
-
   const toggleBtn = document.getElementById("mining-toggle");
   if (toggleBtn) {
     toggleBtn.addEventListener("click", toggleMining);
@@ -22,35 +20,15 @@ window.addEventListener("DOMContentLoaded", async () => {
     window.walletAddress = address;
     updateBalance();
   }
-
-  setTimeout(() => {
-    const addr = getConnectedWalletAddress();
-    if (addr) {
-      debugBalance(addr);
-      window.updateWalletBalanceUI(addr);
-    }
-  }, 500);
-});
-
-window.addEventListener("message", (e) => {
-  if (e.data?.type === "orid-balance-updated") {
-    const address = getConnectedWalletAddress();
-    if (address) {
-      window.updateWalletBalanceUI(address);
-    }
-  }
 });
 
 function updateBalance() {
   const address = window.walletAddress;
   if (!address) return;
 
-  try {
-    const balance = getWalletBalance(address);
-
+  getBalance(address).then(balance => {
     const elements = document.querySelectorAll('.balance-amount');
     elements.forEach(el => {
-      // Si c’est dans .wallet-balance, affiche avec ORID
       if (el.closest('.wallet-balance')) {
         el.textContent = `${balance.toFixed(4)} ORID`;
       } else {
@@ -58,16 +36,14 @@ function updateBalance() {
       }
     });
 
-    // (facultatif) mettre à jour la valeur $ estimée
     const usdElement = document.querySelector('.orid-value-usd');
     if (usdElement) {
       const valueInUSD = balance * 30000;
       usdElement.textContent = `$${valueInUSD.toLocaleString()}`;
     }
-
-  } catch (err) {
+  }).catch(err => {
     console.error("❌ Failed to update balance:", err);
-  }
+  });
 }
 
 function toggleMining() {
@@ -120,9 +96,19 @@ function startMining() {
       const { nonce, hash } = e.data.data;
       const address = getConnectedWalletAddress();
       if (address) {
-        rewardMinerJS(address);
+        const block = {
+          index: blockCounter,
+          timestamp: Date.now(),
+          transactions: [
+            { sender: "System", receiver: address, amount: 0.0001 }
+          ],
+          previousHash: "0",
+          hash,
+          nonce
+        };
+        submitBlock(block);
         setTimeout(() => {
-          window.updateWalletBalanceUI(address);
+          updateBalance();
         }, 500);
       }
 
