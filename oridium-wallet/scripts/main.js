@@ -1,3 +1,2 @@
-import { initBlockchainWasm, rewardMinerJS } from './blockchain-bridge.js';
-
-initBlockchainWasm();
+// main.js
+// (ne fait rien par défaut, évite le double chargement)

@@ -1,6 +1,6 @@
 import { getGlobalDifficulty } from "./utils/difficulty.js";
 import { getConnectedWalletAddress } from './wallet-session.js';
-import { initBlockchainWasm, rewardMinerJS, getWalletBalance } from './blockchain-bridge.js';
+import { initBlockchainWasm, rewardMinerJS, getWalletBalance, debugBalance } from './blockchain-bridge.js';
 
 let worker = null;
 let runtimeSeconds = 0;
@@ -10,17 +10,11 @@ let miningActive = false;
 let runtimeInterval = null;
 
 window.addEventListener("DOMContentLoaded", async () => {
-  console.log("⏳ Loading miner worker...");
-
-  // ✅ Initialise le module WebAssembly et la blockchain interne
   await initBlockchainWasm();
 
   const toggleBtn = document.getElementById("mining-toggle");
   if (toggleBtn) {
     toggleBtn.addEventListener("click", toggleMining);
-    console.log("💡 Ready to mine!");
-  } else {
-    console.warn("❌ No toggle button found!");
   }
 
   const address = getConnectedWalletAddress();
@@ -28,13 +22,20 @@ window.addEventListener("DOMContentLoaded", async () => {
     window.walletAddress = address;
     updateBalance();
   }
+
+  setTimeout(() => {
+    const addr = getConnectedWalletAddress();
+    if (addr) {
+      debugBalance(addr);
+      window.updateWalletBalanceUI(addr);
+    }
+  }, 500);
 });
 
 window.addEventListener("message", (e) => {
   if (e.data?.type === "orid-balance-updated") {
     const address = getConnectedWalletAddress();
     if (address) {
-      console.log("🔄 Refreshing balance after syncfs from WASM");
       window.updateWalletBalanceUI(address);
     }
   }
@@ -45,14 +46,12 @@ function updateBalance() {
   if (!address) return;
 
   try {
-    const balance = getWalletBalance(address); // synchronously from WASM
+    const balance = getWalletBalance(address);
     const el = document.querySelector('.balance-amount');
     if (el && typeof balance === 'number') {
       el.textContent = `${balance.toFixed(4)} ORID`;
     }
-  } catch (err) {
-    console.error("❌ Failed to update balance:", err);
-  }
+  } catch (err) {}
 }
 
 function toggleMining() {
@@ -88,31 +87,21 @@ function startMining() {
 
   try {
     worker = new Worker("./scripts/miner-worker.js");
-    console.log("🚀 Miner worker created");
   } catch (e) {
-    console.error("❌ Failed to create Worker:", e);
     return;
   }
 
   worker.onmessage = (e) => {
-    console.log("📩 Message from worker:", e.data);
-
     if (e.data.type === "ready") {
-      console.log("✅ Worker ready, launching mining...");
       const inputStr = `Oridium block #${blockCounter++}`;
       const difficulty = getGlobalDifficulty();
       worker.postMessage({ type: "start", input: inputStr, difficulty });
     }
 
     if (e.data.type === "result") {
-      if (e.data.error) {
-        console.warn("⚠️ No valid hash found");
-        return;
-      }
+      if (e.data.error) return;
 
       const { nonce, hash } = e.data.data;
-      console.log("✅ Mined:", { nonce, hash });
-
       const address = getConnectedWalletAddress();
       if (address) {
         rewardMinerJS(address);
@@ -120,6 +109,7 @@ function startMining() {
           window.updateWalletBalanceUI(address);
         }, 500);
       }
+
       oridiumEarned += 0.0001;
       document.getElementById("oridium-earned").textContent = `${oridiumEarned.toFixed(4)} ORID`;
 
@@ -146,7 +136,6 @@ function startMining() {
 }
 
 function stopMining() {
-  console.log("🛑 Stopping mining from UI...");
   miningActive = false;
   if (worker) {
     worker.postMessage({ type: "stop" });
