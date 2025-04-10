@@ -31,7 +31,7 @@ Blockchain::Blockchain() {
 
     EM_ASM({
         FS.syncfs(false, function(err) {
-            if (err) console.error("❌ syncfs after blockchain init failed", err);
+            if (err) console.log("❌ syncfs after blockchain init failed");
             else console.log("💾 syncfs after blockchain init complete");
         });
     });
@@ -75,7 +75,7 @@ void Blockchain::addBlock(const std::vector<Transaction>& transactions) {
 
     EM_ASM({
         FS.syncfs(false, function(err) {
-            if (err) console.error("❌ syncfs after mining failed", err);
+            if (err) console.log("❌ syncfs after mining failed");
             else console.log("💾 syncfs after mining complete");
         });
     });
@@ -89,6 +89,7 @@ void Blockchain::rewardMiner(const std::string& minerAddress) {
     Transaction reward("System", minerAddress, MINING_REWARD);
     addTransaction(reward);
     minePendingTransactions();
+    std::cout << "💰 Rewarding miner at address: " << minerAddress << std::endl;
 }
 
 void Blockchain::minePendingTransactions() {
@@ -114,7 +115,7 @@ void Blockchain::save() const {
     EM_ASM({
         FS.syncfs(false, function(err) {
             if (err) {
-                console.error("❌ syncfs after mining failed", err);
+                console.log("❌ syncfs after mining failed");
             } else {
                 console.log("💾 syncfs after mining complete");
                 if (typeof window !== 'undefined' && window.postMessage) {
@@ -125,13 +126,11 @@ void Blockchain::save() const {
     });        
 }
 
-
 extern "C" {
 
 EMSCRIPTEN_KEEPALIVE
 void init_blockchain() {
     std::cout << "🚀 [WASM] init_blockchain called\n";
-    // Intentionally left blank — handled in JS.
 }
 
 EMSCRIPTEN_KEEPALIVE

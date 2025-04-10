@@ -17,12 +17,15 @@ em++ `
   -std=c++17 `
   -s EXPORTED_FUNCTIONS='["_init_blockchain","_initialize_blockchain","_mine_reward","_get_balance","_malloc","_free"]' `
   -s EXPORTED_RUNTIME_METHODS='["FS","IDBFS","cwrap","UTF8ToString","stringToUTF8","lengthBytesUTF8"]' `
+  --pre-js "E:\Oridium\oridium-wallet\scripts\no-tty.js" `
   --no-entry `
   -s FORCE_FILESYSTEM=1 `
   -s MODULARIZE=1 `
   -s EXPORT_ES6=1 `
   -s ALLOW_MEMORY_GROWTH=1 `
   -O3
+
+
 
 
 Write-Host "✅ WASM build complete! Check blockchain.js and blockchain.wasm."
