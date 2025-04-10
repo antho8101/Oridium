@@ -27,6 +27,8 @@ export async function getBalance(address) {
 
 // ➕ Soumet un bloc miné
 export async function submitBlock(block) {
+  console.log("📤 submitBlock CALLED", block); // 👈 Debug log
+
   try {
     const res = await fetch(`${API_BASE}/add-block`, {
       method: "POST",
