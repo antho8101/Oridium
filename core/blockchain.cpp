@@ -113,10 +113,16 @@ void Blockchain::save() const {
 
     EM_ASM({
         FS.syncfs(false, function(err) {
-          if (err) console.error("❌ syncfs after save failed", err);
-          else console.log("💾 syncfs after save complete");
+            if (err) {
+                console.error("❌ syncfs after mining failed", err);
+            } else {
+                console.log("💾 syncfs after mining complete");
+                if (typeof window !== 'undefined' && window.postMessage) {
+                    window.postMessage({ type: 'orid-balance-updated' }, "*");
+                }
+            }
         });
-      });      
+    });        
 }
 
 

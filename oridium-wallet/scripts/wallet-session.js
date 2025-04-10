@@ -75,7 +75,7 @@ export function updateWalletBalanceUI(address) {
   try {
     const balance = getWalletBalance(address);
     if (typeof balance === "number") {
-      balanceSpan.textContent = `${balance.toFixed(4)} ($ORID)`;
+      balanceSpan.textContent = `${balance.toFixed(4)} ORID`;
     } else {
       balanceSpan.textContent = `0.0000 ($ORID)`;
     }
