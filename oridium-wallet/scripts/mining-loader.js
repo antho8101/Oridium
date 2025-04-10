@@ -47,11 +47,27 @@ function updateBalance() {
 
   try {
     const balance = getWalletBalance(address);
-    const el = document.querySelector('.balance-amount');
-    if (el && typeof balance === 'number') {
-      el.textContent = `${balance.toFixed(4)} ORID`;
+
+    const elements = document.querySelectorAll('.balance-amount');
+    elements.forEach(el => {
+      // Si c’est dans .wallet-balance, affiche avec ORID
+      if (el.closest('.wallet-balance')) {
+        el.textContent = `${balance.toFixed(4)} ORID`;
+      } else {
+        el.textContent = balance.toFixed(4);
+      }
+    });
+
+    // (facultatif) mettre à jour la valeur $ estimée
+    const usdElement = document.querySelector('.orid-value-usd');
+    if (usdElement) {
+      const valueInUSD = balance * 30000;
+      usdElement.textContent = `$${valueInUSD.toLocaleString()}`;
     }
-  } catch (err) {}
+
+  } catch (err) {
+    console.error("❌ Failed to update balance:", err);
+  }
 }
 
 function toggleMining() {
