@@ -1,4 +1,5 @@
 import { getWalletBalance } from "./blockchain-bridge.js";
+import { getOridPriceUSD } from "./orid-pricing.js";
 
 let walletConnected = false;
 let currentWalletAddress = null;
@@ -34,6 +35,8 @@ export function setWalletConnected(address) {
 
   if (window.displayPublicKey) {
     window.displayPublicKey(address);
+    window.dispatchEvent(new Event("orid-wallet-connected"));
+
   }
 
   updateWalletBalanceUI(address); // ✅ Appel direct (pas via window)
@@ -69,19 +72,25 @@ export function updateWalletButtons(isConnected) {
 }
 
 export function updateWalletBalanceUI(address) {
-  const balanceSpan = document.querySelector(".wallet-balance .balance-amount");
-  if (!balanceSpan || !address) return;
+  if (!address) return;
 
   try {
     const balance = getWalletBalance(address);
-    if (typeof balance === "number") {
-      balanceSpan.textContent = `${balance.toFixed(4)} ORID`;
-    } else {
-      balanceSpan.textContent = `0.0000 ($ORID)`;
-    }
+
+    // 🔄 Met à jour tous les .balance-amount
+    const balanceElements = document.querySelectorAll(".balance-amount");
+    balanceElements.forEach(el => {
+      const isInsideWalletBalance = el.closest(".wallet-balance") !== null;
+      el.textContent = isInsideWalletBalance ? `${balance.toFixed(4)} ORID` : balance.toFixed(4);
+    });
+
+    // 🔄 Met à jour la valeur USD estimée (optionnel)
+    const usd = balance * getOridPriceUSD();
+    const usdElement = document.querySelector(".orid-value-usd");
+    if (usdElement) usdElement.textContent = `$${usd.toLocaleString()}`;
+
   } catch (err) {
-  
-    balanceSpan.textContent = `0.0000 ($ORID)`;
+    console.error("❌ Failed to update UI with balance:", err);
   }
 }
 
