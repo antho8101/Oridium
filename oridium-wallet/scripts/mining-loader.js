@@ -30,6 +30,16 @@ window.addEventListener("DOMContentLoaded", async () => {
   }
 });
 
+window.addEventListener("message", (e) => {
+  if (e.data?.type === "orid-balance-updated") {
+    const address = getConnectedWalletAddress();
+    if (address) {
+      console.log("🔄 Refreshing balance after syncfs from WASM");
+      window.updateWalletBalanceUI(address);
+    }
+  }
+});
+
 function updateBalance() {
   const address = window.walletAddress;
   if (!address) return;
@@ -106,9 +116,10 @@ function startMining() {
       const address = getConnectedWalletAddress();
       if (address) {
         rewardMinerJS(address);
-        updateBalance();
+        setTimeout(() => {
+          window.updateWalletBalanceUI(address);
+        }, 500);
       }
-
       oridiumEarned += 0.0001;
       document.getElementById("oridium-earned").textContent = `${oridiumEarned.toFixed(4)} ORID`;
 
