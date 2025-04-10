@@ -1,6 +1,6 @@
 import { getGlobalDifficulty } from "./utils/difficulty.js";
 import { getConnectedWalletAddress } from './wallet-session.js';
-import { rewardMinerJS, getWalletBalance } from './blockchain-bridge.js';
+import { initBlockchainWasm, rewardMinerJS, getWalletBalance } from './blockchain-bridge.js';
 
 let worker = null;
 let runtimeSeconds = 0;
@@ -9,8 +9,11 @@ let blockCounter = 0;
 let miningActive = false;
 let runtimeInterval = null;
 
-window.addEventListener("DOMContentLoaded", () => {
+window.addEventListener("DOMContentLoaded", async () => {
   console.log("⏳ Loading miner worker...");
+
+  // ✅ Initialise le module WebAssembly et la blockchain interne
+  await initBlockchainWasm();
 
   const toggleBtn = document.getElementById("mining-toggle");
   if (toggleBtn) {
@@ -27,15 +30,15 @@ window.addEventListener("DOMContentLoaded", () => {
   }
 });
 
-async function updateBalance() {
+function updateBalance() {
   const address = window.walletAddress;
   if (!address) return;
 
   try {
-    const balance = await getWalletBalance(address); // 👈 await ici
-    const el = document.querySelector('.balance-amount'); // 👈 span avec classe spécifique
+    const balance = getWalletBalance(address); // synchronously from WASM
+    const el = document.querySelector('.balance-amount');
     if (el && typeof balance === 'number') {
-      el.textContent = `${balance.toFixed(3)} ORID`;
+      el.textContent = `${balance.toFixed(4)} ORID`;
     }
   } catch (err) {
     console.error("❌ Failed to update balance:", err);
@@ -103,7 +106,7 @@ function startMining() {
       const address = getConnectedWalletAddress();
       if (address) {
         rewardMinerJS(address);
-        updateBalance(); // ✅ Juste après la récompense
+        updateBalance();
       }
 
       oridiumEarned += 0.0001;
@@ -151,11 +154,3 @@ function formatRuntime(seconds) {
 }
 
 window.toggleMining = toggleMining;
-
-// ✅ Bonus : updateBalance une fois le module WebAssembly prêt
-if (typeof Module !== 'undefined') {
-  Module.onRuntimeInitialized = () => {
-    console.log("✅ WASM runtime initialized");
-    updateBalance();
-  };
-}

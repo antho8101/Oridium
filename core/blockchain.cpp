@@ -1,42 +1,64 @@
-// Oridium Project - (c) 2025 Oridium - MIT License
 #include "blockchain.h"
+#include "block.h"
+#include "storage.h"
 #include <iostream>
 #include <chrono>
-#include <filesystem>
-#include <emscripten/emscripten.h>
-#ifdef __EMSCRIPTEN__
-#include <emscripten/emscripten.h>
-#else
-#define EMSCRIPTEN_KEEPALIVE
-#endif
+#include <memory>
+#include <emscripten.h>
 
-#pragma message("✅ Compiling blockchain.cpp version avec rewardMiner()")
+const double MAX_SUPPLY = 21000000.0;
+const double MINING_REWARD = 0.0001;
 
-// ✅ Constructeur avec Genesis Block
+static bool blockchainCreated = false;
+static std::unique_ptr<Blockchain> globalBlockchain;
+
 Blockchain::Blockchain() {
-    if (std::filesystem::exists("blockchain.json")) {
-        std::cout << "📦 Existing blockchain found, loading...\n";
-        loadFromDisk();
-    } else {
-        std::cout << "✅ Blockchain initialized with Genesis Block\n";
+    std::cout << "🚧 Blockchain constructor started\n";
+
+    if (blockchainCreated) {
+        std::cout << "⚠️ Blockchain already created, skipping reinitialization.\n";
+        return;
+    }
+
+    loadBlockchainFromDisk();
+
+    if (chain.empty()) {
         std::vector<Transaction> genesisTx = { Transaction("System", "Genesis", 0.0) };
         chain.emplace_back(0, genesisTx);
-        save();  // ✅ Save after Genesis Block
+        std::cout << "✅ Genesis block created\n";
+        save();
     }
+
+    EM_ASM({
+        FS.syncfs(false, function(err) {
+            if (err) console.error("❌ syncfs after blockchain init failed", err);
+            else console.log("💾 syncfs after blockchain init complete");
+        });
+    });
+
+    blockchainCreated = true;
+    std::cout << "✅ Blockchain ready\n";
 }
 
-void Blockchain::loadFromDisk() {
-    Blockchain temp;
-    if (Storage::loadBlockchain(temp, "blockchain.json")) {
-        chain = temp.getChain(); // Copie la chaîne
+void Blockchain::addBlock(const Block& block) {
+    std::cout << "✅ Block " << block.index << " added to chain.\n";
+    chain.push_back(block);
+    save();
+}
+
+void Blockchain::loadBlockchainFromDisk() {
+    if (Storage::loadBlockchain(*this, "/data/blockchain.json")) {
+        if (!chain.empty()) {
+            std::cout << "✅ Blockchain loaded from blockchain.json (" << chain.size() << " blocks)\n";
+        } else {
+            std::cout << "⚠️ Blockchain file found but empty. Creating Genesis block.\n";
+        }
     } else {
-        std::cerr << "❌ Failed to load blockchain from disk.\n";
+        std::cout << "📂 No blockchain file found. Creating Genesis block.\n";
     }
 }
 
 void Blockchain::addBlock(const std::vector<Transaction>& transactions) {
-    std::cout << "✅ Attempting to add a block with " << transactions.size() << " transaction(s)\n";
-
     const Block& prev = chain.back();
     Block newBlock(
         prev.index + 1,
@@ -45,68 +67,34 @@ void Blockchain::addBlock(const std::vector<Transaction>& transactions) {
         prev.hash
     );
 
-    std::cout << "⚙️  Mining block " << newBlock.index << " with difficulty " << difficulty << "...\n";
     newBlock.mineBlock(difficulty);
-
     chain.push_back(newBlock);
-    save();  // ✅ Save after adding block
-}
+    std::cout << "✅ Block " << newBlock.index << " successfully mined. Hash: " << newBlock.hash << "\n";
 
-void Blockchain::addBlock(const Block& block) {
-    chain.push_back(block);
-    save();  // ✅ Save after adding
+    save();
+
+    EM_ASM({
+        FS.syncfs(false, function(err) {
+            if (err) console.error("❌ syncfs after mining failed", err);
+            else console.log("💾 syncfs after mining complete");
+        });
+    });
 }
 
 void Blockchain::addTransaction(const Transaction& tx) {
     mempool.push_back(tx);
-    std::cout << "✅ Transaction added to mempool: " << tx.toString() << "\n";
 }
 
 void Blockchain::rewardMiner(const std::string& minerAddress) {
-    Transaction reward("System", minerAddress, 50.0);
+    Transaction reward("System", minerAddress, MINING_REWARD);
     addTransaction(reward);
     minePendingTransactions();
 }
 
 void Blockchain::minePendingTransactions() {
-    if (mempool.empty()) {
-        std::cout << "⚠️  Mempool empty, nothing to mine.\n";
-        return;
-    }
-    std::cout << "✅ Mining " << mempool.size() << " pending transaction(s)...\n";
+    if (mempool.empty()) return;
     addBlock(mempool);
     mempool.clear();
-    std::cout << "✅ Mempool cleared after mining.\n";
-}
-
-void Blockchain::printChain() const {
-    std::cout << "📝 Printing blockchain:\n";
-    for (const auto& block : chain) {
-        std::cout << "Index: " << block.index << "\n";
-        for (const auto& tx : block.transactions) {
-            std::cout << "Transaction: " << tx.toString() << "\n";
-        }
-        std::cout << "Hash: " << block.hash << "\n\n";
-    }
-}
-
-bool Blockchain::isChainValid() const {
-    std::cout << "🛠️  Validating blockchain integrity...\n";
-    for (size_t i = 1; i < chain.size(); ++i) {
-        const Block& current = chain[i];
-        const Block& previous = chain[i - 1];
-
-        if (current.hash != current.calculateHash()) {
-            std::cerr << "❌ Invalid hash at block " << i << "\n";
-            return false;
-        }
-        if (current.previousHash != previous.hash) {
-            std::cerr << "❌ Invalid previous hash at block " << i << "\n";
-            return false;
-        }
-    }
-    std::cout << "✅ Blockchain is valid.\n";
-    return true;
 }
 
 double Blockchain::getBalance(const std::string& address) const {
@@ -121,23 +109,43 @@ double Blockchain::getBalance(const std::string& address) const {
 }
 
 void Blockchain::save() const {
-    Storage::saveBlockchain(*this, "blockchain.json");
+    Storage::saveBlockchain(*this, "/data/blockchain.json");
+
+    EM_ASM({
+        FS.syncfs(false, function(err) {
+          if (err) console.error("❌ syncfs after save failed", err);
+          else console.log("💾 syncfs after save complete");
+        });
+      });      
 }
 
-// ✅ Partie exposée à JavaScript via WebAssembly
+
 extern "C" {
 
-    // Marquer la fonction comme utilisée et gardée par Emscripten
-    EMSCRIPTEN_KEEPALIVE
-    void mine_reward(const char* address) {
-        static Blockchain blockchain;
-        blockchain.rewardMiner(std::string(address));
+EMSCRIPTEN_KEEPALIVE
+void init_blockchain() {
+    std::cout << "🚀 [WASM] init_blockchain called\n";
+    // Intentionally left blank — handled in JS.
+}
+
+EMSCRIPTEN_KEEPALIVE
+void initialize_blockchain() {
+    std::cout << "🚀 [WASM] initialize_blockchain called\n";
+    if (!globalBlockchain) {
+        globalBlockchain = std::make_unique<Blockchain>();
     }
-    
-    EMSCRIPTEN_KEEPALIVE
-    double get_balance(const char* address) {
-        static Blockchain blockchain;
-        return blockchain.getBalance(std::string(address));
-    }
-    
-    }    
+}
+
+EMSCRIPTEN_KEEPALIVE
+void mine_reward(const char* address) {
+    if (!globalBlockchain) return;
+    globalBlockchain->rewardMiner(std::string(address));
+}
+
+EMSCRIPTEN_KEEPALIVE
+double get_balance(const char* address) {
+    if (!globalBlockchain) return 0.0;
+    return globalBlockchain->getBalance(std::string(address));
+}
+
+} // extern "C"

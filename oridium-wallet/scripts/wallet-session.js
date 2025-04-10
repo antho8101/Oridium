@@ -80,7 +80,7 @@ export function updateWalletBalanceUI(address) {
       balanceSpan.textContent = `0.0000 ($ORID)`;
     }
   } catch (err) {
-    console.warn("⚠️ Unable to fetch wallet balance:", err);
+  
     balanceSpan.textContent = `0.0000 ($ORID)`;
   }
 }

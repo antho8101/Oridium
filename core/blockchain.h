@@ -1,4 +1,3 @@
-// Oridium Project - (c) 2025 Oridium - MIT License
 #ifndef BLOCKCHAIN_H
 #define BLOCKCHAIN_H
 
@@ -13,7 +12,7 @@ class Blockchain {
 public:
     Blockchain();
 
-    void loadFromDisk();
+    void loadBlockchainFromDisk(); 
 
     void rewardMiner(const std::string& minerAddress);
 
@@ -21,7 +20,7 @@ public:
     void addBlock(const Block& block);
     void addTransaction(const Transaction& tx);
     void minePendingTransactions();
-    double getBalance(const std::string& address) const;  // ✅ Nouveau : calcul du solde
+    double getBalance(const std::string& address) const;
 
     void printChain() const;
     bool isChainValid() const;
