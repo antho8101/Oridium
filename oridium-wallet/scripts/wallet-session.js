@@ -38,14 +38,10 @@ export async function setWalletConnected(address) {
   currentWalletAddress = address;
   localStorage.setItem("orid_wallet_address", address);
 
-  updateWalletButtons(true); // 👈 Update visuel IMMÉDIAT
+  updateWalletButtons(true);
+  displayPublicKey(address); // ✅ Affichage immédiat clé publique
+  window.dispatchEvent(new Event("orid-wallet-connected"));
 
-  if (window.displayPublicKey) {
-    window.displayPublicKey(address); // 👈 Affiche immédiatement la clé
-    window.dispatchEvent(new Event("orid-wallet-connected"));
-  }
-
-  // ✅ On continue ensuite les actions serveur en asynchrone
   registerWallet(address)
     .then(() => console.log("📡 Wallet registered on server:", address))
     .catch(err => console.error("❌ Error during wallet registration:", err));
@@ -62,13 +58,10 @@ export function disconnectWallet() {
   walletConnected = false;
   currentWalletAddress = null;
   localStorage.removeItem("orid_wallet_address");
+
   updateWalletButtons(false);
-
-  if (window.displayPublicKey) {
-    window.displayPublicKey(null);
-  }
-
-  updateBalanceUI(0); // 👈 force à 0 à la déconnexion
+  displayPublicKey(null); // ✅ Masquer la clé publique
+  updateBalanceUI(0);
 }
 
 export function getConnectedWalletAddress() {
@@ -107,6 +100,15 @@ function updateBalanceUI(balance) {
   }
 }
 
+// ✅ Fonction centrale pour afficher ou masquer la clé publique
+function displayPublicKey(address) {
+  const el = document.getElementById("public-key-display");
+  if (!el) return;
+  el.textContent = address ? address : "Connect your wallet to see your public key";
+}
+
+// ✅ Expose si besoin pour le reste de l’app
 window.disconnectWallet = disconnectWallet;
 window.setWalletConnected = setWalletConnected;
 window.updateWalletBalanceUI = updateBalanceUI;
+window.displayPublicKey = displayPublicKey;
