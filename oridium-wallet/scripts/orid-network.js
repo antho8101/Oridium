@@ -44,3 +44,17 @@ export async function submitBlock(block) {
     console.error("❌ Failed to submit block:", err);
   }
 }
+
+export async function registerWallet(address) {
+  try {
+    const res = await fetch(`${API_BASE}/register-wallet`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ address }),
+    });
+    const data = await res.json();
+    console.log("✅ Wallet registered:", data);
+  } catch (err) {
+    console.error("❌ Failed to register wallet:", err);
+  }
+}

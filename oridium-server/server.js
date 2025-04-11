@@ -71,3 +71,29 @@ app.get('/balance/:address', (req, res) => {
 app.listen(PORT, () => {
   console.log(`🚀 Oridium API running on PORT ${PORT}`);
 });
+
+app.post('/register-wallet', (req, res) => {
+  const { address } = req.body;
+  if (!address) return res.status(400).json({ error: 'Missing address' });
+
+  // Si cette adresse n'a aucune transaction, on ajoute un "faux bloc" d'initialisation
+  const alreadyExists = blockchain.some(block =>
+    (block.transactions || []).some(tx => tx.sender === address || tx.receiver === address)
+  );
+
+  if (!alreadyExists) {
+    blockchain.push({
+      index: blockchain.length,
+      timestamp: Date.now(),
+      transactions: [],
+      previousHash: "0",
+      hash: "init", // ou un hash bidon
+      nonce: 0,
+    });
+
+    fs.writeFileSync(BLOCKCHAIN_FILE, JSON.stringify(blockchain, null, 2));
+    console.log(`🆕 Wallet ${address} registered`);
+  }
+
+  res.json({ success: true });
+});
