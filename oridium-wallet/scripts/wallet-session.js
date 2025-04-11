@@ -26,11 +26,11 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("👋 Wallet disconnected");
   });
 
-  // ✅ Vérifie s’il y a un wallet enregistré localement
-  const savedAddress = localStorage.getItem("orid-wallet-address");
-  if (savedAddress) {
-    console.log("🧠 Restoring saved wallet from localStorage:", savedAddress);
-    setWalletConnected(savedAddress);
+  // ✅ Auto-reconnexion si une adresse est déjà enregistrée
+  const saved = localStorage.getItem("orid_wallet_address");
+  if (saved) {
+    console.log("🧠 Restoring saved wallet from localStorage:", saved);
+    setWalletConnected(saved);
   }
 
   updateWalletButtons(false);
@@ -39,7 +39,7 @@ document.addEventListener("DOMContentLoaded", () => {
 export function setWalletConnected(address) {
   walletConnected = true;
   currentWalletAddress = address;
-  localStorage.setItem("orid-wallet-address", address); // ✅ Persiste l'adresse
+  localStorage.setItem("orid_wallet_address", address);
 
   updateWalletButtons(true);
 
@@ -58,7 +58,7 @@ export function setWalletConnected(address) {
 export function disconnectWallet() {
   walletConnected = false;
   currentWalletAddress = null;
-  localStorage.removeItem("orid-wallet-address"); // ✅ Supprime à la déconnexion
+  localStorage.removeItem("orid_wallet_address");
   updateWalletButtons(false);
 
   if (window.displayPublicKey) {
