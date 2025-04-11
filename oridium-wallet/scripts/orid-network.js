@@ -1,6 +1,6 @@
 // orid-network.js
 
-const API_BASE = "https://oridium.onrender.com";
+const API_BASE = "https://oridium-production.up.railway.app";
 
 // 🔁 Récupère la blockchain complète
 export async function getBlockchain() {
@@ -27,13 +27,11 @@ export async function getBalance(address) {
 
 // ➕ Soumet un bloc miné
 export async function submitBlock(block) {
-  console.log("📤 submitBlock CALLED", block); // 👈 Debug log
-
   try {
     const res = await fetch(`${API_BASE}/add-block`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(block)
+      body: JSON.stringify(block),
     });
 
     const result = await res.json();
