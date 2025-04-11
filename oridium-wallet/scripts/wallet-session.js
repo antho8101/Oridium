@@ -37,13 +37,15 @@ export async function setWalletConnected(address) {
   walletConnected = true;
   currentWalletAddress = address;
   localStorage.setItem("orid_wallet_address", address);
-  updateWalletButtons(true);
+
+  updateWalletButtons(true); // 👈 Update visuel IMMÉDIAT
 
   if (window.displayPublicKey) {
-    window.displayPublicKey(address);
+    window.displayPublicKey(address); // 👈 Affiche immédiatement la clé
     window.dispatchEvent(new Event("orid-wallet-connected"));
   }
 
+  // ✅ On continue ensuite les actions serveur en asynchrone
   registerWallet(address)
     .then(() => console.log("📡 Wallet registered on server:", address))
     .catch(err => console.error("❌ Error during wallet registration:", err));
