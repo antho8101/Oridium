@@ -3,6 +3,7 @@ import { keccak256 } from 'https://esm.sh/ethereum-cryptography/keccak';
 import { bytesToHex, hexToBytes } from 'https://esm.sh/@noble/hashes/utils';
 import { playWelcomeIntro } from './intro.js';
 import { setWalletConnected } from './wallet-session.js';
+import { registerWallet } from './orid-network.js'; // ✅ Ajouté ici
 
 document.addEventListener("DOMContentLoaded", () => {
   const modal = document.getElementById("connect-wallet-modal");
@@ -90,6 +91,11 @@ document.addEventListener("DOMContentLoaded", () => {
       const address = "0x" + bytesToHex(hash.slice(-20));
 
       console.log("✅ Wallet connected! Address:", address);
+
+      // 🛰️ Enregistrement serveur
+      registerWallet(address)
+        .then(() => console.log("📡 Address sent to server successfully"))
+        .catch(err => console.error("❌ Failed to notify server:", err));
 
       closeModal();
       playWelcomeIntro();
