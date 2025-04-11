@@ -46,28 +46,29 @@ app.get('/balance/:address', (req, res) => {
 
 // ➕ POST /add-block
 app.post('/add-block', (req, res) => {
-  console.log("📥 Received POST /add-block:");
-  console.log(req.headers);
-  console.log(req.body);
+  console.log("📥 Received POST /add-block");
+  console.log("🧾 Headers:", req.headers);
+  console.log("📦 Body:", req.body);
+
+  const block = req.body;
+
+  if (!block || typeof block !== 'object' || !block.transactions) {
+    return res.status(400).json({ error: 'Invalid block format' });
+  }
+
+  blockchain.push(block);
 
   try {
-    const block = req.body;
-    if (!block || typeof block !== 'object') {
-      return res.status(400).json({ error: 'Invalid block format' });
-    }
-
-    blockchain.push(block);
     fs.writeFileSync(BLOCKCHAIN_FILE, JSON.stringify(blockchain, null, 2));
-    console.log(`🧱 Block ${block.index} added`);
+    console.log(`🧱 Block #${block.index} added to blockchain`);
     res.json({ success: true });
-
   } catch (err) {
-    console.error("❌ Error in /add-block:", err);
+    console.error("❌ Failed to write blockchain file:", err);
     res.status(500).json({ error: 'Server error' });
   }
 });
 
 // 🚀 Start server
 app.listen(PORT, () => {
-  console.log(`🚀 Oridium API running at http://localhost:${PORT}`);
+  console.log(`🚀 Oridium API running on PORT ${PORT}`);
 });
