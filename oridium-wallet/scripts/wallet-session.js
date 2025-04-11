@@ -1,6 +1,6 @@
 import { getWalletBalance } from "./blockchain-bridge.js";
 import { getOridPriceUSD } from "./orid-pricing.js";
-import { registerWallet } from "./orid-network.js"; // 👈 Ajouté ici
+import { registerWallet } from "./orid-network.js";
 
 let walletConnected = false;
 let currentWalletAddress = null;
@@ -39,10 +39,10 @@ export function setWalletConnected(address) {
     window.dispatchEvent(new Event("orid-wallet-connected"));
   }
 
-  // ✅ Envoie l'adresse au serveur pour enregistrement
+  // ✅ Envoie l'adresse au serveur pour l'enregistrer
   registerWallet(address)
-    .then(() => console.log("📡 Wallet address registered:", address))
-    .catch((err) => console.error("❌ Failed to register wallet:", err));
+    .then(() => console.log("📡 Wallet registered on server:", address))
+    .catch(err => console.error("❌ Error during wallet registration:", err));
 
   updateWalletBalanceUI(address);
 }
@@ -81,7 +81,6 @@ export function updateWalletBalanceUI(address) {
 
   try {
     const balance = getWalletBalance(address);
-
     const balanceElements = document.querySelectorAll(".balance-amount");
     balanceElements.forEach(el => {
       const isInsideWalletBalance = el.closest(".wallet-balance") !== null;
@@ -96,7 +95,6 @@ export function updateWalletBalanceUI(address) {
   }
 }
 
-// Pour usage global si besoin
 window.disconnectWallet = disconnectWallet;
 window.setWalletConnected = setWalletConnected;
 window.updateWalletBalanceUI = updateWalletBalanceUI;

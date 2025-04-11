@@ -1,5 +1,3 @@
-// orid-network.js
-
 const API_BASE = "https://oridium-production.up.railway.app";
 
 // 🔁 Récupère la blockchain complète
@@ -45,6 +43,7 @@ export async function submitBlock(block) {
   }
 }
 
+// 🆕 Enregistre un wallet
 export async function registerWallet(address) {
   try {
     const res = await fetch(`${API_BASE}/register-wallet`, {
@@ -59,10 +58,11 @@ export async function registerWallet(address) {
   }
 }
 
+// ✅ Pour accès dans la console (window.xxx)
 if (typeof window !== "undefined") {
-  window.registerWallet = registerWallet;
   window.getBlockchain = getBlockchain;
   window.getBalance = getBalance;
   window.submitBlock = submitBlock;
+  window.registerWallet = registerWallet;
   console.log("🟢 orid-network.js exposé globalement");
 }
