@@ -1,4 +1,4 @@
-import { getWalletBalance } from "./blockchain-bridge.js";
+import { getBalance } from "./orid-network.js";
 import { getOridPriceUSD } from "./orid-pricing.js";
 import { registerWallet } from "./orid-network.js";
 
@@ -26,7 +26,6 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("👋 Wallet disconnected");
   });
 
-  // ✅ Auto-reconnexion si une adresse est déjà enregistrée
   const saved = localStorage.getItem("orid_wallet_address");
   if (saved) {
     console.log("🧠 Restoring saved wallet from localStorage:", saved);
@@ -85,11 +84,11 @@ export function updateWalletButtons(isConnected) {
   }
 }
 
-export function updateWalletBalanceUI(address) {
+export async function updateWalletBalanceUI(address) {
   if (!address) return;
 
   try {
-    const balance = getWalletBalance(address);
+    const balance = await getBalance(address);
     const balanceElements = document.querySelectorAll(".balance-amount");
     balanceElements.forEach(el => {
       const isInsideWalletBalance = el.closest(".wallet-balance") !== null;
@@ -100,7 +99,7 @@ export function updateWalletBalanceUI(address) {
     const usdElement = document.querySelector(".orid-value-usd");
     if (usdElement) usdElement.textContent = `$${usd.toLocaleString()}`;
   } catch (err) {
-    console.error("❌ Failed to update UI with balance:", err);
+    console.error("❌ Failed to update balance from server:", err);
   }
 }
 
