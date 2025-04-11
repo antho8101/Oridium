@@ -26,12 +26,21 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("👋 Wallet disconnected");
   });
 
+  // ✅ Vérifie s’il y a un wallet enregistré localement
+  const savedAddress = localStorage.getItem("orid-wallet-address");
+  if (savedAddress) {
+    console.log("🧠 Restoring saved wallet from localStorage:", savedAddress);
+    setWalletConnected(savedAddress);
+  }
+
   updateWalletButtons(false);
 });
 
 export function setWalletConnected(address) {
   walletConnected = true;
   currentWalletAddress = address;
+  localStorage.setItem("orid-wallet-address", address); // ✅ Persiste l'adresse
+
   updateWalletButtons(true);
 
   if (window.displayPublicKey) {
@@ -39,7 +48,6 @@ export function setWalletConnected(address) {
     window.dispatchEvent(new Event("orid-wallet-connected"));
   }
 
-  // ✅ Envoie l'adresse au serveur pour l'enregistrer
   registerWallet(address)
     .then(() => console.log("📡 Wallet registered on server:", address))
     .catch(err => console.error("❌ Error during wallet registration:", err));
@@ -50,6 +58,7 @@ export function setWalletConnected(address) {
 export function disconnectWallet() {
   walletConnected = false;
   currentWalletAddress = null;
+  localStorage.removeItem("orid-wallet-address"); // ✅ Supprime à la déconnexion
   updateWalletButtons(false);
 
   if (window.displayPublicKey) {
