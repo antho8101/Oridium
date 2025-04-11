@@ -25,13 +25,12 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   const saved = localStorage.getItem("orid_wallet_address");
-  if (saved) {
-    console.log("🧠 Restoring saved wallet from localStorage:", saved);
-    setWalletConnected(saved);
-  }
-
+if (saved) {
+  console.log("🧠 Restoring saved wallet from localStorage:", saved);
+  setWalletConnected(saved);
+} else {
   updateWalletButtons(false);
-});
+}
 
 export async function setWalletConnected(address) {
   walletConnected = true;
