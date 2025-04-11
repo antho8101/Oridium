@@ -58,3 +58,5 @@ export async function registerWallet(address) {
     console.error("❌ Failed to register wallet:", err);
   }
 }
+
+window.registerWallet = registerWallet;
