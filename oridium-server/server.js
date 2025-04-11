@@ -46,26 +46,7 @@ app.get('/balance/:address', (req, res) => {
 
 // ➕ POST /add-block
 app.post('/add-block', (req, res) => {
-  console.log("📥 Received POST /add-block");
-  console.log("🧾 Headers:", req.headers);
-  console.log("📦 Body:", req.body);
-
-  const block = req.body;
-
-  if (!block || typeof block !== 'object' || !block.transactions) {
-    return res.status(400).json({ error: 'Invalid block format' });
-  }
-
-  blockchain.push(block);
-
-  try {
-    fs.writeFileSync(BLOCKCHAIN_FILE, JSON.stringify(blockchain, null, 2));
-    console.log(`🧱 Block #${block.index} added to blockchain`);
-    res.json({ success: true });
-  } catch (err) {
-    console.error("❌ Failed to write blockchain file:", err);
-    res.status(500).json({ error: 'Server error' });
-  }
+  res.json({ ok: true, data: req.body });
 });
 
 // 🚀 Start server
