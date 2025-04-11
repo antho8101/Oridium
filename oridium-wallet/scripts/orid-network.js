@@ -60,3 +60,6 @@ export async function registerWallet(address) {
 }
 
 window.registerWallet = registerWallet;
+window.getBlockchain = getBlockchain;
+window.getBalance = getBalance;
+window.submitBlock = submitBlock;
