@@ -59,7 +59,10 @@ export async function registerWallet(address) {
   }
 }
 
-window.registerWallet = registerWallet;
-window.getBlockchain = getBlockchain;
-window.getBalance = getBalance;
-window.submitBlock = submitBlock;
+if (typeof window !== "undefined") {
+  window.registerWallet = registerWallet;
+  window.getBlockchain = getBlockchain;
+  window.getBalance = getBalance;
+  window.submitBlock = submitBlock;
+  console.log("🟢 Fonctions exposées globalement à window ✅");
+}
