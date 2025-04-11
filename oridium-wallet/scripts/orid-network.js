@@ -58,7 +58,7 @@ export async function registerWallet(address) {
   }
 }
 
-// ✅ Pour accès dans la console (window.xxx)
+// ✅ Pour accès dans la console (debug)
 if (typeof window !== "undefined") {
   window.getBlockchain = getBlockchain;
   window.getBalance = getBalance;
