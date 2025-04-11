@@ -1,5 +1,5 @@
 {
-  "buildCommand": "yarn install",
+  "buildCommand": "npm ci",
   "startCommand": "node server.js",
   "rootDir": "oridium-server"
 }
