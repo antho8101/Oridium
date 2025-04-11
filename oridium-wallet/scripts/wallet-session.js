@@ -1,6 +1,4 @@
-import { getBalance } from "./orid-network.js";
-import { getOridPriceUSD } from "./orid-pricing.js";
-import { registerWallet } from "./orid-network.js";
+import { getBalance, registerWallet } from "./orid-network.js";
 
 let walletConnected = false;
 let currentWalletAddress = null;
@@ -35,11 +33,10 @@ document.addEventListener("DOMContentLoaded", () => {
   updateWalletButtons(false);
 });
 
-export function setWalletConnected(address) {
+export async function setWalletConnected(address) {
   walletConnected = true;
   currentWalletAddress = address;
   localStorage.setItem("orid_wallet_address", address);
-
   updateWalletButtons(true);
 
   if (window.displayPublicKey) {
@@ -51,7 +48,12 @@ export function setWalletConnected(address) {
     .then(() => console.log("📡 Wallet registered on server:", address))
     .catch(err => console.error("❌ Error during wallet registration:", err));
 
-  updateWalletBalanceUI(address);
+  try {
+    const balance = await getBalance(address);
+    updateBalanceUI(balance);
+  } catch (err) {
+    console.error("❌ Failed to fetch balance from server:", err);
+  }
 }
 
 export function disconnectWallet() {
@@ -63,6 +65,8 @@ export function disconnectWallet() {
   if (window.displayPublicKey) {
     window.displayPublicKey(null);
   }
+
+  updateBalanceUI(0); // 👈 force à 0 à la déconnexion
 }
 
 export function getConnectedWalletAddress() {
@@ -84,25 +88,23 @@ export function updateWalletButtons(isConnected) {
   }
 }
 
-export async function updateWalletBalanceUI(address) {
-  if (!address) return;
+function updateBalanceUI(balance) {
+  const elements = document.querySelectorAll(".balance-amount");
+  elements.forEach(el => {
+    if (el.closest(".wallet-balance")) {
+      el.textContent = `${balance.toFixed(4)} ORID`;
+    } else {
+      el.textContent = balance.toFixed(4);
+    }
+  });
 
-  try {
-    const balance = await getBalance(address);
-    const balanceElements = document.querySelectorAll(".balance-amount");
-    balanceElements.forEach(el => {
-      const isInsideWalletBalance = el.closest(".wallet-balance") !== null;
-      el.textContent = isInsideWalletBalance ? `${balance.toFixed(4)} ORID` : balance.toFixed(4);
-    });
-
-    const usd = balance * getOridPriceUSD();
-    const usdElement = document.querySelector(".orid-value-usd");
-    if (usdElement) usdElement.textContent = `$${usd.toLocaleString()}`;
-  } catch (err) {
-    console.error("❌ Failed to update balance from server:", err);
+  const usdElement = document.querySelector(".orid-value-usd");
+  if (usdElement) {
+    const valueInUSD = balance * 30000;
+    usdElement.textContent = `$${valueInUSD.toLocaleString()}`;
   }
 }
 
 window.disconnectWallet = disconnectWallet;
 window.setWalletConnected = setWalletConnected;
-window.updateWalletBalanceUI = updateWalletBalanceUI;
+window.updateWalletBalanceUI = updateBalanceUI;
