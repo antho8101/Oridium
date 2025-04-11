@@ -5,13 +5,13 @@ import fs from 'fs';
 import cors from 'cors';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT; // ✅ Render fournit ce port automatiquement
 const BLOCKCHAIN_FILE = './blockchain.json';
 
 app.use(cors());
-app.use(express.json()); // ✅ Nécessaire pour parser les blocs POST
+app.use(express.json()); // ✅ Pour parser JSON dans POST
 
-// 🔁 Charge la blockchain depuis le fichier
+// 🔁 Charge la blockchain existante si présente
 let blockchain = [];
 if (fs.existsSync(BLOCKCHAIN_FILE)) {
   try {
@@ -24,9 +24,32 @@ if (fs.existsSync(BLOCKCHAIN_FILE)) {
   console.log('📂 No blockchain found, starting fresh');
 }
 
-// 📡 GET /blockchain
+// 🔍 GET /blockchain
 app.get('/blockchain', (req, res) => {
   res.json(blockchain);
+});
+
+// ➕ POST /add-block
+app.post('/add-block', (req, res) => {
+  console.log("📥 Received POST /add-block:");
+  console.log(req.headers);
+  console.log(req.body);
+
+  try {
+    const block = req.body;
+    if (!block || typeof block !== 'object') {
+      return res.status(400).json({ error: 'Invalid block format' });
+    }
+
+    blockchain.push(block);
+    fs.writeFileSync(BLOCKCHAIN_FILE, JSON.stringify(blockchain, null, 2));
+    console.log(`🧱 Block ${block.index} added`);
+    res.json({ success: true });
+
+  } catch (err) {
+    console.error("❌ Error in /add-block:", err);
+    res.status(500).json({ error: 'Server error' });
+  }
 });
 
 // 💰 GET /balance/:address
@@ -42,11 +65,6 @@ app.get('/balance/:address', (req, res) => {
   });
 
   res.json({ address, balance });
-});
-
-// ➕ POST /add-block
-app.post('/add-block', (req, res) => {
-  res.json({ ok: true, data: req.body });
 });
 
 // 🚀 Start server
