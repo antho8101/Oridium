@@ -1,11 +1,5 @@
 {
-    "build": {
-      "builder": "node",
-      "buildCommand": "yarn install",
-      "rootDir": "oridium-server"
-    },
-    "start": {
-      "cmd": "node server.js",
-      "rootDir": "oridium-server"
-    }
-  }  
+  "buildCommand": "yarn install",
+  "startCommand": "node server.js",
+  "rootDir": "oridium-server"
+}
