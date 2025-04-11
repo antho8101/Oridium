@@ -1,0 +1,9 @@
+{
+    "build": {
+      "builder": "node",
+      "buildCommand": "yarn install"
+    },
+    "start": {
+      "cmd": "node server.js"
+    }
+  }  
