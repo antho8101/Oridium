@@ -64,5 +64,5 @@ if (typeof window !== "undefined") {
   window.getBlockchain = getBlockchain;
   window.getBalance = getBalance;
   window.submitBlock = submitBlock;
-  console.log("🟢 Fonctions exposées globalement à window ✅");
+  console.log("🟢 orid-network.js exposé globalement");
 }
