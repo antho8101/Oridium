@@ -114,7 +114,7 @@
           </div>
           
           
-            <button class="button button-menu-main">Send public key</button>
+            <button id="open-sendkey-btn" class="button button-menu-main">Send public key</button>
             <button class="button button-gold">Send Oridium</button>
           </div>   
           
@@ -226,7 +226,7 @@
       <div class="div-button-modale">
       <button class="button button-gold" id="generate-wallet">Create my wallet</button>
       <button class="button button-gold" id="download-wallet">Download my key</button>
-      <button class="button button-menu-fit" id="close-wallet-modal">Cancel</button>
+      <button class="button button-menu-fit" id="close-wallet-modal">Close</button>
       </div>
 
     </div>
@@ -309,7 +309,7 @@
 <div class="div-button-modale">
   <button class="button button-gold" id="restore-wallet-confirm">Restore Wallet</button>
   <button class="button button-gold hidden" id="download-restored-wallet">Download Wallet</button>
-  <button class="button button-menu-fit" id="close-restore-wallet-modal">Cancel</button>
+  <button class="button button-menu-fit" id="close-restore-wallet-modal">Close</button>
 </div>
 
   </div>
@@ -353,10 +353,109 @@
     <!-- Buttons -->
     <div class="div-button-modale">
       <button class="button button-gold" id="connect-wallet-confirm">Connect Wallet</button>
-      <button class="button button-menu-fit" id="close-connect-wallet-modal">Cancel</button>
+      <button class="button button-menu-fit" id="close-connect-wallet-modal">Close</button>
     </div>
   </div>
 </div>
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Send Public Key Modal -->
+<div id="send-publickey-modal" class="modal hidden">
+  <div class="modal-content">
+    <h1 class="logo">Share your public key 🔐</h1>
+
+    <div class="key-display">
+      <label class="text">Your Public Key:</label>
+      <input id="modal-public-key" readonly />
+      <button class="button button-menu-fit" id="copy-key-btn">Copy</button>
+    </div>
+
+    <p class="seed-suggestion div-noidea-modale">You can share your key via:</p>
+
+    <div class="div-button-modale">
+      <button class="button button-menu-fit">Email</button>
+      <button class="button button-menu-fit">Telegram</button>
+      <button class="button button-menu-fit">Messenger</button>
+    </div>
+
+    <div class="div-button-modale">
+      <button class="button button-menu-fit" id="close-sendkey-modal">Close</button>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+<!-- Send Oridium Modal -->
+<div id="send-orid-modal" class="modal hidden">
+  <div class="modal-content">
+    <h1 class="logo">Send Oridium 💸</h1>
+
+    <!-- Step 1 -->
+    <div id="step-1" class="send-step">
+      <label class="text">Recipient Public Key:</label>
+      <input type="text" id="recipient-key" placeholder="Paste the public key" />
+      <p id="key-validation-msg" class="input-error-message hidden">Invalid public key.</p>
+
+      <div class="div-button-modale">
+        <button class="button button-gold" id="next-to-amount" disabled>Next</button>
+      </div>
+    </div>
+
+    <!-- Step 2 -->
+    <div id="step-2" class="send-step hidden">
+      <label class="text">Amount (ORID):</label>
+      <input type="number" id="orid-amount" min="0.0001" step="0.0001" placeholder="Enter amount to send" />
+
+      <div class="div-button-modale">
+        <button class="button button-menu-fit" id="back-to-key">Back</button>
+        <button class="button button-gold" id="next-to-summary">Next</button>
+      </div>
+    </div>
+
+    <!-- Step 3 -->
+    <div id="step-3" class="send-step hidden">
+      <p class="text">You're about to send:</p>
+      <p class="text title-thin">🔹 <span id="summary-amount">0</span> ORID</p>
+      <p class="text title-thin">🔑 to <span id="summary-key">[key]</span></p>
+
+      <div class="div-button-modale">
+        <button class="button button-menu-fit" id="back-to-amount">Back</button>
+        <button class="button button-gold" id="confirm-send">Send</button>
+        <button class="button button-menu-fit" id="cancel-send">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
 
 
 
@@ -395,6 +494,7 @@
 <script type="module" src="./scripts/main.js"></script>
 <script type="module" src="scripts/orid-global.js"></script>
 <script type="module" src="scripts/wallet-session.js"></script>
+<script type="module" src="scripts/wallet/send-publickey.js"></script>
 
 
 
