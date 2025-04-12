@@ -1,4 +1,5 @@
 import { getBalance, registerWallet } from "./orid-network.js";
+import { getOridPriceUSD } from "./orid-pricing.js";
 
 let walletConnected = false;
 let currentWalletAddress = null;
@@ -27,7 +28,9 @@ document.addEventListener("DOMContentLoaded", () => {
   const saved = localStorage.getItem("orid_wallet_address");
   if (saved) {
     console.log("🧠 Restoring saved wallet from localStorage:", saved);
-    setWalletConnected(saved);
+    setTimeout(() => {
+      setWalletConnected(saved);
+    }, 200);
   } else {
     updateWalletButtons(false);
   }
@@ -39,7 +42,7 @@ export async function setWalletConnected(address) {
   localStorage.setItem("orid_wallet_address", address);
 
   updateWalletButtons(true);
-  displayPublicKey(address); // ✅ Affichage immédiat clé publique
+  displayPublicKey(address);
   window.dispatchEvent(new Event("orid-wallet-connected"));
 
   registerWallet(address)
@@ -60,7 +63,7 @@ export function disconnectWallet() {
   localStorage.removeItem("orid_wallet_address");
 
   updateWalletButtons(false);
-  displayPublicKey(null); // ✅ Masquer la clé publique
+  displayPublicKey(null);
   updateBalanceUI(0);
 }
 
@@ -95,19 +98,44 @@ function updateBalanceUI(balance) {
 
   const usdElement = document.querySelector(".orid-value-usd");
   if (usdElement) {
-    const valueInUSD = balance * 30000;
+    const valueInUSD = balance * getOridPriceUSD();
     usdElement.textContent = `$${valueInUSD.toLocaleString()}`;
   }
 }
 
-// ✅ Fonction centrale pour afficher ou masquer la clé publique
+// ✅ Gère l’affichage + la copie
 function displayPublicKey(address) {
+  console.log("🔍 displayPublicKey called with:", address);
+
   const el = document.getElementById("public-key-display");
-  if (!el) return;
-  el.textContent = address ? address : "Connect your wallet to see your public key";
+  const copyIcon = document.getElementById("copy-public-key");
+
+  if (!el || !copyIcon) return;
+
+  if (address) {
+    el.textContent = address;
+    copyIcon.style.opacity = "1";
+    copyIcon.style.pointerEvents = "auto";
+    copyIcon.style.cursor = "pointer";
+
+    copyIcon.onclick = () => {
+      navigator.clipboard.writeText(address).then(() => {
+        el.textContent = "Copied!";
+        setTimeout(() => {
+          el.textContent = address;
+        }, 1500);
+      });
+    };
+
+  } else {
+    el.textContent = "Connect your wallet to see your public key";
+    copyIcon.style.opacity = "0.3";
+    copyIcon.style.pointerEvents = "none";
+    copyIcon.style.cursor = "default";
+    copyIcon.onclick = null;
+  }
 }
 
-// ✅ Expose si besoin pour le reste de l’app
 window.disconnectWallet = disconnectWallet;
 window.setWalletConnected = setWalletConnected;
 window.updateWalletBalanceUI = updateBalanceUI;
