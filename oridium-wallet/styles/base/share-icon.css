@@ -1,0 +1,35 @@
+.icon-share-container {
+    display: flex;
+    justify-content: left;
+    flex-wrap: wrap;
+    gap: 20px;
+    margin-top: 10px;
+    margin-bottom: 20px;
+  }
+  
+  .share-icon {
+    width: 50px;
+    height: 50px;
+    cursor: pointer;
+    transition: transform 0.2s ease, opacity 0.2s ease;
+    border-radius: 50%;
+    box-shadow: 0 0 8px rgba(0, 0, 0, 0.08);
+  }
+  
+  .share-icon:hover {
+    transform: scale(1.1);
+    opacity: 0.85;
+  }
+
+  .share-button {
+    display: flex;
+    align-items: center;
+    justify-content: center; /* pour centrer texte + icône */
+    gap: 5px; /* <-- contrôle l'espacement entre texte et icône */
+  }
+  
+  .share-icon-inline {
+    width: 20px;
+    height: 20px;
+    object-fit: contain;
+  }  

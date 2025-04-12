@@ -9,12 +9,17 @@
   <!-- Feuilles de style -->
   <link rel="stylesheet" href="styles/base/fonts.css" />
   <link rel="stylesheet" href="styles/base/styles.css" />
+  <link rel="stylesheet" href="styles/base/share-icon.css" />
+
+  <link rel="icon" type="image/x-icon" href="favicon.ico" />
 
   <!-- Librairies externes -->
   <script type="module">
     import * as secp from "https://cdn.jsdelivr.net/npm/@noble/secp256k1@1.7.1/+esm";
     window.nobleSecp256k1 = secp;
   </script>  
+
+<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.0/build/qrcode.min.js"></script>
 
 
   <!-- Scripts internes (non modules) -->
@@ -382,11 +387,24 @@
 
     <p class="seed-suggestion div-noidea-modale">You can share your key via:</p>
 
-    <div class="div-button-modale">
-      <button class="button button-menu-fit">Email</button>
-      <button class="button button-menu-fit">Telegram</button>
-      <button class="button button-menu-fit">Messenger</button>
-    </div>
+    <div class="icon-share-container">
+      <button class="button button-menu-fit share-button" id="share-gmail">
+        Gmail
+        <img src="assets/images/icons/ph_google-logo.svg" alt="Gmail Icon" class="share-icon-inline" />
+      </button>
+      <button class="button button-menu-fit share-button" id="share-whatsapp">
+        WhatsApp
+        <img src="assets/images/icons/ph_whatsapp-logo.svg" alt="WhatsApp Icon" class="share-icon-inline" />
+      </button>
+      <button class="button button-menu-fit share-button" id="share-telegram">
+        Telegram
+        <img src="assets/images/icons/ph_telegram-logo.svg" alt="Telegram Icon" class="share-icon-inline" />
+      </button>
+      <button class="button button-menu-fit share-button" id="share-qr">
+        QR code
+        <img src="assets/images/icons/ph_qr-code.svg" alt="QR Icon" class="share-icon-inline" />
+      </button>      
+    </div>    
 
     <div class="div-button-modale">
       <button class="button button-menu-fit" id="close-sendkey-modal">Close</button>
@@ -394,6 +412,17 @@
   </div>
 </div>
 
+
+<!-- QR Code Modal -->
+<div id="qr-modal" class="modal hidden">
+  <div class="modal-content">
+    <h1 class="logo">Scan this QR Code 📱</h1>
+    <div id="qr-code-display" class="qr-container" style="display: flex; justify-content: center; margin: 20px 0;"></div>
+    <div class="div-button-modale">
+      <button class="button button-menu-fit" id="close-qr-modal">Close</button>
+    </div>
+  </div>
+</div>
 
 
 
