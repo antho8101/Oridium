@@ -99,7 +99,7 @@ function updateBalanceUI(balance) {
   const usdElement = document.querySelector(".orid-value-usd");
   if (usdElement) {
     const valueInUSD = balance * getOridPriceUSD();
-    usdElement.textContent = `$${valueInUSD.toLocaleString()}`;
+    usdElement.textContent = `$${valueInUSD.toFixed(2)}`;
   }
 }
 

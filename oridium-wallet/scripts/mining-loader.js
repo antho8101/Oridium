@@ -1,6 +1,7 @@
 import { getGlobalDifficulty } from "./utils/difficulty.js";
 import { getConnectedWalletAddress } from './wallet-session.js';
 import { submitBlock, getBalance } from './orid-network.js';
+import { getOridPriceUSD } from "./orid-pricing.js";
 
 let worker = null;
 let runtimeSeconds = 0;
@@ -38,8 +39,9 @@ function updateBalance() {
 
     const usdElement = document.querySelector('.orid-value-usd');
     if (usdElement) {
-      const valueInUSD = balance * 30000;
-      usdElement.textContent = `$${valueInUSD.toLocaleString()}`;
+      const valueInUSD = balance * getOridPriceUSD();
+      usdElement.textContent = `$${valueInUSD.toFixed(2)}`;
+
     }
   }).catch(err => {
     console.error("❌ Failed to update balance:", err);
