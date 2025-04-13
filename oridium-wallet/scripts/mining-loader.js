@@ -11,6 +11,7 @@ let miningActive = false;
 let runtimeInterval = null;
 let pendingBlocks = [];
 let lastSentHash = "0";
+let batchTimeout = null; // ⏳ envoi dynamique
 
 window.addEventListener("DOMContentLoaded", async () => {
   const toggleBtn = document.getElementById("mining-toggle");
@@ -28,8 +29,7 @@ function updateBalance() {
   if (!address) return;
 
   getBalance(address).then(balance => {
-    const elements = document.querySelectorAll('.balance-amount');
-    elements.forEach(el => {
+    document.querySelectorAll('.balance-amount').forEach(el => {
       if (el.closest('.wallet-balance')) {
         el.textContent = `${balance.toFixed(4)} ORID`;
       } else {
@@ -100,14 +100,11 @@ function startMining() {
         const block = {
           index: blockCounter,
           timestamp: Date.now(),
-          transactions: [
-            { sender: "System", receiver: address, amount: 0.0001 }
-          ],
+          transactions: [{ sender: "System", receiver: address, amount: 0.0001 }],
           previousHash: lastSentHash || "0",
           hash,
-          nonce: Number(nonce) // ✅ conversion explicite
-        };        
-
+          nonce: Number(nonce)
+        };
         pendingBlocks.push(block);
       }
 
@@ -130,48 +127,61 @@ function startMining() {
     document.getElementById("runtime").textContent = formatRuntime(runtimeSeconds);
   }, 1000);
 
-  setInterval(() => {
-    if (pendingBlocks.length > 0) {
-      const blocksToSend = [...pendingBlocks];
-      pendingBlocks = [];
+  dynamicBatchLoop(); // ⬅️ démarre l’envoi dynamique
+}
 
-      for (let i = 0; i < blocksToSend.length; i++) {
-        blocksToSend[i].previousHash = i === 0 ? lastSentHash : blocksToSend[i - 1].hash;
-      }
+function getDynamicInterval() {
+  const count = pendingBlocks.length;
+  if (count > 10) return 3000;
+  if (count > 5) return 5000;
+  if (count > 2) return 7000;
+  return 10000;
+}
 
-      // 🧼 Supprimer les index avant envoi
-      const cleaned = blocksToSend.map((b, i) => ({
-        ...b,
-        index: blockCounter - blocksToSend.length + i
-      }));      
+function dynamicBatchLoop() {
+  if (!miningActive) return;
 
-      console.log("🚀 Sending batch of", cleaned.length, "blocks:", cleaned);
+  if (pendingBlocks.length > 0) {
+    const blocksToSend = [...pendingBlocks];
+    pendingBlocks = [];
 
-      fetch("https://oridium-production.up.railway.app/batch-add-blocks", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(cleaned)
-      }).then(res => res.json())
-        .then(result => {
-          if (result.success) {
-            const accepted = cleaned.length;
-            oridiumEarned += accepted * 0.0001;
-            document.getElementById("oridium-earned").textContent = `${oridiumEarned.toFixed(4)} ORID`;
-            updateBalance();
-            lastSentHash = cleaned[cleaned.length - 1].hash;
-          } else {
-            pendingBlocks.push(...blocksToSend);
-            stopMining();
-            showNetworkBusyModal(10);
-          }
-        }).catch(err => {
-          console.error("❌ Batch send failed:", err);
+    for (let i = 0; i < blocksToSend.length; i++) {
+      blocksToSend[i].previousHash = i === 0 ? lastSentHash : blocksToSend[i - 1].hash;
+    }
+
+    const cleaned = blocksToSend.map((b, i) => ({
+      ...b,
+      index: blockCounter - blocksToSend.length + i
+    }));
+
+    console.log("🚀 Sending batch of", cleaned.length, "blocks:", cleaned);
+
+    fetch("https://oridium-production.up.railway.app/batch-add-blocks", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(cleaned)
+    }).then(res => res.json())
+      .then(result => {
+        if (result.success) {
+          const accepted = cleaned.length;
+          oridiumEarned += accepted * 0.0001;
+          document.getElementById("oridium-earned").textContent = `${oridiumEarned.toFixed(4)} ORID`;
+          updateBalance();
+          lastSentHash = cleaned[cleaned.length - 1].hash;
+        } else {
           pendingBlocks.push(...blocksToSend);
           stopMining();
           showNetworkBusyModal(10);
-        });
-    }
-  }, 5000);
+        }
+      }).catch(err => {
+        console.error("❌ Batch send failed:", err);
+        pendingBlocks.push(...blocksToSend);
+        stopMining();
+        showNetworkBusyModal(10);
+      });
+  }
+
+  batchTimeout = setTimeout(dynamicBatchLoop, getDynamicInterval());
 }
 
 function stopMining() {
@@ -182,7 +192,9 @@ function stopMining() {
     worker = null;
   }
   clearInterval(runtimeInterval);
+  clearTimeout(batchTimeout);
   runtimeInterval = null;
+  batchTimeout = null;
   runtimeSeconds = 0;
 }
 
@@ -197,24 +209,15 @@ export function showNetworkBusyModal(seconds = 10) {
   const countdown = document.getElementById("network-countdown");
   const closeBtn = document.getElementById("close-network-busy");
 
-  if (!modal || !countdown || !closeBtn) {
-    console.error("❌ Network busy modal elements not found");
-    return;
-  }
+  if (!modal || !countdown || !closeBtn) return;
 
   stopMining();
 
-  const playIcon = document.getElementById("icon-play");
-  const pauseIcon = document.getElementById("icon-pause");
-  const statusText = document.getElementById("mining-status");
+  document.getElementById("icon-play").style.display = "inline";
+  document.getElementById("icon-pause").style.display = "none";
+  document.getElementById("mining-status").textContent = "Mining is paused ⏸️";
 
-  if (playIcon) playIcon.style.display = "inline";
-  if (pauseIcon) pauseIcon.style.display = "none";
-  if (statusText) statusText.textContent = "Mining is paused ⏸️";
-
-  modal.classList.remove("hidden");
-  modal.classList.remove("no-blur");
-
+  modal.classList.remove("hidden", "no-blur");
   const content = modal.querySelector(".modal-content");
   content.classList.remove("fade-out");
   content.classList.add("fade-in");
@@ -236,11 +239,7 @@ export function showNetworkBusyModal(seconds = 10) {
     modal.classList.add("no-blur");
     content.classList.remove("fade-in");
     content.classList.add("fade-out");
-
-    setTimeout(() => {
-      modal.classList.add("hidden");
-      modal.classList.remove("no-blur");
-    }, 300);
+    setTimeout(() => modal.classList.add("hidden"), 300);
   }, { once: true });
 }
 
