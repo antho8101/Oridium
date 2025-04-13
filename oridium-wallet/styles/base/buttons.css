@@ -142,3 +142,12 @@
     transition: background-color 0.1s;
     width: 100%;
 }
+
+.button-gold:disabled,
+.button-menu:disabled,
+.button-menu-fit:disabled,
+.button-menu-main:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+  pointer-events: none;
+}
