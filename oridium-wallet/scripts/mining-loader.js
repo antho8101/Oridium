@@ -142,7 +142,7 @@ function startMining() {
       fetch("https://oridium-production.up.railway.app/batch-add-blocks", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ blocks: blocksToSend })
+        body: JSON.stringify(blocksToSend)
       }).then(res => res.json())
         .then(result => {
           if (!result.success) {
