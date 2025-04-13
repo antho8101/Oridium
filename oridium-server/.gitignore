@@ -1,1 +1,7 @@
-blockchain.json
+node_modules/
+package-lock.json
+*.log
+.DS_Store
+*.sqlite
+*.sqlite-journal
+.env
