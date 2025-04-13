@@ -23,12 +23,6 @@ function isBlacklisted(block) {
   return senders.some(sender => sender !== "System" && BLACKLIST.has(sender));
 }
 
-// 🔒 Recalcul du hash
-function calculateHash(index, timestamp, transactions, previousHash, nonce) {
-  const data = `${index}${timestamp}${JSON.stringify(transactions)}${previousHash}${nonce}`;
-  return crypto.createHash('sha256').update(data).digest('hex');
-}
-
 // ✅ Vérifie la difficulté (4 zéros en début de hash pour test)
 function isValidHashDifficulty(hash, difficulty = 4) {
   return hash.startsWith('0'.repeat(difficulty));
@@ -45,88 +39,11 @@ app.get('/blockchain', (req, res) => {
   }
 });
 
-// ➕ POST /add-block
+// 🔁 POST /batch-add-blocks
 app.post('/batch-add-blocks', (req, res) => {
   const blocks = req.body;
 
   console.log("📥 Received batch:", blocks);
-
-  if (!Array.isArray(blocks)) {
-    return res.status(400).json({ error: 'Expected an array of blocks' });
-  }
-
-  try {
-    let blockchain = getBlockchainFromDB();
-    let lastHash = blockchain.length > 0 ? blockchain[blockchain.length - 1].hash : "0";
-    let index = blockchain.length;
-
-    for (const rawBlock of blocks) {
-      const txs = rawBlock.transactions || [];
-
-      const totalBySender = {};
-      for (const tx of txs) {
-        if (tx.sender === "System") continue;
-        if (!totalBySender[tx.sender]) totalBySender[tx.sender] = 0;
-        totalBySender[tx.sender] += tx.amount;
-      }
-
-      for (const sender in totalBySender) {
-        const balance = getBalanceFromDB(sender);
-        if (balance < totalBySender[sender]) {
-          console.warn("❌ Balance too low:", sender, "has", balance, "needs", totalBySender[sender]);
-          return res.status(400).json({
-            error: `Insufficient balance for ${sender}`
-          });
-        }
-      }
-
-      const recalculated = calculateHash(
-        rawBlock.index,
-        rawBlock.timestamp,
-        txs,
-        lastHash,
-        rawBlock.nonce
-      );
-
-      if (recalculated !== rawBlock.hash) {
-        console.warn("❌ Hash mismatch:", {
-          expected: recalculated,
-          received: rawBlock.hash
-        });
-        return res.status(400).json({ error: 'Hash mismatch in batch' });
-      }
-
-      if (!isValidHashDifficulty(recalculated)) {
-        console.warn("❌ Invalid difficulty:", recalculated);
-        return res.status(400).json({ error: 'Invalid hash difficulty in batch' });
-      }
-
-      const block = {
-        index: rawBlock.index,
-        timestamp: rawBlock.timestamp,
-        transactions: txs,
-        previousHash: lastHash,
-        hash: recalculated,
-        nonce: rawBlock.nonce
-      };
-
-      addBlockToDB(block);
-      lastHash = recalculated;
-      index++;
-      console.log(`📦 Block ${block.index} added`);
-    }
-
-    res.json({ success: true });
-
-  } catch (err) {
-    console.error("❌ Error in /batch-add-blocks:", err);
-    res.status(500).json({ error: 'Batch server error' });
-  }
-});
-
-// 🔁 POST /batch-add-blocks
-app.post('/batch-add-blocks', (req, res) => {
-  const blocks = req.body;
 
   if (!Array.isArray(blocks)) {
     return res.status(400).json({ error: 'Expected an array of blocks' });
@@ -154,18 +71,15 @@ app.post('/batch-add-blocks', (req, res) => {
       for (const sender in totalBySender) {
         const balance = getBalanceFromDB(sender);
         if (balance < totalBySender[sender]) {
+          console.warn("❌ Balance too low:", sender, "has", balance, "needs", totalBySender[sender]);
           return res.status(400).json({
             error: `Insufficient balance for ${sender}`
           });
         }
       }
 
-      const recalculatedHash = calculateHash(index, rawBlock.timestamp, txs, lastHash, rawBlock.nonce);
-      if (recalculatedHash !== rawBlock.hash) {
-        return res.status(400).json({ error: 'Hash mismatch in batch' });
-      }
-
-      if (!isValidHashDifficulty(recalculatedHash)) {
+      if (!isValidHashDifficulty(rawBlock.hash)) {
+        console.warn("❌ Invalid difficulty:", rawBlock.hash);
         return res.status(400).json({ error: 'Invalid hash difficulty in batch' });
       }
 
@@ -174,12 +88,12 @@ app.post('/batch-add-blocks', (req, res) => {
         timestamp: rawBlock.timestamp,
         transactions: txs,
         previousHash: lastHash,
-        hash: recalculatedHash,
+        hash: rawBlock.hash,
         nonce: rawBlock.nonce
       };
 
       addBlockToDB(block);
-      lastHash = recalculatedHash;
+      lastHash = rawBlock.hash;
       index++;
       console.log(`📦 Block ${block.index} added`);
     }
