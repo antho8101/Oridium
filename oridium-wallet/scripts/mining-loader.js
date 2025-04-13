@@ -146,7 +146,6 @@ function startMining() {
       }).then(res => res.json())
         .then(result => {
           if (!result.success) {
-            console.warn("🛑 Batch failed, requeuing blocks");
             pendingBlocks.push(...blocksToSend);
             stopMining();
             showNetworkBusyModal(10);
