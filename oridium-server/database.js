@@ -11,7 +11,7 @@ const db = new Database(DB_PATH);
 db.exec(`
   CREATE TABLE IF NOT EXISTS blocks (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
-    index INTEGER,
+    "index" INTEGER,
     timestamp INTEGER,
     transactions TEXT,
     previousHash TEXT,
@@ -23,7 +23,7 @@ db.exec(`
 // ➕ Ajouter un bloc
 export function addBlockToDB(block) {
   const stmt = db.prepare(`
-    INSERT INTO blocks (index, timestamp, transactions, previousHash, hash, nonce)
+    INSERT INTO blocks ("index", timestamp, transactions, previousHash, hash, nonce)
     VALUES (?, ?, ?, ?, ?, ?)
   `);
   stmt.run(
@@ -38,7 +38,7 @@ export function addBlockToDB(block) {
 
 // 🔄 Obtenir toute la blockchain
 export function getBlockchainFromDB() {
-  const rows = db.prepare('SELECT * FROM blocks ORDER BY index ASC').all();
+  const rows = db.prepare('SELECT * FROM blocks ORDER BY "index" ASC').all();
   return rows.map(row => ({
     index: row.index,
     timestamp: row.timestamp,
