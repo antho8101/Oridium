@@ -138,6 +138,52 @@ export function displayPublicKey(address) {
   }
 }
 
+export function showAccessDeniedModal() {
+  const modal = document.getElementById("access-denied-modal");
+  const connectModal = document.getElementById("connect-wallet-modal");
+
+  if (!modal || !connectModal) return;
+
+  const content = modal.querySelector(".modal-content");
+  const connectContent = connectModal.querySelector(".modal-content");
+  const supportBtn = document.getElementById("contact-support");
+  const switchBtn = document.getElementById("switch-wallet");
+
+  // Reset the buttons to remove old event listeners
+  const newSupportBtn = supportBtn.cloneNode(true);
+  const newSwitchBtn = switchBtn.cloneNode(true);
+  supportBtn.replaceWith(newSupportBtn);
+  switchBtn.replaceWith(newSwitchBtn);
+
+  // Show the access denied modal
+  modal.classList.remove("hidden", "no-blur");
+  content.classList.remove("fade-out");
+  content.classList.add("fade-in");
+
+  // Contact support button
+  newSupportBtn.addEventListener("click", () => {
+    window.open("mailto:support@getoridium.com?subject=Blacklisted Wallet Access", "_blank");
+  });
+
+  // Switch wallet button
+  newSwitchBtn.addEventListener("click", () => {
+    localStorage.removeItem("orid_wallet_address");
+
+    // Close Access Denied modal
+    content.classList.remove("fade-in");
+    content.classList.add("fade-out");
+    setTimeout(() => {
+      modal.classList.add("hidden");
+
+      // Show Connect Wallet modal
+      connectModal.classList.remove("hidden", "no-blur");
+      connectContent.classList.remove("fade-out");
+      connectContent.classList.add("fade-in");
+    }, 300);
+  });
+}
+
+
 // ✅ Rafraîchit le solde automatiquement si blockchain modifiée par WASM
 window.addEventListener("message", (event) => {
   if (event.data?.type === "orid-balance-updated") {
@@ -153,3 +199,4 @@ window.disconnectWallet = disconnectWallet;
 window.setWalletConnected = setWalletConnected;
 window.updateWalletBalanceUI = updateBalanceUI;
 window.displayPublicKey = displayPublicKey;
+window.showAccessDeniedModal = showAccessDeniedModal;

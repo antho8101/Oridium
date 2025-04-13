@@ -22,12 +22,17 @@ db.exec(`
 
 // ➕ Ajouter un bloc
 export function addBlockToDB(block) {
+  // 🔁 Récupère l'index le plus élevé
+  const lastIndexRow = db.prepare('SELECT MAX("index") AS max FROM blocks').get();
+  const index = (lastIndexRow?.max ?? -1) + 1;
+
   const stmt = db.prepare(`
     INSERT INTO blocks ("index", timestamp, transactions, previousHash, hash, nonce)
     VALUES (?, ?, ?, ?, ?, ?)
   `);
+
   stmt.run(
-    block.index,
+    index,
     block.timestamp,
     JSON.stringify(block.transactions || []),
     block.previousHash,
