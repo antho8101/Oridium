@@ -25,7 +25,7 @@ app.get('/blockchain', (req, res) => {
   }
 });
 
-// ➕ POST /add-block
+// ➕ POST /add-block (unique)
 app.post('/add-block', (req, res) => {
   const block = req.body;
 
@@ -36,14 +36,19 @@ app.post('/add-block', (req, res) => {
   try {
     const txs = block.transactions || [];
 
+    const totalBySender = {};
     for (const tx of txs) {
-      if (tx.sender !== "System") {
-        const senderBalance = getBalanceFromDB(tx.sender);
-        if (senderBalance < tx.amount) {
-          return res.status(400).json({
-            error: `Insufficient balance for sender ${tx.sender}`
-          });
-        }
+      if (tx.sender === "System") continue;
+      if (!totalBySender[tx.sender]) totalBySender[tx.sender] = 0;
+      totalBySender[tx.sender] += tx.amount;
+    }
+
+    for (const sender in totalBySender) {
+      const balance = getBalanceFromDB(sender);
+      if (balance < totalBySender[sender]) {
+        return res.status(400).json({
+          error: `Insufficient balance for ${sender} – needs ${totalBySender[sender]}, has ${balance}`
+        });
       }
     }
 
@@ -54,6 +59,50 @@ app.post('/add-block', (req, res) => {
   } catch (err) {
     console.error("❌ Error in /add-block:", err);
     res.status(500).json({ error: 'Server error' });
+  }
+});
+
+// 🔁 POST /batch-add-blocks
+app.post('/batch-add-blocks', (req, res) => {
+  const blocks = req.body;
+
+  if (!Array.isArray(blocks)) {
+    return res.status(400).json({ error: 'Expected an array of blocks' });
+  }
+
+  try {
+    for (const block of blocks) {
+      if (!block || typeof block !== 'object') {
+        return res.status(400).json({ error: 'Invalid block in batch' });
+      }
+
+      const txs = block.transactions || [];
+
+      const totalBySender = {};
+      for (const tx of txs) {
+        if (tx.sender === "System") continue;
+        if (!totalBySender[tx.sender]) totalBySender[tx.sender] = 0;
+        totalBySender[tx.sender] += tx.amount;
+      }
+
+      for (const sender in totalBySender) {
+        const balance = getBalanceFromDB(sender);
+        if (balance < totalBySender[sender]) {
+          return res.status(400).json({
+            error: `Insufficient balance for ${sender} – needs ${totalBySender[sender]}, has ${balance}`
+          });
+        }
+      }
+
+      addBlockToDB(block);
+      console.log(`📦 Block ${block.index} added`);
+    }
+
+    res.json({ success: true });
+
+  } catch (err) {
+    console.error("❌ Error in /batch-add-blocks:", err);
+    res.status(500).json({ error: 'Batch server error' });
   }
 });
 
