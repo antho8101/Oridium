@@ -103,10 +103,10 @@ function startMining() {
           transactions: [
             { sender: "System", receiver: address, amount: 0.0001 }
           ],
-          previousHash: "0",
+          previousHash: lastSentHash || "0",
           hash,
-          nonce
-        };
+          nonce: Number(nonce) // ✅ conversion explicite
+        };        
 
         pendingBlocks.push(block);
       }
