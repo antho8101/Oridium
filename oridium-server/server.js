@@ -1,48 +1,53 @@
 // server.js
 
 import express from 'express';
-import fs from 'fs';
 import cors from 'cors';
+import {
+  getBlockchainFromDB,
+  addBlockToDB,
+  getBalanceFromDB
+} from './database.js';
 
 const app = express();
-const PORT = process.env.PORT; // ✅ Render fournit ce port automatiquement
-const BLOCKCHAIN_FILE = './blockchain.json';
+const PORT = process.env.PORT || 3000;
 
 app.use(cors());
-app.use(express.json()); // ✅ Pour parser JSON dans POST
-
-// 🔁 Charge la blockchain existante si présente
-let blockchain = [];
-if (fs.existsSync(BLOCKCHAIN_FILE)) {
-  try {
-    blockchain = JSON.parse(fs.readFileSync(BLOCKCHAIN_FILE, 'utf-8'));
-    console.log(`✅ Blockchain loaded (${blockchain.length} blocks)`);
-  } catch (err) {
-    console.error('❌ Failed to read blockchain.json:', err);
-  }
-} else {
-  console.log('📂 No blockchain found, starting fresh');
-}
+app.use(express.json());
 
 // 🔍 GET /blockchain
 app.get('/blockchain', (req, res) => {
-  res.json(blockchain);
+  try {
+    const blockchain = getBlockchainFromDB();
+    res.json(blockchain);
+  } catch (err) {
+    console.error('❌ Error fetching blockchain:', err);
+    res.status(500).json({ error: 'Failed to fetch blockchain' });
+  }
 });
 
 // ➕ POST /add-block
 app.post('/add-block', (req, res) => {
-  console.log("📥 Received POST /add-block:");
-  console.log(req.headers);
-  console.log(req.body);
+  const block = req.body;
+
+  if (!block || typeof block !== 'object') {
+    return res.status(400).json({ error: 'Invalid block format' });
+  }
 
   try {
-    const block = req.body;
-    if (!block || typeof block !== 'object') {
-      return res.status(400).json({ error: 'Invalid block format' });
+    const txs = block.transactions || [];
+
+    for (const tx of txs) {
+      if (tx.sender !== "System") {
+        const senderBalance = getBalanceFromDB(tx.sender);
+        if (senderBalance < tx.amount) {
+          return res.status(400).json({
+            error: `Insufficient balance for sender ${tx.sender}`
+          });
+        }
+      }
     }
 
-    blockchain.push(block);
-    fs.writeFileSync(BLOCKCHAIN_FILE, JSON.stringify(blockchain, null, 2));
+    addBlockToDB(block);
     console.log(`🧱 Block ${block.index} added`);
     res.json({ success: true });
 
@@ -55,45 +60,52 @@ app.post('/add-block', (req, res) => {
 // 💰 GET /balance/:address
 app.get('/balance/:address', (req, res) => {
   const { address } = req.params;
-  let balance = 0;
 
-  blockchain.forEach(block => {
-    (block.transactions || []).forEach(tx => {
-      if (tx.sender === address) balance -= tx.amount;
-      if (tx.receiver === address) balance += tx.amount;
-    });
-  });
+  try {
+    const balance = getBalanceFromDB(address);
+    res.json({ address, balance });
+  } catch (err) {
+    console.error("❌ Error in /balance:", err);
+    res.status(500).json({ error: 'Failed to get balance' });
+  }
+});
 
-  res.json({ address, balance });
+// 🆕 POST /register-wallet
+app.post('/register-wallet', (req, res) => {
+  const { address } = req.body;
+  if (!address) return res.status(400).json({ error: 'Missing address' });
+
+  try {
+    const blockchain = getBlockchainFromDB();
+    const alreadyExists = blockchain.some(block =>
+      (block.transactions || []).some(tx =>
+        tx.sender === address || tx.receiver === address
+      )
+    );
+
+    if (!alreadyExists) {
+      const lastBlock = blockchain[blockchain.length - 1];
+      const newBlock = {
+        index: blockchain.length,
+        timestamp: Date.now(),
+        transactions: [],
+        previousHash: lastBlock?.hash || "0",
+        hash: "init",
+        nonce: 0,
+      };
+
+      addBlockToDB(newBlock);
+      console.log(`🆕 Wallet ${address} registered`);
+    }
+
+    res.json({ success: true });
+  } catch (err) {
+    console.error("❌ Error in /register-wallet:", err);
+    res.status(500).json({ error: 'Failed to register wallet' });
+  }
 });
 
 // 🚀 Start server
 app.listen(PORT, () => {
   console.log(`🚀 Oridium API running on PORT ${PORT}`);
-});
-
-app.post('/register-wallet', (req, res) => {
-  const { address } = req.body;
-  if (!address) return res.status(400).json({ error: 'Missing address' });
-
-  // Si cette adresse n'a aucune transaction, on ajoute un "faux bloc" d'initialisation
-  const alreadyExists = blockchain.some(block =>
-    (block.transactions || []).some(tx => tx.sender === address || tx.receiver === address)
-  );
-
-  if (!alreadyExists) {
-    blockchain.push({
-      index: blockchain.length,
-      timestamp: Date.now(),
-      transactions: [],
-      previousHash: "0",
-      hash: "init", // ou un hash bidon
-      nonce: 0,
-    });
-
-    fs.writeFileSync(BLOCKCHAIN_FILE, JSON.stringify(blockchain, null, 2));
-    console.log(`🆕 Wallet ${address} registered`);
-  }
-
-  res.json({ success: true });
 });
