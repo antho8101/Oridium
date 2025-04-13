@@ -9,7 +9,7 @@ let oridiumEarned = 0;
 let blockCounter = 0;
 let miningActive = false;
 let runtimeInterval = null;
-let pendingBlocks = []; // 🆕 stockage local
+let pendingBlocks = [];
 
 window.addEventListener("DOMContentLoaded", async () => {
   const toggleBtn = document.getElementById("mining-toggle");
@@ -107,12 +107,8 @@ function startMining() {
           nonce
         };
 
-        pendingBlocks.push(block); // 🆕 ajoute au batch
-        updateBalance();
+        pendingBlocks.push(block);
       }
-
-      oridiumEarned += 0.0001;
-      document.getElementById("oridium-earned").textContent = `${oridiumEarned.toFixed(4)} ORID`;
 
       const statusText = document.getElementById("mining-status");
       if (statusText) {
@@ -133,7 +129,6 @@ function startMining() {
     document.getElementById("runtime").textContent = formatRuntime(runtimeSeconds);
   }, 1000);
 
-  // 🆕 batching toutes les 5 secondes
   setInterval(() => {
     if (pendingBlocks.length > 0) {
       const blocksToSend = [...pendingBlocks];
@@ -145,7 +140,12 @@ function startMining() {
         body: JSON.stringify(blocksToSend)
       }).then(res => res.json())
         .then(result => {
-          if (!result.success) {
+          if (result.success) {
+            const accepted = blocksToSend.length;
+            oridiumEarned += accepted * 0.0001;
+            document.getElementById("oridium-earned").textContent = `${oridiumEarned.toFixed(4)} ORID`;
+            updateBalance();
+          } else {
             pendingBlocks.push(...blocksToSend);
             stopMining();
             showNetworkBusyModal(10);
