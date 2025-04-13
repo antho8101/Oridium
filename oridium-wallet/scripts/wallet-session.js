@@ -1,3 +1,5 @@
+// wallet-session.js
+
 import { getBalance, registerWallet } from "./orid-network.js";
 import { getOridPriceUSD } from "./orid-pricing.js";
 
@@ -86,7 +88,7 @@ export function updateWalletButtons(isConnected) {
   }
 }
 
-function updateBalanceUI(balance) {
+export function updateBalanceUI(balance) {
   const elements = document.querySelectorAll(".balance-amount");
   elements.forEach(el => {
     if (el.closest(".wallet-balance")) {
@@ -104,7 +106,7 @@ function updateBalanceUI(balance) {
 }
 
 // ✅ Gère l’affichage + la copie
-function displayPublicKey(address) {
+export function displayPublicKey(address) {
   console.log("🔍 displayPublicKey called with:", address);
 
   const el = document.getElementById("public-key-display");
@@ -136,6 +138,17 @@ function displayPublicKey(address) {
   }
 }
 
+// ✅ Rafraîchit le solde automatiquement si blockchain modifiée par WASM
+window.addEventListener("message", (event) => {
+  if (event.data?.type === "orid-balance-updated") {
+    const address = getConnectedWalletAddress();
+    if (address) {
+      getBalance(address).then(updateBalanceUI);
+    }
+  }
+});
+
+// ⬇️ Expose les fonctions globalement si besoin
 window.disconnectWallet = disconnectWallet;
 window.setWalletConnected = setWalletConnected;
 window.updateWalletBalanceUI = updateBalanceUI;
