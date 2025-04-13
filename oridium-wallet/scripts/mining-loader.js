@@ -10,6 +10,7 @@ let blockCounter = 0;
 let miningActive = false;
 let runtimeInterval = null;
 let pendingBlocks = [];
+let lastSentHash = "0";
 
 window.addEventListener("DOMContentLoaded", async () => {
   const toggleBtn = document.getElementById("mining-toggle");
@@ -134,17 +135,30 @@ function startMining() {
       const blocksToSend = [...pendingBlocks];
       pendingBlocks = [];
 
+      for (let i = 0; i < blocksToSend.length; i++) {
+        blocksToSend[i].previousHash = i === 0 ? lastSentHash : blocksToSend[i - 1].hash;
+      }
+
+      // 🧼 Supprimer les index avant envoi
+      const cleaned = blocksToSend.map((b, i) => ({
+        ...b,
+        index: blockCounter - blocksToSend.length + i
+      }));      
+
+      console.log("🚀 Sending batch of", cleaned.length, "blocks:", cleaned);
+
       fetch("https://oridium-production.up.railway.app/batch-add-blocks", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify(blocksToSend)
+        body: JSON.stringify(cleaned)
       }).then(res => res.json())
         .then(result => {
           if (result.success) {
-            const accepted = blocksToSend.length;
+            const accepted = cleaned.length;
             oridiumEarned += accepted * 0.0001;
             document.getElementById("oridium-earned").textContent = `${oridiumEarned.toFixed(4)} ORID`;
             updateBalance();
+            lastSentHash = cleaned[cleaned.length - 1].hash;
           } else {
             pendingBlocks.push(...blocksToSend);
             stopMining();

@@ -46,63 +46,81 @@ app.get('/blockchain', (req, res) => {
 });
 
 // ➕ POST /add-block
-app.post('/add-block', (req, res) => {
-  const rawBlock = req.body;
-  if (!rawBlock || typeof rawBlock !== 'object') {
-    return res.status(400).json({ error: 'Invalid block format' });
-  }
+app.post('/batch-add-blocks', (req, res) => {
+  const blocks = req.body;
 
-  if (isBlacklisted(rawBlock)) {
-    return res.status(403).json({ error: 'Sender is blacklisted' });
+  console.log("📥 Received batch:", blocks);
+
+  if (!Array.isArray(blocks)) {
+    return res.status(400).json({ error: 'Expected an array of blocks' });
   }
 
   try {
-    const blockchain = getBlockchainFromDB();
-    const index = blockchain.length;
-    const previousHash = index > 0 ? blockchain[index - 1].hash : "0";
-    const txs = rawBlock.transactions || [];
+    let blockchain = getBlockchainFromDB();
+    let lastHash = blockchain.length > 0 ? blockchain[blockchain.length - 1].hash : "0";
+    let index = blockchain.length;
 
-    const totalBySender = {};
-    for (const tx of txs) {
-      if (tx.sender === "System") continue;
-      if (!totalBySender[tx.sender]) totalBySender[tx.sender] = 0;
-      totalBySender[tx.sender] += tx.amount;
-    }
+    for (const rawBlock of blocks) {
+      const txs = rawBlock.transactions || [];
 
-    for (const sender in totalBySender) {
-      const balance = getBalanceFromDB(sender);
-      if (balance < totalBySender[sender]) {
-        return res.status(400).json({
-          error: `Insufficient balance for ${sender}`
-        });
+      const totalBySender = {};
+      for (const tx of txs) {
+        if (tx.sender === "System") continue;
+        if (!totalBySender[tx.sender]) totalBySender[tx.sender] = 0;
+        totalBySender[tx.sender] += tx.amount;
       }
+
+      for (const sender in totalBySender) {
+        const balance = getBalanceFromDB(sender);
+        if (balance < totalBySender[sender]) {
+          console.warn("❌ Balance too low:", sender, "has", balance, "needs", totalBySender[sender]);
+          return res.status(400).json({
+            error: `Insufficient balance for ${sender}`
+          });
+        }
+      }
+
+      const recalculated = calculateHash(
+        rawBlock.index,
+        rawBlock.timestamp,
+        txs,
+        lastHash,
+        rawBlock.nonce
+      );
+
+      if (recalculated !== rawBlock.hash) {
+        console.warn("❌ Hash mismatch:", {
+          expected: recalculated,
+          received: rawBlock.hash
+        });
+        return res.status(400).json({ error: 'Hash mismatch in batch' });
+      }
+
+      if (!isValidHashDifficulty(recalculated)) {
+        console.warn("❌ Invalid difficulty:", recalculated);
+        return res.status(400).json({ error: 'Invalid hash difficulty in batch' });
+      }
+
+      const block = {
+        index: rawBlock.index,
+        timestamp: rawBlock.timestamp,
+        transactions: txs,
+        previousHash: lastHash,
+        hash: recalculated,
+        nonce: rawBlock.nonce
+      };
+
+      addBlockToDB(block);
+      lastHash = recalculated;
+      index++;
+      console.log(`📦 Block ${block.index} added`);
     }
 
-    const recalculatedHash = calculateHash(index, rawBlock.timestamp, txs, previousHash, rawBlock.nonce);
-    if (recalculatedHash !== rawBlock.hash) {
-      return res.status(400).json({ error: 'Hash mismatch' });
-    }
-
-    if (!isValidHashDifficulty(recalculatedHash)) {
-      return res.status(400).json({ error: 'Invalid hash difficulty' });
-    }
-
-    const block = {
-      index,
-      timestamp: rawBlock.timestamp,
-      transactions: txs,
-      previousHash,
-      hash: recalculatedHash,
-      nonce: rawBlock.nonce
-    };
-
-    addBlockToDB(block);
-    console.log(`🧱 Block ${index} added`);
     res.json({ success: true });
 
   } catch (err) {
-    console.error("❌ Error in /add-block:", err);
-    res.status(500).json({ error: 'Server error' });
+    console.error("❌ Error in /batch-add-blocks:", err);
+    res.status(500).json({ error: 'Batch server error' });
   }
 });
 
