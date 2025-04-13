@@ -58,11 +58,20 @@ export async function registerWallet(address) {
   }
 }
 
+// 🔄 Met à jour l'affichage du solde dans l'interface
+export async function updateBalanceDisplay() {
+  const address = window.getConnectedWalletAddress?.();
+  if (!address) return;
+  const balance = await getBalance(address);
+  window.updateWalletBalanceUI?.(balance);
+}
+
 // ✅ Pour accès dans la console (debug)
 if (typeof window !== "undefined") {
   window.getBlockchain = getBlockchain;
   window.getBalance = getBalance;
   window.submitBlock = submitBlock;
   window.registerWallet = registerWallet;
+  window.updateBalanceDisplay = updateBalanceDisplay;
   console.log("🟢 orid-network.js exposé globalement");
 }

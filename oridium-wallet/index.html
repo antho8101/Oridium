@@ -120,7 +120,7 @@
           
           
             <button id="open-sendkey-btn" class="button button-menu-main">Send public key</button>
-            <button class="button button-gold">Send Oridium</button>
+            <button id="open-send-orid-btn" class="button button-gold">Send Oridium</button>
           </div>   
           
           <div class="menu-separator"></div>
@@ -437,47 +437,124 @@
 
 
 
-<!-- Send Oridium Modal -->
-<div id="send-orid-modal" class="modal hidden">
+<!-- Send Oridium Step 1 Modal -->
+<div id="send-orid-step1-modal" class="modal hidden">
   <div class="modal-content">
     <h1 class="logo">Send Oridium 💸</h1>
 
-    <!-- Step 1 -->
-    <div id="step-1" class="send-step">
-      <label class="text">Recipient Public Key:</label>
-      <input type="text" id="recipient-key" placeholder="Paste the public key" />
-      <p id="key-validation-msg" class="input-error-message hidden">Invalid public key.</p>
-
-      <div class="div-button-modale">
-        <button class="button button-gold" id="next-to-amount" disabled>Next</button>
-      </div>
+    <div class="key-display seed-container">
+      <label class="text">Recipient public key:</label>
+      <input
+        type="text"
+        class="deep-black"
+        id="recipient-key"
+        placeholder="Paste your friend’s public key"
+      />
     </div>
 
-    <!-- Step 2 -->
-    <div id="step-2" class="send-step hidden">
-      <label class="text">Amount (ORID):</label>
-      <input type="number" id="orid-amount" min="0.0001" step="0.0001" placeholder="Enter amount to send" />
+    <p class="seed-suggestion div-noidea-modale">
+      Enter your friend’s address above to start the transfer.
+    </p>
 
-      <div class="div-button-modale">
-        <button class="button button-menu-fit" id="back-to-key">Back</button>
-        <button class="button button-gold" id="next-to-summary">Next</button>
-      </div>
+    <div
+      id="key-validation-msg"
+      class="error-message hidden div-button-modale title-thin"
+    >
+      Invalid public key. Make sure it starts with 0x and contains 40 hex characters.
     </div>
 
-    <!-- Step 3 -->
-    <div id="step-3" class="send-step hidden">
-      <p class="text">You're about to send:</p>
-      <p class="text title-thin">🔹 <span id="summary-amount">0</span> ORID</p>
-      <p class="text title-thin">🔑 to <span id="summary-key">[key]</span></p>
-
-      <div class="div-button-modale">
-        <button class="button button-menu-fit" id="back-to-amount">Back</button>
-        <button class="button button-gold" id="confirm-send">Send</button>
-        <button class="button button-menu-fit" id="cancel-send">Close</button>
-      </div>
+    <div class="div-button-modale">
+      <button class="button button-menu-fit" id="close-send-orid-step1">Cancel</button>
+      <button class="button button-gold" id="next-to-step2" disabled>Next</button>
     </div>
   </div>
 </div>
+
+<!-- Send Oridium Step 2 Modal -->
+<div id="send-orid-step2-modal" class="modal hidden">
+  <div class="modal-content">
+    <h1 class="logo">Choose amount 💰</h1>
+
+    <p class="seed-suggestion div-noidea-modale">
+      Select how many ORID you want to send.
+    </p>
+
+    <div class="key-display">
+      <label class="text">Your balance:</label>
+      <p class="text" id="your-balance">0.0000 ORID</p>
+    </div>
+
+    <div class="key-display">
+      <label class="text">Amount to send:</label>
+      <input
+        type="number"
+        id="orid-amount"
+        min="0.0001"
+        step="0.0001"
+        placeholder="Enter amount"
+      />
+    </div>
+
+    <div id="amount-error-msg" class="input-error-message hidden div-button-modale">
+      Amount exceeds your balance.
+    </div>
+
+    <div class="div-button-modale">
+      <button class="button button-menu-fit" id="back-to-step1">Back</button>
+      <button class="button button-gold" id="next-to-summary" disabled>Next</button>
+    </div>
+  </div>
+</div>
+
+<!-- Step 3: Summary -->
+<div id="send-orid-step3-modal" class="modal hidden">
+  <div class="modal-content">
+    <h1 class="logo">Transaction Summary ✅</h1>
+
+    <div class="key-display">
+      <label class="text">Amount to send:</label>
+      <p id="summary-amount" class="text">—</p>
+    </div>
+
+    <div class="key-display">
+      <label class="text">Recipient key:</label>
+      <p id="summary-key" class="text">—</p>
+    </div>
+
+    <div class="key-display">
+      <label class="text">Your public key:</label>
+      <p id="summary-sender" class="text">—</p>
+    </div>
+
+    <div class="div-button-modale">
+      <button class="button button-menu-fit" id="back-to-step2">Back</button>
+      <button class="button button-gold" id="confirm-send">Send Oridium</button>
+      <button class="button button-menu-fit" id="close-send-orid-step3">Cancel</button>
+    </div>
+  </div>
+</div>
+
+<!-- Step 4: Confirmation -->
+<div id="send-orid-step4-modal" class="modal hidden">
+  <div class="modal-content">
+    <h1 class="logo">Transaction Status 🚀</h1>
+
+    <p class="seed-suggestion div-noidea-modale" id="confirmation-message">
+      ⏳ Sending...
+    </p>
+
+    <div class="div-button-modale">
+      <button class="button button-menu-fit" id="close-send-orid-step4">Close</button>
+    </div>
+  </div>
+</div>
+
+
+
+
+
+
+
 
 
 
@@ -524,6 +601,7 @@
 <script type="module" src="scripts/orid-global.js"></script>
 <script type="module" src="scripts/wallet-session.js"></script>
 <script type="module" src="scripts/wallet/send-publickey.js"></script>
+<script type="module" src="scripts/wallet/send-orid.js"></script>
 
 
 
