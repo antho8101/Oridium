@@ -1,0 +1,111 @@
+/* === SHARED STYLES === */
+@import url('./fonts.css');
+@import url('./buttons.css');
+
+/* === BASE / SYSTEM === */
+@import url('./base/reset.css');
+@import url('./base/variables.css');
+
+/* === LAYOUT === */
+@import url('./layout/header.css');
+@import url('./layout/footer.css');
+@import url('./layout/hero.css');
+
+/* === GLOBAL BODY SETUP === */
+body {
+  user-select: none;
+  background: var(--Oridium-bg, #0E0F14);
+  color: var(--Oridium, #DCCB92);
+  font-family: 'Space Grotesk', sans-serif;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
+}
+
+.page-wrapper {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1; /* ← ajoute ça pour forcer le stretch */
+}
+
+.hero {
+  flex-grow: 1;
+}
+
+/* Supprime si #footer n’existe pas */
+#footer {
+  width: 100%;
+}
+
+/* === ACCORDÉON FOOTER === */
+.footer-accordion-group {
+  display: none;
+  flex-direction: column;
+  align-items: flex-start;
+  align-self: stretch;
+  width: 100%;
+}
+
+.footer-accordion-item {
+  width: 100%;
+  border-bottom: 1px solid #575449;
+}
+
+.footer-accordion-header {
+  width: 100%;
+  background: transparent;
+  border: none;
+  color: #DCCB92;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 14px;
+  font-weight: 500;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 16px 0;
+  cursor: pointer;
+}
+
+.accordion-icon {
+  width: 18px;
+  height: 18px;
+  transition: transform 0.3s ease;
+}
+
+.footer-accordion-item.active .accordion-icon {
+  transform: rotate(45deg);
+}
+
+.footer-accordion-content {
+  display: none;
+  flex-direction: column;
+  gap: 10px;
+  padding-bottom: 16px;
+}
+
+.footer-accordion-item.active .footer-accordion-content {
+  display: flex;
+}
+
+.button,
+.button-icon-gold {
+  transform: none !important;
+  transition: color 0.2s ease !important; /* ou juste la couleur */
+}
+
+/* === RESPONSIVE : TABLETTE & MOBILE === */
+@media (max-width: 1024px) {
+  .footer-columns-desktop {
+    display: none !important;
+  }
+
+  .footer-accordion-group {
+    display: flex;
+  }
+}
