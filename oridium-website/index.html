@@ -4,46 +4,92 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Oridium — Digital Currency of the Elite</title>
-  <style>
-    body {
-      margin: 0;
-      padding: 0;
-      font-family: 'Space Grotesk', sans-serif;
-      background-color: #0E0F14;
-      color: #DCCB92;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      height: 100vh;
-      text-align: center;
-    }
 
-    h1 {
-      font-size: 2.5rem;
-      margin-bottom: 1rem;
-    }
-
-    a.button {
-      background-color: #DCCB92;
-      color: #0E0F14;
-      text-decoration: none;
-      padding: 0.8rem 1.5rem;
-      border-radius: 30px;
-      font-weight: bold;
-      transition: all 0.2s ease-in-out;
-    }
-
-    a.button:hover {
-      background-color: #bfae76;
-    }
-  </style>
+  <!-- Styles -->
+  <link rel="stylesheet" href="assets/css/main.css">
+  <link rel="stylesheet" href="assets/css/layout/hero.css">
 </head>
 <body>
+      
+  <div class="page-wrapper">
 
-  <h1>Welcome to Oridium</h1>
-  <p>The Digital Currency of the Elite</p>
-  <a class="button" href="https://wallet.getoridium.com">Go to Wallet →</a>
+    <!-- HERO SECTION -->
+    <section class="hero">
+        <video class="hero-bg-video" autoplay muted loop playsinline>
+          <source src="assets/video/hero-bg.mp4" type="video/mp4" />
+          Your browser does not support the video tag.
+        </video>
+      
+        <div class="hero-overlay"></div>
+      
+        <header class="hero-header">
+          <img src="assets/Oridium_Logo.svg" alt="Oridium Logo" class="hero-logo" />
+          <nav class="hero-nav">
+            <a href="/market.html">Oridium™ Market</a>
+            <a href="/features">Features</a>
+            <a href="/security">Security & Trust</a>
+          </nav>
+          <div class="hero-price">
+            <span class="price">720,00 USD</span>
+            <span class="variation">+4.37 (2.21%)</span>
+          </div>
+          <a href="https://wallet.getoridium.com" class="button-icon-gold hero-wallet-cta">
+            Go to Wallet →
+          </a>
+        </header>
+      
+        <div class="hero-content">
+          <h1 class="hero-title">The Digital Currency of the Elite</h1>
+          <p class="hero-subtitle">
+            Join the digital gold rush.<br />
+            Oridium is a rare asset, released weekly in limited supply by a public algorithmic bank.<br />
+            Built to grow. Designed to reward those who move early.
+          </p>
+          <div class="hero-buttons">
+            <a href="https://wallet.getoridium.com" class="button-gold">Get Oridium®</a>
+            <a href="/whitepaper" class="button-outline">
+              Explore WhitePaper <img src="assets/ri_document-line.svg" alt="" />
+            </a>
+          </div>
+        </div>
+      </section>      
 
+    <!-- FOOTER -->
+    <div id="footer"></div>
+  </div>
+
+  <script>
+    fetch("components/footer.html")
+      .then(res => res.text())
+      .then(html => {
+        document.getElementById("footer").innerHTML = html;
+
+        // Inject accordion behavior after injection
+        const script = document.createElement("script");
+        script.textContent = `
+          document.querySelectorAll('.footer-accordion-header').forEach(header => {
+            header.addEventListener('click', () => {
+              const item = header.parentElement;
+              const content = item.querySelector('.footer-accordion-content');
+              const isOpen = item.classList.contains('active');
+
+              document.querySelectorAll('.footer-accordion-item.active').forEach(openItem => {
+                openItem.classList.remove('active');
+                openItem.querySelector('.footer-accordion-content').style.maxHeight = null;
+              });
+
+              if (!isOpen) {
+                item.classList.add('active');
+                content.style.maxHeight = content.scrollHeight + 'px';
+              } else {
+                item.classList.remove('active');
+                content.style.maxHeight = null;
+              }
+            });
+          });
+        `;
+        document.body.appendChild(script);
+      });
+  </script>
 </body>
 </html>

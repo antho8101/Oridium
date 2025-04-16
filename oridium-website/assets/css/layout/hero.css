@@ -1,0 +1,110 @@
+.hero {
+  position: relative;
+  width: 100%;
+  height: 100vh;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  z-index: 0;
+}
+
+.hero-bg-video {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center center;
+  z-index: -2;
+}
+
+.hero-overlay {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: rgba(0, 0, 0, 0.55);
+  z-index: -1;
+}
+
+.hero-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 30px 60px;
+  z-index: 1;
+}
+
+.hero-logo {
+  height: 40px;
+}
+
+.hero-nav {
+  display: flex;
+  gap: 40px;
+}
+
+.hero-nav a {
+  text-decoration: none;
+}
+
+.hero-price {
+  text-align: right;
+}
+
+.hero-wallet-cta {
+  margin-left: 40px;
+  text-decoration: none;
+}
+
+.hero-content {
+  z-index: 1;
+  padding-bottom: 120px;
+  max-width: 900px;
+  margin: auto;
+  text-align: center;
+}
+
+.hero-buttons {
+  display: flex;
+  gap: 20px;
+  justify-content: center;
+  flex-wrap: wrap;
+  margin-top: 120px;
+}
+.hero-title {
+  font-family: "Space Grotesk", sans-serif;
+  font-weight: 700;
+  font-size: 48px;
+}
+
+.hero-title-shadow {
+  color: #DCCB92;
+  width: 740px;
+  height: 61px;
+  margin: 0 auto 20px auto;
+  text-align: center;
+  box-shadow:
+    0px 4px 4px rgba(0, 0, 0, 0.3),
+    0px 8px 12px 6px rgba(0, 0, 0, 0.15);
+}
+
+.hero-subtitle {
+  width: 583px;
+  height: 54px;
+  font-size: 14px;
+
+  margin: 0 auto 40px auto;
+  text-align: center;
+  color: white; /* override si besoin */
+}
+
+.hero-text-wrapper {
+  margin-bottom: 30px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}

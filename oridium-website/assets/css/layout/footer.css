@@ -1,0 +1,289 @@
+/* === FOOTER.CSS === */
+
+.oridium-footer {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 60px;
+    padding-top: 60px;
+    width: 100%;
+    background: radial-gradient(50% 50% at 50% 50%, #3A3C44 0%, #1F212C 100%);
+    border-top: 1px solid #DCCB92;
+    color: #DCCB92;
+    text-align: center;
+    box-sizing: border-box;
+    user-select: none;
+  }
+  
+  .footer-top-content {
+    display: flex;
+    padding: 0px 120px;
+    justify-content: space-between;
+    align-items: flex-start;
+    align-self: stretch;
+    flex-wrap: wrap;
+    gap: 40px;
+  }
+  
+  .footer-header-group {
+    display: none;
+  }
+  
+  .footer-logo-block {
+    display: flex;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .footer-logo {
+    width: 30px;
+    height: auto;
+  }
+  
+  .footer-logo-texts {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: left;
+  }
+  
+  .footer-brand-name {
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 700;
+    font-size: 32px;
+    line-height: 100%;
+    color: #DCCB92;
+  }
+  
+  .footer-baseline {
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 300;
+    font-size: 14px;
+    line-height: normal;
+    color: #DCCB92;
+    margin-top: 4px;
+  }
+  
+  .footer-column {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+  }
+  
+  .footer-column-title {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #DCCB92;
+  }
+  
+  .footer-column-links {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  
+  .footer-link {
+    color: #FFFFFF;
+    font-family: "Space Grotesk";
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: normal;
+    transition: color 0.2s ease, transform 0.1s ease;
+  }
+  
+  .footer-link:hover {
+    color: #DCCB92;
+  }
+  
+  .footer-link:active {
+    color: #575449;
+  }
+  
+  .footer-divider {
+    width: 1px;
+    height: auto;
+    background: var(--Dividers, #575449);
+    align-self: stretch;
+  }
+  
+  .footer-bottom {
+    display: flex;
+    flex-direction: column;
+    padding: 20px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .footer-author-link {
+    color: #DCCB92;
+    text-decoration: underline;
+    transition: color 0.2s ease;
+  }
+  
+  .footer-author-link:hover {
+    color: #ffffff;
+  }
+  
+  .footer-cta {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: auto;
+  }
+  
+  /* === ACCORDION (TABLETTE & MOBILE) === */
+  .footer-accordion-group {
+    display: none;
+    flex-direction: column;
+    align-items: flex-start;
+    align-self: stretch;
+    width: 100%;
+  }
+  
+  .footer-accordion-item {
+    width: 100%;
+    border-bottom: 1px solid #575449;
+  }
+  
+  .footer-accordion-header {
+    width: 100%;
+    background: transparent;
+    border: none;
+    color: #DCCB92;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 16px 0;
+    cursor: pointer;
+  }
+  
+  .accordion-icon {
+    width: 18px;
+    height: 18px;
+    transition: transform 0.3s ease;
+  }
+  
+  .footer-accordion-item.active .accordion-icon {
+    transform: rotate(45deg);
+  }
+  
+  .footer-accordion-content {
+    display: none;
+    flex-direction: column;
+    gap: 30px;
+    padding-bottom: 16px;
+  }
+  
+  .footer-accordion-item.active .footer-accordion-content {
+    display: flex;
+  }
+  
+  .footer-cta {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: auto;
+  }
+  
+  /* Par défaut */
+  .footer-cta-tablet {
+    display: none;
+  }
+  
+  .footer-cta-desktop {
+    display: flex;
+  }
+
+  /* Neutraliser tout scale parasite */
+.button,
+.button:hover,
+.button:focus,
+.button:active,
+.button-icon-gold,
+.button-icon-gold:hover,
+.button-icon-gold:focus,
+.button-icon-gold:active {
+  transform: none !important;
+  transition: color 0.2s ease, background 0.2s ease !important;
+}
+
+  
+/* === RESPONSIVE === */
+@media (max-width: 1024px) {
+    .oridium-footer {
+      padding-top: 30px;
+      gap: 20px;
+    }
+  
+    .footer-top-content {
+      padding: 0 30px;
+      flex-direction: column;
+      gap: 30px;
+    }
+  
+    .footer-header-group {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      flex-direction: row;
+      flex-wrap: wrap;
+      width: 100%;
+    }
+  
+    .footer-logo-block {
+      flex-direction: row;
+      align-items: center;
+      gap: 10px;
+    }
+  
+    .footer-cta-desktop {
+      display: none !important;
+    }
+  
+    .footer-cta-tablet {
+      display: flex;
+    }
+  
+    .footer-baseline,
+    .footer-column,
+    .footer-divider {
+      display: none !important;
+    }
+  
+    .footer-accordion-wrapper {
+      order: 3;
+      width: 100%;
+    }
+  
+    .footer-accordion-group {
+      display: flex;
+    }
+  
+    .footer-logo-desktop {
+      display: none !important;
+    }
+  
+    .footer-accordion-content {
+        max-height: 0;
+        overflow: hidden;
+        transition: max-height 0.4s ease;
+        display: flex;
+        flex-direction: column;
+        gap: 30px;
+        padding-bottom: 0;
+      }
+      
+      .footer-accordion-item.active .footer-accordion-content {
+        /* Ne rien mettre ici pour max-height (JS le gère dynamiquement) */
+        padding-bottom: 16px;
+      }         
+  }  
