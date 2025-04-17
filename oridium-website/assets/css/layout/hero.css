@@ -62,7 +62,6 @@
 
 .hero-content {
   z-index: 1;
-  max-width: 900px;
   margin: auto;
   text-align: center;
 }
@@ -76,10 +75,12 @@
   margin-bottom: 120px;
 }
 .hero-title {
+  align-self: stretch;
   font-family: "Space Grotesk", sans-serif;
   font-weight: 700;
   font-size: 48px;
   margin: 0;
+  width: fit-content;
 }
 
 .hero-title-shadow {
@@ -97,6 +98,7 @@
   font-weight: 500;
   line-height: normal;
   text-align: center;
+  width: 100%;
   margin: 0;
 }
 
@@ -105,4 +107,73 @@
   flex-direction: column;
   align-items: center;
   gap: 30px;
+  align-self: stretch;
+  width: 100%;
+}
+
+@media (max-width: 1024px) {
+  
+  .hero-content {
+    padding-left: 120px;
+    padding-right: 120px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+
+  .hero-title {
+    width: 100%;
+    height: auto;
+
+  }
+
+  .hero-text-wrapper {
+    width: 100%;
+  }
+}
+
+@media (max-width: 768px) {
+  .hero {
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    height: 100vh;
+  }
+
+  .hero-content {
+    width: 100%;
+    max-width: unset;
+    box-sizing: border-box;
+    padding: 0 30px 40px;
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+  }
+
+  .hero-text-wrapper {
+    display: flex;
+    justify-content: center;
+    height: 100%;
+    flex-direction: column;
+    gap: 30px;
+  }
+
+  .hero-buttons {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    align-items: center;
+    width: 100%;
+    margin-bottom: 0;
+  }
+
+  .hero-title {
+    font-size: 32px;
+    width: 100%;
+    height: auto;
+  }
+
+  .hero-buttons a {
+    width: 100%;
+    box-sizing: border-box;
+  }
 }
