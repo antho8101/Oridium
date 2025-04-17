@@ -1,0 +1,190 @@
+/* === HEADER PRINCIPAL === */
+.hero-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 30px;
+    width: 100%;
+    height: fit-content;
+    box-sizing: border-box;
+  }
+  
+  /* === GAUCHE : Logo + Texte Oridium === */
+  .header-left {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+  
+  .hero-logo {
+    height: 40px;
+  }
+  
+  .header-brand {
+    color: var(--Oridium, #DCCB92);
+    font-family: "Space Grotesk";
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 100%;
+    letter-spacing: 0;
+  }
+  
+  /* === DROITE : Menu + Prix + CTA === */
+  .header-right {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 60px;
+  }
+  
+  .hero-nav {
+    display: flex;
+    gap: 30px;
+  }
+  
+  .hero-nav a {
+    text-decoration: none;
+    color: white;
+    font-family: "Space Grotesk";
+    font-size: 14px;
+    font-weight: 700;
+  }
+  
+  .header-info-group {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 30px;
+  }
+  
+  .hero-price {
+    display: flex;
+    width: fit-content;
+    height: fit-content;
+    padding: 10px 20px;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    border-radius: 99px;
+    border: 1px solid var(--Dividers, #575449);
+    background: var(--Pure-White, #FFF);
+  }
+  
+  .hero-price .price {
+    font-weight: bold;
+    color: var(--clear-black, #282A36);
+    
+  }
+  
+  .hero-price .variation {
+    color: #387912;
+    font-family: "Space Grotesk";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  }
+
+  .header-link {
+    color: #FFFFFF;
+    font-family: "Space Grotesk";
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: normal;
+    transition: color 0.2s ease, transform 0.1s ease;
+  }
+  
+  .header-link:hover {
+    color: #DCCB92;
+  }
+  
+  .header-link:active {
+    color: #575449;
+  }
+
+  /* CACHÉ PAR DÉFAUT */
+.burger-menu {
+    display: none;
+    background: none;
+    border: none;
+    cursor: pointer;
+    padding: 0;
+  }
+  
+  .burger-icon {
+    width: 32px;
+    height: 32px;
+    aspect-ratio: 1/1;
+  }
+
+  .mobile-menu {
+    display: none;
+  }
+  
+  /* AFFICHÉ EN TABLETTE / MOBILE */
+  @media (max-width: 1024px) {
+    .burger-menu {
+      display: block;
+    }
+  
+    .hero-nav,
+    .hero-wallet-cta {
+      display: none !important; /* On masque le menu desktop */
+    }
+
+    .mobile-menu {
+        position: absolute;
+        top: 101px;
+        left: 0;
+        right: 0;
+        background-color: var(--Oridium, #DCCB92);
+        z-index: 999;
+        padding: 30px 40px;
+        display: none;
+        flex-direction: column;
+        gap: 20px;
+        box-shadow: 0 12px 16px rgba(0, 0, 0, 0.2);
+        animation: slideDown 0.3s ease forwards;
+      }
+      
+      .mobile-menu.open {
+        display: flex;
+      }
+      
+      .mobile-menu-section {
+        border-bottom: 1px solid #575449;
+        padding-bottom: 20px;
+        margin-bottom: 20px;
+      }
+      
+      .mobile-menu-title {
+        font-weight: 700;
+        margin-bottom: 10px;
+        color: #000;
+        font-family: "Space Grotesk";
+      }
+      
+      @keyframes slideDown {
+        0% {
+          transform: translateY(-20px);
+          opacity: 0;
+        }
+        100% {
+          transform: translateY(0);
+          opacity: 1;
+        }
+      }
+      
+  }
+
+  @media (max-width: 768px) {
+    .header-info-group,
+    .hero-nav {
+      display: none !important;
+    }
+  }
+  

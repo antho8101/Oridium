@@ -21,22 +21,65 @@
       <div class="hero-overlay"></div>
 
       <header class="hero-header">
-        <img src="assets/Oridium_Logo.svg" alt="Oridium Logo" class="hero-logo" />
-        <nav class="hero-nav">
-          <a href="/market.html">Oridium™ Market</a>
-          <a href="/features">Features</a>
-          <a href="/security">Security & Trust</a>
-        </nav>
-        <div class="hero-price">
-          <span class="price">720,00 USD</span>
-          <span class="variation">+4.37 (2.21%)</span>
+        <a href="https://www.getoridium.com/" class="header-left">
+          <img src="assets/Oridium_Logo.svg" alt="Oridium Logo" class="hero-logo" />
+          <span class="header-brand">Oridium®</span>
+        </a>
+
+        <div class="header-right">
+          <nav class="hero-nav">
+            <a href="/market.html" class="header-link">Oridium™ Market</a>
+            <a href="/features" class="header-link">Features</a>
+            <a href="/security" class="header-link">Security & Trust</a>
+          </nav>
+
+          <div class="header-info-group">
+            <div class="hero-price">
+              <span class="price">720,00 USD</span>
+              <span class="variation">+4.37 (2.21%)</span>
+              <img src="assets/ri_arrow-right-up-long-line.svg" />
+            </div>
+            <a href="https://wallet.getoridium.com" class="button-icon-gold" target="_blank" rel="noopener noreferrer">
+              Go to Wallet
+              <img src="assets/ri_arrow-right-long-line.svg" alt="Arrow Icon" class="button-icon" />
+            </a>
+          </div>
+
+          <!-- Menu Burger -->
+          <button class="burger-menu" id="hamburger-toggle" aria-label="Open menu">
+            <img src="assets/ri_menu-line.svg" alt="Menu" class="burger-icon" />
+          </button>
         </div>
-        <a href="https://wallet.getoridium.com" class="button-icon-gold" target="_blank" rel="noopener noreferrer">
-            Go to Wallet
-            <img src="assets/ri_arrow-right-long-line.svg" alt="Arrow Icon" class="button-icon" />
-          </a>
       </header>
 
+      <!-- MENU MOBILE -->
+      <div class="mobile-menu" id="mobile-menu">
+        <div class="mobile-menu-section">
+          <div class="mobile-menu-title">Explore</div>
+          <a href="/market.html" class="header-link">Oridium™ Market</a>
+          <a href="/whitepaper" class="header-link">WhitePaper</a>
+          <a href="/features" class="header-link">Features</a>
+          <a href="/about" class="header-link">About</a>
+        </div>
+
+        <div class="mobile-menu-section">
+          <div class="mobile-menu-title">Support</div>
+          <a href="/help" class="header-link">Help Center</a>
+          <a href="/contact" class="header-link">Contact Us</a>
+          <a href="/troubleshooting" class="header-link">Troubleshooting</a>
+          <a href="/wallet-guide" class="header-link">Wallet Guide</a>
+        </div>
+
+        <div class="mobile-menu-section">
+          <div class="mobile-menu-title">Legal</div>
+          <a href="/our-commitment" class="header-link">Our Commitment</a>
+          <a href="/terms-of-use" class="header-link">Terms of Use</a>
+          <a href="/private-life" class="header-link">Private Life</a>
+          <a href="/cookies" class="header-link">Cookies</a>
+        </div>
+      </div>
+
+      <!-- CONTENU CENTRAL -->
       <div class="hero-content">
         <div class="hero-text-wrapper">
           <h1 class="hero-title logo hero-title-shadow">The Digital Currency of the Elite</h1>
@@ -48,19 +91,18 @@
         </div>
 
         <div class="hero-buttons">
-            <a href="https://wallet.getoridium.com" class="button-icon-gold" target="_blank" rel="noopener noreferrer">
-              Get Oridium®
-              <img src="assets/ri_arrow-right-long-line.svg" alt="Arrow Icon" class="button-icon" />
-            </a>
-            <a href="https://ac-global-business.notion.site/Whitepaper-Oridium-1c12085e713e803aaaa8f832f0366dfb" class="button-icon-black" target="_blank" rel="noopener noreferrer">
-                Explore WhitePaper
-                <svg class="button-icon" width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
-                  <path d="M13.8334 16.6667V3.33335H3.83341V15.8334C3.83341 16.0544 3.92121 16.2663 4.07749 16.4226C4.23377 16.5789 4.44573 16.6667 4.66675 16.6667H13.8334ZM16.3334 18.3334H4.66675C4.00371 18.3334 3.36782 18.07 2.89898 17.6011C2.43014 17.1323 2.16675 16.4964 2.16675 15.8334V2.50002C2.16675 2.27901 2.25455 2.06704 2.41083 1.91076C2.56711 1.75448 2.77907 1.66669 3.00008 1.66669H14.6667C14.8878 1.66669 15.0997 1.75448 15.256 1.91076C15.4123 2.06704 15.5001 2.27901 15.5001 2.50002V8.33335H18.8334V15.8334C18.8334 16.4964 18.57 17.1323 18.1012 17.6011C17.6323 18.07 16.9965 18.3334 16.3334 18.3334ZM15.5001 10V15.8334C15.5001 16.0544 15.5879 16.2663 15.7442 16.4226C15.9004 16.5789 16.1124 16.6667 16.3334 16.6667C16.5544 16.6667 16.7664 16.5789 16.9227 16.4226C17.079 16.2663 17.1667 16.0544 17.1667 15.8334V10H15.5001ZM5.50008 5.00002H10.5001V10H5.50008V5.00002ZM7.16675 6.66669V8.33335H8.83341V6.66669H7.16675ZM5.50008 10.8334H12.1667V12.5H5.50008V10.8334ZM5.50008 13.3334H12.1667V15H5.50008V13.3334Z"
-                    fill="currentColor" />
-                </svg>
-              </a>              
-          </div>
-          
+          <a href="https://wallet.getoridium.com" class="button-icon-gold" target="_blank" rel="noopener noreferrer">
+            Get Oridium®
+            <img src="assets/ri_arrow-right-long-line.svg" alt="Arrow Icon" class="button-icon" />
+          </a>
+          <a href="https://ac-global-business.notion.site/Whitepaper-Oridium-1c12085e713e803aaaa8f832f0366dfb" class="button-icon-black" target="_blank" rel="noopener noreferrer">
+            Explore WhitePaper
+            <svg class="button-icon" width="21" height="20" viewBox="0 0 21 20" fill="none" xmlns="http://www.w3.org/2000/svg">
+              <path d="M13.8334 16.6667V3.33335H3.83341V15.8334C3.83341 16.0544 3.92121 16.2663 4.07749 16.4226C4.23377 16.5789 4.44573 16.6667 4.66675 16.6667H13.8334ZM16.3334 18.3334H4.66675C4.00371 18.3334 3.36782 18.07 2.89898 17.6011C2.43014 17.1323 2.16675 16.4964 2.16675 15.8334V2.50002C2.16675 2.27901 2.25455 2.06704 2.41083 1.91076C2.56711 1.75448 2.77907 1.66669 3.00008 1.66669H14.6667C14.8878 1.66669 15.0997 1.75448 15.256 1.91076C15.4123 2.06704 15.5001 2.27901 15.5001 2.50002V8.33335H18.8334V15.8334C18.8334 16.4964 18.57 17.1323 18.1012 17.6011C17.6323 18.07 16.9965 18.3334 16.3334 18.3334ZM15.5001 10V15.8334C15.5001 16.0544 15.5879 16.2663 15.7442 16.4226C15.9004 16.5789 16.1124 16.6667 16.3334 16.6667C16.5544 16.6667 16.7664 16.5789 16.9227 16.4226C17.079 16.2663 17.1667 16.0544 17.1667 15.8334V10H15.5001ZM5.50008 5.00002H10.5001V10H5.50008V5.00002ZM7.16675 6.66669V8.33335H8.83341V6.66669H7.16675ZM5.50008 10.8334H12.1667V12.5H5.50008V10.8334ZM5.50008 13.3334H12.1667V15H5.50008V13.3334Z"
+              fill="currentColor" />
+            </svg>
+          </a>
+        </div>
       </div>
     </section>
 
