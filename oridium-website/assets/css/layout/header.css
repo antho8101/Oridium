@@ -23,7 +23,7 @@
   }
   
   .header-brand {
-    color: var(--Oridium, #DCCB92);
+    color: var(--Oridium, #DCCB92) !important;
     font-family: "Space Grotesk";
     font-size: 32px;
     font-style: normal;
@@ -136,36 +136,141 @@
       display: none !important; /* On masque le menu desktop */
     }
 
-    .mobile-menu {
-        position: absolute;
-        top: 101px;
-        left: 0;
-        right: 0;
-        background-color: var(--Oridium, #DCCB92);
-        z-index: 999;
-        padding: 30px 40px;
-        display: none;
-        flex-direction: column;
-        gap: 20px;
-        box-shadow: 0 12px 16px rgba(0, 0, 0, 0.2);
-        animation: slideDown 0.3s ease forwards;
-      }
+    .header-brand-alt {
+      color: var(--clear-black, #282A36);
+      font-family: "Space Grotesk";
+      font-size: 32px;
+      font-style: normal;
+      font-weight: 700;
+      line-height: normal;
+    }
+
+    .hero-price {
+      display: flex;
+      width: fit-content;
+      height: fit-content;
+      padding: 10px 20px;
+      justify-content: center;
+      align-items: center;
+      gap: 5px;
+      border-radius: 99px;
+      border: 1px solid var(--Dividers, #575449);
+      background: var(--Pure-White, #FFF);
+    }
+    
+    .hero-price .price {
+      font-weight: bold;
+      color: var(--clear-black, #282A36);
       
-      .mobile-menu.open {
-        display: flex;
-      }
+    }
+    
+    .hero-price .variation {
+      color: #387912;
+      font-family: "Space Grotesk";
+      font-size: 14px;
+      font-style: normal;
+      font-weight: 400;
+      line-height: normal;
+    }  
+
+    .header-right {
+      gap: 30px;
+    }
+
+    .mobile-menu {
+      position: fixed;
+      top: 0;
+      left: 0;
+      right: 0;
+      background-color: var(--Oridium, #DCCB92);
+      z-index: 9999;
+      padding: 0 40px;
+      display: flex;
+      flex-direction: column;
+      gap: 30px;
+      box-shadow: 0 12px 16px rgba(0, 0, 0, 0.2);
+      overflow: hidden;
+    
+      /* Déroulement initial */
+      max-height: 0;
+      pointer-events: none;
+      transition: max-height 0.4s ease, padding-top 0.3s ease, padding-bottom 0.3s ease;
+    }
+    
+    .mobile-menu.open {
+      max-height: 600px;
+      pointer-events: auto;
+      padding-top: 30px;
+      padding-bottom: 30px;
+    }   
       
       .mobile-menu-section {
-        border-bottom: 1px solid #575449;
-        padding-bottom: 20px;
-        margin-bottom: 20px;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-end;
+        gap: 20px;
       }
       
       .mobile-menu-title {
         font-weight: 700;
         margin-bottom: 10px;
-        color: #000;
+        color: var(--Dividers, #575449);
         font-family: "Space Grotesk";
+        font-size: 14px;
+        font-style: normal;
+        font-weight: 500;
+        line-height: normal;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: flex-end;
+      }
+
+      .mobile-menu-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        padding: 10px 0;
+      }
+      
+      .header-left-alt {
+        color: #282A36;
+      }
+
+      .button-icon-gold {
+        border: 1px solid var(--clear-black, #282A36) !important;
+      }
+
+      .header-brand {
+        color: #282A36;
+      }
+      
+      .hero-logo.alt {
+        filter: brightness(0) saturate(100%);
+      }
+
+      .mobile-menu-section {
+        display: flex;
+        flex-direction: column;
+        gap: 10px;
+        margin-bottom: 30px;
+      }
+      
+      .mobile-menu-links {
+        display: flex;
+        align-items: flex-start;
+        gap: 30px;
+      }    
+      
+      .header-link {
+        color: var(--clear-black, #282A36);
+        font-family: "Space Grotesk";
+        text-decoration: none;
+        font-size: 14px;
+        font-weight: 400;
+        line-height: normal;
+        transition: color 0.2s ease, transform 0.1s ease;
       }
       
       @keyframes slideDown {
