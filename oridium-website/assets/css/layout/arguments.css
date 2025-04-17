@@ -1,0 +1,44 @@
+.arguments-strip {
+    display: flex;
+    padding: 20px 120px;
+    justify-content: center;
+    align-items: center;
+    gap: 60px;
+    align-self: stretch;
+    border-top: 1px solid #DCCB92;
+    border-bottom: 1px solid #DCCB92;
+    background: radial-gradient(50% 50% at 50% 50%, #3A3C44 0%, #1F212C 100%);
+    box-shadow:
+      0px 8px 12px 6px rgba(0, 0, 0, 0.15),
+      0px 4px 4px 0px rgba(0, 0, 0, 0.30);
+  }
+  
+  .argument-item {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 20px;
+  }
+  
+  .argument-item span {
+    color: #FFF;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+  }
+
+  @media (max-width: 768px) {
+    .arguments-strip {
+        display: flex;
+        padding: 30px;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        gap: 30px;
+        align-self: stretch;
+    }
+
+}
