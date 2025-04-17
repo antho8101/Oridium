@@ -4,13 +4,10 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Oridium — Digital Currency of the Elite</title>
-
-  <!-- Styles -->
   <link rel="stylesheet" href="assets/css/main.css">
 </head>
 <body>
   <div class="page-wrapper">
-
     <!-- HERO SECTION -->
     <section class="hero">
       <video class="hero-bg-video" autoplay muted loop playsinline>
@@ -53,31 +50,64 @@
       </header>
 
       <!-- MENU MOBILE -->
-      <div class="mobile-menu" id="mobile-menu">
-        <div class="mobile-menu-section">
-          <div class="mobile-menu-title">Explore</div>
-          <a href="/market.html" class="header-link">Oridium™ Market</a>
-          <a href="/whitepaper" class="header-link">WhitePaper</a>
-          <a href="/features" class="header-link">Features</a>
-          <a href="/about" class="header-link">About</a>
+<div class="mobile-menu" id="mobile-menu">
+    <div class="mobile-menu-header">
+      <!-- Bloc gauche (logo + texte) -->
+      <a href="https://www.getoridium.com/" class="header-left alt">
+        <img src="assets/Oridium_Logo_Alt.svg" alt="Oridium Logo" class="hero-logo alt" />
+        <span class="header-brand-alt">Oridium®</span>
+      </a>      
+  
+      <!-- Bloc droite (prix + cta + bouton burger) -->
+      <div class="header-right alt">
+        <div class="hero-price alt">
+          <span class="price">720,00 USD</span>
+          <span class="variation">+4.37 (2.21%)</span>
         </div>
-
-        <div class="mobile-menu-section">
-          <div class="mobile-menu-title">Support</div>
-          <a href="/help" class="header-link">Help Center</a>
-          <a href="/contact" class="header-link">Contact Us</a>
-          <a href="/troubleshooting" class="header-link">Troubleshooting</a>
-          <a href="/wallet-guide" class="header-link">Wallet Guide</a>
-        </div>
-
-        <div class="mobile-menu-section">
-          <div class="mobile-menu-title">Legal</div>
-          <a href="/our-commitment" class="header-link">Our Commitment</a>
-          <a href="/terms-of-use" class="header-link">Terms of Use</a>
-          <a href="/private-life" class="header-link">Private Life</a>
-          <a href="/cookies" class="header-link">Cookies</a>
-        </div>
+  
+        <a href="https://wallet.getoridium.com" class="button-icon-gold target="_blank" rel="noopener noreferrer">
+          Go to Wallet
+          <img src="assets/ri_arrow-right-long-line.svg" class="button-icon" />
+        </a>
+  
+        <!-- Bouton de fermeture burger -->
+        <button class="burger-menu" id="hamburger-toggle-close" aria-label="Close menu">
+          <img src="assets/ri_menu-line_alt.svg" alt="Menu" class="burger-icon" />
+        </button>
       </div>
+    </div>
+  
+    <div class="mobile-menu-section">
+      <div class="mobile-menu-title">Explore</div>
+      <div class="mobile-menu-links">
+        <a href="/market.html" class="header-link">Oridium™ Market</a>
+        <a href="/whitepaper" class="header-link">WhitePaper</a>
+        <a href="/features" class="header-link">Features</a>
+        <a href="/about" class="header-link">About</a>
+      </div>
+    </div>
+    
+    <div class="mobile-menu-section">
+      <div class="mobile-menu-title">Support</div>
+      <div class="mobile-menu-links">
+        <a href="/help" class="header-link">Help Center</a>
+        <a href="/contact" class="header-link">Contact Us</a>
+        <a href="/troubleshooting" class="header-link">Troubleshooting</a>
+        <a href="/wallet-guide" class="header-link">Wallet Guide</a>
+      </div>
+    </div>
+    
+    <div class="mobile-menu-section">
+      <div class="mobile-menu-title">Legal</div>
+      <div class="mobile-menu-links">
+        <a href="/our-commitment" class="header-link">Our Commitment</a>
+        <a href="/terms-of-use" class="header-link">Terms of Use</a>
+        <a href="/private-life" class="header-link">Private Life</a>
+        <a href="/cookies" class="header-link">Cookies</a>
+      </div>
+    </div>
+    
+  </div>  
 
       <!-- CONTENU CENTRAL -->
       <div class="hero-content">
@@ -266,5 +296,7 @@
 
   <!-- JS -->
   <script src="scripts/footer.js" defer></script>
+  <script src="scripts/header.js" defer></script>
+
 </body>
 </html>
