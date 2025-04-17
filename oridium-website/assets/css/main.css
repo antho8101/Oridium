@@ -8,37 +8,32 @@
 
 /* === LAYOUT === */
 @import url('./layout/header.css');
-@import url('./layout/footer.css');
 @import url('./layout/hero.css');
+@import url('./layout/footer.css');
 
 /* === GLOBAL BODY SETUP === */
+html,
 body {
+  height: 100%;
+  margin: 0;
+  padding: 0;
   user-select: none;
   background: var(--Oridium-bg, #0E0F14);
   color: var(--Oridium, #DCCB92);
   font-family: 'Space Grotesk', sans-serif;
-  margin: 0;
-  padding: 0;
-}
-
-html, body {
-  height: 100%;
-  margin: 0;
-  padding: 0;
 }
 
 .page-wrapper {
   min-height: 100vh;
   display: flex;
   flex-direction: column;
-  flex-grow: 1; /* ← ajoute ça pour forcer le stretch */
+  flex-grow: 1;
 }
 
 .hero {
   flex-grow: 1;
 }
 
-/* Supprime si #footer n’existe pas */
 #footer {
   width: 100%;
 }
@@ -96,7 +91,7 @@ html, body {
 .button,
 .button-icon-gold {
   transform: none !important;
-  transition: color 0.2s ease !important; /* ou juste la couleur */
+  transition: color 0.2s ease !important;
 }
 
 /* === RESPONSIVE : TABLETTE & MOBILE === */
