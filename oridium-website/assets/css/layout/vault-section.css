@@ -1,0 +1,40 @@
+.vault-section {
+    display: flex;
+    padding: 60px 120px;
+    flex-direction: column;
+    align-items: center;
+    gap: 60px;
+    align-self: stretch;
+    background-image: 
+      url("/assets/pattern2.png"),
+      radial-gradient(50% 50% at 50% 50%, #393427 0%, #191A21 100%);
+    background-repeat: repeat, no-repeat;
+    background-size: auto, cover;
+    background-position: top left, center;
+  }  
+  
+  .vault-title {
+    line-height: 100%; 
+    align-self: stretch;
+    color: #FFFFFF;
+    text-align: center;
+    font-family: "Space Grotesk";
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 100%;
+    letter-spacing: 0;
+  }
+  
+  .vault-subtitle {
+    align-self: stretch;
+    color: #FFFFFF;
+    text-align: center;
+    font-family: "Space Grotesk";
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 100%;
+    letter-spacing: 0;
+  }
+  
