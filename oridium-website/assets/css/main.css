@@ -11,6 +11,7 @@
 @import url('./layout/hero.css');
 @import url('./layout/footer.css');
 @import url('./layout/arguments.css');
+@import url('./layout/vault-section.css');
 
 /* === GLOBAL BODY SETUP === */
 html,
