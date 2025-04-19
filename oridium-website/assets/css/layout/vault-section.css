@@ -103,19 +103,22 @@
   .vault-3d-wrapper {
     perspective: 1500px;
     width: 100%;
+    max-width: 100%;
     display: flex;
     justify-content: center;
     align-items: center;
     overflow: visible;
-
+    padding: 0 40px; /* 👈 ajoute du padding latéral pour la respiration */
+    box-sizing: border-box;
   }
   
   .vault-3d-img {
+    width: 100%; /* 👈 rend l’image responsive à son conteneur */
+    max-width: 1300px; /* 👈 taille max sur grands écrans */
     transform: rotateX(70deg);
     transform-origin: center center;
     transition: transform 0.1s ease-out;
     will-change: transform;
-    max-width: 1800px;
     border-radius: 30px;
     border: 1px solid var(--Oridium, #DCCB92);
     box-shadow: 0px 0px 25px rgba(220, 203, 146, 0.5);
