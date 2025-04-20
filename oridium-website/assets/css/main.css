@@ -12,6 +12,7 @@
 @import url('./layout/footer.css');
 @import url('./layout/arguments.css');
 @import url('./layout/vault-section.css');
+@import url('./layout/legend-section.css');
 
 /* === BASE RESET SIMPLE === */
 * {

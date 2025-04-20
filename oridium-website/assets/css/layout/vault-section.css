@@ -119,9 +119,51 @@
     transform-origin: center center;
     transition: transform 0.1s ease-out;
     will-change: transform;
-    border-radius: 30px;
+    border-radius: 20px;
     border: 1px solid var(--Oridium, #DCCB92);
     box-shadow: 0px 0px 25px rgba(220, 203, 146, 0.5);
+  }
+
+  .vault-eco-text {
+    width: 100%;
+    font-family: "Space Grotesk", sans-serif;
+    font-weight: 300;
+    font-size: 20px;
+    line-height: 100%;
+    letter-spacing: 0;
+    text-align: center;
+    color: var(--Pure-White, #FFF);
+    margin: 0;
+  }
+  
+  .vault-eco-text sup {
+    font-size: 12px;
+    vertical-align: super;
+  }
+
+  .vault-cta {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: fit-content;
+  }
+  
+  .vault-cta .button-icon-gold {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .vault-cta-hint {
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+    color: var(--Pure-White, #FFF);
+    text-align: center;
+    margin: 0;
   }  
 
   @media (max-width: 1200px) {

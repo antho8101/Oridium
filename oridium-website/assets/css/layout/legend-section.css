@@ -1,0 +1,236 @@
+.legend-section {
+    display: flex;
+    padding: 60px 120px;
+    flex-direction: column;
+    align-items: center;
+    gap: 60px;
+    align-self: stretch;
+    border-top: 1px solid var(--Oridium, #DCCB92);
+    border-bottom: 1px solid var(--Oridium, #DCCB92);
+    background: var(--background-clear-black, radial-gradient(50% 50% at 50% 50%, #3A3C44 0%, #1F212C 100%));
+
+    /* M3/Elevation Light/5 */
+    box-shadow: 0px 8px 12px 6px rgba(0, 0, 0, 0.15), 0px 4px 4px 0px rgba(0, 0, 0, 0.30);
+  }  
+
+  .legend-intro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    align-self: stretch;
+  }
+
+  .legend-outro {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    align-self: stretch;
+  }
+  
+  .legend-title {
+    align-self: stretch;
+    color: var(--Pure-White, #FFF);
+    text-align: center;
+    font-family: "Space Grotesk";
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 100%;
+    letter-spacing: 0;
+    margin: 0;
+
+    text-shadow:
+    0px 8px 12px rgba(0, 0, 0, 0.15),
+    0px 4px 4px rgba(0, 0, 0, 0.30);
+  }
+  
+  .legend-subtitle {
+    align-self: stretch;
+    color: var(--Pure-White, #FFF);
+    text-align: center;
+    font-family: "Space Grotesk";
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 100%;
+    letter-spacing: 0;
+    margin: 0;
+
+    text-shadow:
+    0px 8px 12px rgba(0, 0, 0, 0.15),
+    0px 4px 4px rgba(0, 0, 0, 0.30); 
+  }
+  
+  .legend-graph-group {
+    display: flex;
+    width: 920px;
+    align-items: center;
+    gap: 30px;
+  }
+  
+  .legend-graph-card {
+    display: flex;
+    padding: 20px 30px;
+    flex-direction: column;
+    align-items: center;
+    gap: 20px;
+    flex: 1 0 0;
+    border-radius: 20px;
+    border: 1px solid var(--Oridium, #DCCB92);
+    background: linear-gradient(180deg, #DCCB92 0%, #766D4E 100%);
+    box-shadow:
+      0px 8px 12px 6px rgba(0, 0, 0, 0.15),
+      0px 4px 4px 0px rgba(0, 0, 0, 0.30);
+    
+      transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .legend-graph-card:hover {
+    transform: translateY(-6px);
+    box-shadow:
+      0px 12px 16px rgba(0, 0, 0, 0.25),
+      0px 6px 6px rgba(0, 0, 0, 0.3);
+  }
+  
+  .legend-graph-header {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    align-self: stretch;
+    width: 100%;
+  }
+  
+  .legend-graph-name {
+    color: var(--Deep-Black, #191A21);
+    font-family: "Space Grotesk";
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: 100%;
+    letter-spacing: 0%;
+  }
+  
+  .legend-graph-multiplier {
+    color: #387912;
+    font-family: "Space Grotesk";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: 100%;
+    letter-spacing: 0%;
+  }
+
+  .legend-graph-bars {
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 10px;
+    width: 100%;
+  }
+  
+  /* Barres Bitcoin */
+  .barre-1-bitcoin,
+  .barre-2-bitcoin,
+  .barre-3-bitcoin,
+  .barre-4-bitcoin,
+  .barre-5-bitcoin,
+  .barre-6-bitcoin {
+    width: 16px;
+    background: var(--clear-black, #282A36);
+  }
+  
+  /* Hauteurs individuelles (à adapter si besoin) */
+  .barre-1-bitcoin { height: 1px; }
+  .barre-2-bitcoin { height: 4px; }
+  .barre-3-bitcoin { height: 10px; }
+  .barre-4-bitcoin { height: 30px; }
+  .barre-5-bitcoin { height: 70px; }
+  .barre-6-bitcoin { height: 105px; }
+
+    /* Barres Ethereum */
+    .barre-1-ethereum,
+    .barre-2-ethereum,
+    .barre-3-ethereum,
+    .barre-4-ethereum,
+    .barre-5-ethereum,
+    .barre-6-ethereum {
+      width: 16px;
+      background: var(--clear-black, #282A36);
+    }
+    
+    /* Hauteurs individuelles (à adapter si besoin) */
+    .barre-1-ethereum { height: 4px; }
+    .barre-2-ethereum { height: 20px; }
+    .barre-3-ethereum { height: 40px; }
+    .barre-4-ethereum { height: 105px; }
+    .barre-5-ethereum { height: 40px; }
+    .barre-6-ethereum { height: 55px; }  
+
+      /* Barres Solana */
+  .barre-1-solana,
+  .barre-2-solana,
+  .barre-3-solana,
+  .barre-4-solana,
+  .barre-5-solana,
+  .barre-6-solana {
+    width: 16px;
+    background: var(--clear-black, #282A36);
+  }
+  
+  /* Hauteurs individuelles (à adapter si besoin) */
+  .barre-1-solana { height: 2px; }
+  .barre-2-solana { height: 60px; }
+  .barre-3-solana { height: 45px; }
+  .barre-4-solana { height: 35px; }
+  .barre-5-solana { height: 80px; }
+  .barre-6-solana { height: 105px; }
+
+  /* Conteneur des deux périodes */
+.legend-graph-footer {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+}
+
+/* Spacing spécifique pour Bitcoin */
+.legend-gap-bitcoin {
+  gap: 65px;
+}
+
+/* Spacing générique (75px pour les autres cryptos) */
+.legend-gap-default {
+  gap: 75px;
+}
+
+/* Chaque point temporel (2009 / 2025) */
+.legend-graph-period {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+
+/* Date */
+.legend-graph-date {
+  color: var(--Grey, #E2E3EA);
+  text-align: center;
+  font-family: "Space Grotesk";
+  font-size: 14px;
+  font-weight: 700;
+  line-height: 100%;
+  letter-spacing: 0;
+}
+
+/* Valeur */
+.legend-graph-value {
+  color: var(--Grey, #E2E3EA);
+  text-align: center;
+  font-family: "Space Grotesk";
+  font-size: 20px;
+  font-weight: 300;
+  line-height: 100%;
+  letter-spacing: 0;
+}
