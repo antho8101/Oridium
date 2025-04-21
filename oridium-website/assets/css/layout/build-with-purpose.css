@@ -1,0 +1,202 @@
+/* Section principale */
+.built-with-purpose {
+    display: flex;
+    padding: 60px 120px;
+    flex-direction: column;
+    align-items: center;
+    gap: 60px;
+    align-self: stretch;
+    position: relative;
+    background: radial-gradient(50% 50% at 50% 50%, #393427 0%, #191A21 100%);
+    background-size: cover;
+    overflow: hidden;
+    z-index: 0;
+  }
+  
+  .built-with-purpose::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url('https://github.com/antho8101/Oridium/blob/main/oridium-website/assets/pattern.png?raw=true');
+    background-repeat: repeat;
+    background-size: 100px 100px;
+    opacity: 0.25;
+    z-index: 1;
+    pointer-events: none;
+  }
+  
+  .built-with-purpose > * {
+    position: relative;
+    z-index: 2;
+  }
+  
+  /* Container desktop texte + visuel */
+  .built-with-purpose-row {
+    display: flex;
+    max-width: 920px;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 60px;
+    width: 100%;
+  }  
+  
+  .built-left {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 30px;
+    flex: 1 0 0;
+  }
+  
+  .built-title {
+    align-self: stretch;
+    color: #FFF;
+    font-family: "Space Grotesk";
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    text-shadow:
+        0px 8px 12px 6px rgba(0, 0, 0, 0.15),
+        0px 4px 4px 0px rgba(0, 0, 0, 0.30);
+  }  
+  
+  .built-description-desktop {
+    align-self: stretch;
+    color: #FFF;
+    font-family: "Space Grotesk";
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+    display: block;
+  }
+
+  .built-right {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
+    gap: 30px;
+  }
+  
+  .built-hash-box {
+    display: flex;
+    padding: 30px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 20px;
+    border: 1px solid #DCCB92;
+    background: linear-gradient(180deg, #DCCB92 0%, #766D4E 100%);
+  }
+  
+  .built-hash-text {
+    color: #5F490F;
+    font-family: "Cascadia Code", monospace;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 350;
+    white-space: pre-line;
+    text-align: left;
+  }
+
+  .built-description-mobile {
+    align-self: stretch;
+    max-width: 920px;
+    color: #FFF;
+    font-family: "Space Grotesk";
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+    display: none;
+  }
+
+  .built-pillars-row {
+    display: flex;
+    max-width: 920px;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 60px;
+    width: 100%;
+    flex-wrap: wrap;
+  }
+  
+  .built-pillar {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    flex: 1 0 0;
+    min-width: 250px;
+  }
+  
+  .pillar-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .pillar-title {
+    color: var(--Oridium, #DCCB92);
+    font-family: "Space Grotesk";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    margin: 0;
+  }
+  
+  .pillar-divider {
+    width: 100%;
+    height: 1px;
+    background: var(--Dividers, #575449);
+  }
+  
+  .pillar-description {
+    color: #FFF;
+    font-family: "Space Grotesk";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    align-self: stretch;
+    margin: 0;
+  }  
+  
+  /* Masquer ce texte sur mobile/tablette */
+  @media (max-width: 1024px) {
+    .built-description-mobile {
+      display: block;
+    }
+  
+    .built-description-desktop {
+      display: none;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .built-with-purpose-row {
+      flex-direction: column;
+      align-items: center;
+      gap: 30px;
+      align-self: stretch;
+    }
+
+    .built-with-purpose {
+        padding: 60px 30px;
+    }
+
+    .built-pillars-row {
+        flex-direction: column;
+        align-items: center;
+        gap: 30px;
+        align-self: stretch;
+      }
+    
+      .built-pillar {
+        width: 100%;
+    }
+  }
+  
