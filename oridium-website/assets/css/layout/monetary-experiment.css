@@ -1,0 +1,109 @@
+/* === SECTION "MONETARY EXPERIMENT" === */
+
+.monetary-experiment {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  padding-top: 60px;
+  border-top: 1px solid #DCCB92;
+  border-bottom: 1px solid #DCCB92;
+  background: radial-gradient(50% 50% at 50% 50%, #3A3C44 0%, #1F212C 100%);
+  box-shadow:
+    0px 8px 12px 6px rgba(0, 0, 0, 0.15),
+    0px 4px 4px 0px rgba(0, 0, 0, 0.30);
+}
+
+.monetary-experiment-content {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 60px;
+  width: 100%;
+  max-width: 920px;
+}
+
+.monetary-experiment-text-group {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+}
+
+.monetary-experiment-title {
+  color: #FFF;
+  text-align: center;
+  font-family: "Space Grotesk";
+  font-size: 48px;
+  font-weight: 700;
+}
+
+.monetary-experiment-subtitle {
+  color: #FFF;
+  text-align: center;
+  font-family: "Space Grotesk";
+  font-size: 20px;
+  font-weight: 300;
+}
+
+.monetary-panels-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start;
+  gap: 60px;
+  align-self: stretch;
+  max-width: 920px;
+}
+
+.monetary-panel {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  flex: 1;
+  min-width: 260px;
+}
+
+.monetary-panel-header {
+  display: flex;
+  align-items: center;
+  gap: 20px;
+}
+
+.monetary-icon {
+  width: 32px;
+  height: 32px;
+}
+
+.monetary-title {
+  color: #FFF;
+  font-family: "Space Grotesk";
+  font-size: 20px;
+  font-weight: 300;
+}
+
+.monetary-text {
+  color: #FFF;
+  font-family: "Space Grotesk";
+  font-size: 14px;
+  font-weight: 400;
+}
+
+.bank-hero-section {
+  height: 718px;
+  padding: 307px 0 120px 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 65px;
+  align-self: stretch;
+
+  background-image: url("assets/Oridium_Central_Bank.png"); /* Chemin relatif au HTML */
+  background-repeat: no-repeat;
+  background-size: auto 100%; /* Hauteur fixe, largeur auto */
+  background-position: center;
+  background-attachment: scroll; /* ou fixed si tu veux un effet paralaxe */
+  background-color: transparent; /* ou une couleur de fallback si nécessaire */
+  overflow: hidden;
+}
