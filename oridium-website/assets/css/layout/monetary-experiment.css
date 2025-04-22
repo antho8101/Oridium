@@ -246,4 +246,12 @@
     border-radius: 0px;
   }
 
+  .bank-content {
+    gap: 10px;
+  }
+
+  .bank-tag-group {
+    gap: 10px;
+  }
+
 }
