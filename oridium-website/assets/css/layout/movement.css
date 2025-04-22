@@ -1,0 +1,148 @@
+/* === JOIN THE MOVEMENT SECTION === */
+
+.movement-section {
+    display: flex;
+    padding: 150px 0px;
+    flex-direction: column;
+    align-items: center;
+    gap: 60px;
+    align-self: stretch;
+    position: relative;
+    background: radial-gradient(50% 50% at 50% 50%, #393427 0%, #191A21 100%);
+    background-size: cover;
+    overflow: hidden;
+    z-index: 0;
+  }
+  
+  .movement-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url('https://github.com/antho8101/Oridium/blob/main/oridium-website/assets/pattern.png?raw=true');
+    background-repeat: repeat;
+    background-size: 100px 100px;
+    opacity: 0.25;
+    z-index: 1;
+    pointer-events: none;
+  }
+  
+  .movement-section > * {
+    position: relative;
+    z-index: 2;
+  }
+  
+  .movement-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    align-self: stretch;
+  }
+  
+  .movement-title {
+    color: #FFF;
+    text-align: center;
+    font-family: "Space Grotesk";
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+  }
+  
+  .movement-subtitle {
+    color: #FFF;
+    text-align: center;
+    font-family: "Space Grotesk";
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+  }
+  
+  .movement-scroll-container {
+    max-width: 652px;
+    width: 100%;
+  }
+  
+  .movement-steps {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
+    gap: 40px;
+    position: relative;
+  }
+  
+  .movement-steps::before {
+    content: "";
+    position: absolute;
+    top: 38px;
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: #DCCB92;
+    z-index: 0;
+  }
+  
+  .movement-step {
+    display: flex;
+    width: 71.248px;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    flex-shrink: 0;
+    z-index: 1;
+  }
+  
+  .movement-step-icon {
+    display: flex;
+    padding: 20px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    align-self: stretch;
+    border-radius: 99px;
+    background: #DCCB92;
+  }
+  
+  .movement-step-text {
+    color: #FFF;
+    text-align: center;
+    font-family: "Space Grotesk";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    text-shadow: 0px 8px 12px rgba(0, 0, 0, 0.15), 0px 4px 4px rgba(0, 0, 0, 0.30);
+    white-space: nowrap;
+  }
+  
+  @media (max-width: 768px) {
+
+    .movement-header {
+      padding-left: 30px;
+      padding-right: 30px;
+    }
+    .movement-scroll-container {
+      padding-left: 60px;
+      padding-right: 60px;
+      display: block;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+  
+    .movement-scroll-container::-webkit-scrollbar {
+      display: none;
+    }
+  
+    .movement-steps {
+      width: 800px;
+      gap: 40px;
+      justify-content: space-between;
+    }
+  
+    .movement-section {
+      padding-left: 0;
+      padding-right: 0;
+    }
+  }
