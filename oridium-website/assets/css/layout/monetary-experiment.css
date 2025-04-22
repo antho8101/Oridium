@@ -91,19 +91,159 @@
 }
 
 .bank-hero-section {
+  width: 100%;
   height: 718px;
-  padding: 307px 0 120px 0;
-  display: flex;
+  padding-top: 100  px;
   flex-direction: column;
-  align-items: center;
+  align-items: center;  
   gap: 65px;
   align-self: stretch;
-
-  background-image: url("assets/Oridium_Central_Bank.png"); /* Chemin relatif au HTML */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-image: url("https://github.com/antho8101/Oridium/blob/main/oridium-website/assets/Oridium_Central_Bank.png?raw=true");
   background-repeat: no-repeat;
-  background-size: auto 100%; /* Hauteur fixe, largeur auto */
+  background-size: auto 100%;
   background-position: center;
-  background-attachment: scroll; /* ou fixed si tu veux un effet paralaxe */
-  background-color: transparent; /* ou une couleur de fallback si nécessaire */
-  overflow: hidden;
+  transform: translateY(60px);
+  transition: transform 0.1s ease-out;
+  will-change: transform;
+}
+
+.bank-content {
+  display: flex;
+  height: 718px;
+  padding: 307px 0px 120px 0px;
+  flex-direction: column;
+  align-items: center;
+  gap: 30px;
+  align-self: stretch;
+}
+
+.bank-info-box {
+  display: flex;
+  width: 592px;
+  padding: 30px 60px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 20px;
+  border: 1px solid #FFF;
+  background: rgba(255, 255, 255, 0.65);
+  box-shadow:
+    0px 1px 2px 0px rgba(0, 0, 0, 0.30),
+    0px 1px 3px 1px rgba(0, 0, 0, 0.15);
+  backdrop-filter: blur(6px);
+}
+
+.bank-info-text {
+  flex: 1 0 0;
+  color: #282A36;
+  text-align: center;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 500;
+  line-height: normal;
+}
+
+.bank-tag-group {
+  display: flex;
+  width: 592px;
+  justify-content: center;
+  align-items: center;
+  align-content: center;
+  gap: 30px;
+  flex-wrap: wrap;
+  margin-top: 30px;
+}
+
+.bank-tag {
+  display: flex;
+  padding: 10px 20px;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  border-radius: 99px;
+  border: 1px solid #DCCB92;
+  background: #282A36;
+}
+
+.bank-tag img {
+  width: 20px;
+  height: 20px;
+}
+
+.bank-tag span {
+  color: #FFF;
+  font-family: "Space Grotesk", sans-serif;
+  font-size: 14px;
+  font-style: normal;
+  font-weight: 700;
+  line-height: normal;
+}
+
+@media (max-width: 1024px) {
+  .monetary-panels-container {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 30px;
+    align-self: stretch;
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+
+  .monetary-panel {
+    display: flex;
+    padding: 30px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    flex: 1 0 0;
+  }
+
+  .monetary-experiment-text-group {
+    padding-left: 30px;
+    padding-right: 30px;
+  }
+
+  .bank-info-box {
+    max-width: 100%;
+    padding-right: 30px;
+    padding-left: 30px;
+  }
+
+  .bank-tag-group {
+    max-width: 100%;
+    padding-right: 30px;
+    padding-left: 30px;
+  }
+
+
+}
+
+@media (max-width: 768px) {
+  .monetary-panels-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    align-self: stretch;
+  }
+
+  .monetary-panel {
+    display: flex;
+    padding: 30px;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 20px;
+    align-self: stretch;
+  }
+
+  .bank-info-box {
+    border-radius: 0px;
+  }
+
 }
