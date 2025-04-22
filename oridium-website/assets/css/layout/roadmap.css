@@ -1,0 +1,141 @@
+.roadmap-section {
+    display: flex;
+    padding: 60px 120px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 60px;
+    align-self: stretch;
+    border-top: 1px solid #DCCB92;
+    border-bottom: 1px solid #DCCB92;
+    background: #F5F6FA;
+  }
+  
+  .roadmap-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    align-self: stretch;
+  }
+  
+  .roadmap-title {
+    color: #282A36;
+    text-align: center;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    align-self: stretch;
+  }
+  
+  .roadmap-subtitle {
+    color: #282A36;
+    text-align: center;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+    align-self: stretch;
+  }
+  
+  .roadmap-timeline {
+    display: flex;
+    max-width: 920px;
+    width: 100%;
+    justify-content: space-between;
+    align-items: center;
+    position: relative;
+  }
+  
+  .roadmap-timeline::before {
+    content: "";
+    position: absolute;
+    top: 38px; /* vertical position of the line */
+    left: 0;
+    right: 0;
+    height: 1px;
+    background: #DCCB92;
+    z-index: 0;
+  }
+  
+  .roadmap-step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    width: 71.248px;
+    flex-shrink: 0;
+    z-index: 1; /* ensure icons go above the line */
+  }
+  
+  .roadmap-icon {
+    display: flex;
+    padding: 20px;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    border-radius: 99px;
+  }
+  
+  .roadmap-icon img {
+    width: 32px;
+    height: 32px;
+  }
+  
+  .roadmap-date {
+    color: #282A36;
+    text-align: center;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    line-height: 100%;
+  }
+  
+  .roadmap-label {
+    color: #282A36;
+    text-align: center;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 14px;
+    font-weight: 400;
+    line-height: 100%;
+  }
+
+  .roadmap-scroll-container {
+    width: 100%;
+    position: relative;
+    display: flex;
+    justify-content: center;
+    overflow: visible;
+  }
+  
+  .roadmap-scroll-container::-webkit-scrollbar {
+    display: none;
+  }
+
+  @media (max-width: 768px) {
+    .roadmap-scroll-container {
+      padding-left: 30px;
+      padding-right: 30px;
+      display: block;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+    }
+  
+    .roadmap-scroll-container::-webkit-scrollbar {
+      display: none;
+    }
+  
+    .roadmap-timeline {
+      width: 800px;
+      gap: 40px;
+      justify-content: space-between;
+    }
+
+    .roadmap-section {
+      padding-right: 0%;
+      padding-left: 0%;
+    }
+  }
