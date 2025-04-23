@@ -139,7 +139,7 @@
   }
   
   .join-progress-fill {
-    width: 30%; /* à animer plus tard */
+    width: 1%; /* à animer plus tard */
     height: 100%;
     background: #DCCB92;
     border-radius: 99px;
