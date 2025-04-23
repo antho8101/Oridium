@@ -1,0 +1,481 @@
+/* === JOIN PAGE === */
+
+.join-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center; /* ← centre horizontalement les enfants */
+    gap: 60px;
+    padding-top: 120px;
+    padding-bottom: 60px;
+    background: radial-gradient(50% 50% at 50% 50%, #393427 0%, #191A21 100%);
+    background-size: cover;
+    overflow: hidden;
+    position: relative;
+    z-index: 0;
+  }  
+  
+  .join-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url('https://github.com/antho8101/Oridium/blob/main/oridium-website/assets/pattern.png?raw=true');
+    background-repeat: repeat;
+    background-size: 100px 100px;
+    opacity: 0.25;
+    z-index: 1;
+    pointer-events: none;
+  }
+  
+  .join-section > * {
+    position: relative;
+    z-index: 2;
+  }
+  
+  .hero-header {
+    background: transparent;
+    z-index: 10;
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+  }
+  
+  .release-info {
+    display: flex;
+    width: auto;
+    padding-right: 30px;
+    padding-left: 30px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .release-label {
+    align-self: stretch;
+    color: #FFF;
+    text-align: center;
+    font-family: "Space Grotesk";
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+  }
+  
+  .release-date {
+    align-self: stretch;
+    color: #DCCB92;
+    text-align: center;
+    width: 100%;
+    font-family: "Space Grotesk";
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+  }
+  
+  .countdown-timer {
+    align-self: stretch;
+    color: var(--Pure-White, #FFF);
+    text-align: center;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+  }
+  
+  .join-content {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 60px;
+    max-width: 1272px;
+    width: 100%;
+    margin: 0 auto;
+  } 
+  
+  .join-left {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 30px;
+    padding-bottom: 132px;
+    width: fit-content;
+    flex-shrink: 0; 
+  }
+  
+  .join-title {
+    color: #FFF;
+    font-family: "Space Grotesk";
+    font-size: 48px;
+    font-weight: 700;
+    line-height: normal;
+  }
+  
+  .join-subtitle {
+    color: #FFF;
+    font-family: "Space Grotesk";
+    font-size: 20px;
+    font-weight: 300;
+    line-height: normal;
+  }
+  
+  .join-progress-wrapper {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 5px;
+    align-self: stretch;
+    width: 100%;
+  }
+  
+  .join-progress-bar {
+    width: 100%;
+    height: 5px;
+    background: #575449;
+    border-radius: 99px;
+    overflow: hidden;
+  }
+  
+  .join-progress-fill {
+    width: 30%; /* à animer plus tard */
+    height: 100%;
+    background: #DCCB92;
+    border-radius: 99px;
+  }
+  
+  .join-progress-labels {
+    display: flex;
+    justify-content: space-between;
+    width: 100%;
+    font-family: "Space Grotesk";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    color: var(--Pure-White, #FFF);    
+  }
+  
+  .join-warning {
+    color: #FFF;
+    font-family: "Space Grotesk";
+    font-size: 14px;
+    font-weight: 300;
+    line-height: normal;
+  }
+
+  .best-value {
+    display: flex;
+    padding: 10px 5px 5px 5px;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 10px;
+    flex: 1 1 0%;
+    border-radius: 30px;
+    background: var(--Oridium, #DCCB92);
+    box-shadow: 0px 0px 8px 0px #DCCB92;
+    width: 100%;
+    height: fit-content;
+    min-width: 0;
+  }  
+  
+  
+  .best-value-label {
+    align-self: stretch;
+    color: var(--clear-black, #282A36);
+    text-align: center;
+    font-family: "Space Grotesk";
+    font-size: 14px;
+    font-weight: 700;
+    line-height: normal;
+  }
+  
+  .best-value-box {
+    display: flex;
+    width: 100%;
+    padding: 30px;
+    box-sizing: border-box;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 40px;
+    align-self: stretch;
+    width: 100%;
+    height: fit-content;
+    border-radius: 27px;
+    background: var(--clear-black, #282A36);
+}
+  
+  .best-value-title {
+    align-self: stretch;
+    color: var(--Pure-White, #FFF);
+    text-align: center;
+    font-family: "Space Grotesk";
+    font-size: 20px;
+    font-weight: 300;
+    line-height: normal;
+  }
+  
+  .best-value-price-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    align-self: stretch;
+  }
+  
+  .best-value-price {
+    align-self: stretch;
+    color: var(--Pure-White, #FFF);
+    text-align: center;
+    font-family: "Space Grotesk";
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+  }
+  
+  .best-value-note {
+    align-self: stretch;
+    color: var(--Pure-White, #FFF);
+    text-align: center;
+    font-family: "Space Grotesk";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+  }
+
+  .best-value-features {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    align-self: stretch;
+    width: 100%;
+  }
+  
+  .feature-line {
+    width: 100%;
+    height: 1px;
+    background: var(--Dividers, #575449);
+  }
+  
+  .feature-item {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    align-self: stretch;
+  }
+  
+  .feature-item-text {
+    flex: 1 0 0;
+    width: 100%;
+    color: var(--Pure-White, #FFF);
+    font-family: "Space Grotesk";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+  }
+  
+  .best-value-cta-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    align-self: stretch;
+    width: 100%;
+  }
+  
+  .best-value-button {
+    width: 100%;
+    opacity: 0.4;
+    pointer-events: auto;
+    cursor: not-allowed;
+    position: relative;
+  }
+  
+  .best-value-button::after {
+    content: "Available soon!";
+    position: absolute;
+    top: -35px;
+    right: 0;
+    background: rgba(40, 42, 54, 0.9);
+    color: var(--Pure-White, #FFF);
+    font-family: "Space Grotesk";
+    font-size: 12px;
+    font-weight: 500;
+    padding: 4px 10px;
+    border-radius: 6px;
+    white-space: nowrap;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.2s ease;
+  }
+  
+  .best-value-button:hover::after {
+    opacity: 1;
+  }  
+  
+  .best-value-disclaimer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    align-self: stretch;
+    width: 100%;
+  }
+  
+  .best-value-disclaimer span {
+    color: var(--Pure-White, #FFF);
+    text-align: center;
+    font-family: "Space Grotesk";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+  }
+
+  .standard-whitelist {
+    display: flex;
+    padding: 30px;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 30px;
+    flex: 1 1 0%;
+    max-width: 367px;
+    height: fit-content;
+    border-radius: 30px;
+    box-sizing: border-box;
+    border: 1px solid var(--Oridium, #DCCB92);
+    background: var(--clear-black, #282A36);
+    min-width: 0;
+  }
+  
+  .standard-title {
+    align-self: stretch;
+    color: var(--Pure-White, #FFF);
+    text-align: center;
+    font-family: "Space Grotesk";
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+  }
+  
+  .standard-price-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    align-self: stretch;
+  }
+  
+  .standard-price {
+    align-self: stretch;
+    color: var(--Pure-White, #FFF);
+    text-align: center;
+    font-family: "Space Grotesk";
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+  }
+  
+  .standard-note {
+    align-self: stretch;
+    color: var(--Pure-White, #FFF);
+    text-align: center;
+    font-family: "Space Grotesk";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+  }
+
+  .standard-benefits {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    align-self: stretch;
+  }
+  
+  .benefit-separator {
+    width: 100%;
+    height: 1px;
+    background: var(--Dividers, #575449);
+  }
+  
+  .benefit-line {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    align-self: stretch;
+    color: var(--Pure-White, #FFF);
+    font-family: "Space Grotesk";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+  }
+  
+  .benefit-line img {
+    width: 20px;
+    height: 20px;
+  }
+  
+  .benefit-text {
+    flex: 1 0 0;
+  }
+  
+  .standard-disclaimer {
+    align-self: stretch;
+    color: var(--Pure-White, #FFF);
+    text-align: center;
+    font-family: "Space Grotesk";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+    width: 100%;
+  }
+  
+  .standard-cta-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    align-self: stretch;
+    width: 100%;
+  }
+  
+  .standard-disclaimer {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 5px;
+    align-self: stretch;
+    color: var(--Pure-White, #FFF);
+    font-family: "Space Grotesk";
+    font-size: 14px;
+    font-weight: 300;
+    text-align: center;
+  }
+  
+  .white-icon {
+    filter: brightness(0) invert(1);
+  }
+  
+  .non-refundable-note {
+    color: var(--Pure-White, #FFF);
+    font-family: "Space Grotesk";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+    padding-left: 30px;
+    padding-right: 30px;
+    width: fit-content;
+  }  

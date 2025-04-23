@@ -1,0 +1,87 @@
+/* === HEADER MINIMAL === */
+.hero-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-top: 30px;
+    padding-left: 40px;
+    padding-right: 40px;
+    padding-bottom: 0px;
+    width: 100%;
+    box-sizing: border-box;
+  }
+  
+  .header-left {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+    text-decoration: none;
+  }
+  
+  .hero-logo {
+    height: 40px;
+  }
+  
+  .header-brand {
+    color: var(--Oridium, #DCCB92) !important;
+    font-family: "Space Grotesk";
+    font-size: 32px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: 100%;
+    letter-spacing: 0;
+  }
+  
+  .header-brand sup {
+    font-size: 0.5em;
+    vertical-align: super;
+    line-height: 0;
+  }
+  
+  .header-right {
+    display: flex;
+    align-items: center;
+  }
+  
+  .back-button {
+    display: flex;
+    align-items: center;
+    padding: 10px 20px;
+    gap: 10px;
+    font-family: "Space Grotesk";
+    font-size: 14px;
+    font-weight: 700;
+    color: var(--Pure-White, #FFF);
+    background-color: transparent;
+    border: 1px solid var(--Oridium, #DCCB92);
+    border-radius: 99px;
+    text-decoration: none;
+    transition: all 0.2s ease-in-out;
+  }
+  
+  .back-button:hover {
+    background-color: var(--Oridium, #DCCB92);
+    color: var(--clear-black, #282A36);
+  }
+  
+  .back-button img {
+    width: 16px;
+    height: 16px;
+  }
+  
+  @media (max-width: 768px) {
+    .hero-header {
+      padding: 20px;
+      flex-direction: row;
+    }
+  
+    .header-brand {
+      font-size: 28px;
+    }
+  
+    .back-button {
+      padding: 8px 16px;
+      font-size: 13px;
+    }
+  }  
