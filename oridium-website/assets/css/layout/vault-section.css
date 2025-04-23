@@ -187,4 +187,8 @@
         align-self: stretch;
     }
 
+    .vault-3d-img {
+        border-radius: 5px
+    }
+
   }
