@@ -56,13 +56,13 @@ function updateBalance() {
         for (const block of chain) {
           if (block.timestamp <= lastTs) continue;
 
-          // 🔒 Skip block si je suis sender ou receiver de n'importe quelle transaction
-          const blockForMe = block.transactions.some(tx =>
-            tx.sender?.toLowerCase() === lowerAddress || tx.receiver?.toLowerCase() === lowerAddress
+          // 🔒 Si une seule tx du bloc a été envoyée par moi, on skip tout le bloc
+          const iAmSender = block.transactions.some(tx =>
+            tx.sender?.toLowerCase() === lowerAddress
           );
-          if (blockForMe) continue;
+          if (iAmSender) continue;
 
-          // ✅ Une vraie transaction entrante
+          // ✅ On détecte une vraie réception extérieure
           for (const tx of block.transactions) {
             const isValid = (
               tx.receiver?.toLowerCase() === lowerAddress &&
@@ -73,13 +73,13 @@ function updateBalance() {
               const pseudo = localStorage.getItem(`orid_wallet_${tx.sender}_pseudo`) || "Someone";
               showOridAlert(pseudo, tx.amount, tx.receiver);
               localStorage.setItem("orid_last_alert_ts", block.timestamp.toString());
-              break; // 🔒 une seule alerte par bloc
+              break; // une seule alerte par bloc
             }
           }
         }
       })
       .catch(() => {
-        // 🧼 Silence radio
+        // silence
       });
 
   }).catch(err => {
