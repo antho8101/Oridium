@@ -13,10 +13,7 @@ const PORT = process.env.PORT || 3000;
 app.use(cors());
 app.use(express.json({ limit: '5mb' }));
 
-// 🚫 Blacklist
-const BLACKLIST = new Set([
-  "0x000000000000000000000000000000000000dead",
-]);
+const BLACKLIST = new Set(["0x000000000000000000000000000000000000dead"]);
 
 function isBlacklisted(block) {
   const senders = (block.transactions || []).map(tx => tx.sender);
@@ -27,7 +24,6 @@ function isValidHashDifficulty(hash, difficulty = 4) {
   return hash.startsWith('0'.repeat(difficulty));
 }
 
-// 🔍 GET /blockchain
 app.get('/blockchain', (req, res) => {
   try {
     const blockchain = getBlockchainFromDB();
@@ -38,7 +34,6 @@ app.get('/blockchain', (req, res) => {
   }
 });
 
-// 🔁 POST /batch-add-blocks
 app.post('/batch-add-blocks', (req, res) => {
   const blocks = req.body;
 
@@ -59,7 +54,6 @@ app.post('/batch-add-blocks', (req, res) => {
       }
 
       const txs = rawBlock.transactions || [];
-
       const totalBySender = {};
       for (const tx of txs) {
         if (tx.sender === "System") continue;
@@ -70,15 +64,11 @@ app.post('/batch-add-blocks', (req, res) => {
       for (const sender in totalBySender) {
         const balance = getBalanceFromDB(sender);
         if (balance < totalBySender[sender]) {
-          console.warn("❌ Balance too low:", sender, "has", balance, "needs", totalBySender[sender]);
-          return res.status(400).json({
-            error: `Insufficient balance for ${sender}`
-          });
+          return res.status(400).json({ error: `Insufficient balance for ${sender}` });
         }
       }
 
       if (!isValidHashDifficulty(rawBlock.hash)) {
-        console.warn("❌ Invalid difficulty:", rawBlock.hash);
         return res.status(400).json({ error: 'Invalid hash difficulty in batch' });
       }
 
@@ -98,14 +88,11 @@ app.post('/batch-add-blocks', (req, res) => {
     }
 
     res.json({ success: true });
-
   } catch (err) {
-    console.error("❌ Error in /batch-add-blocks:", err);
     res.status(500).json({ error: 'Batch server error' });
   }
 });
 
-// 💰 GET /balance/:address
 app.get('/balance/:address', (req, res) => {
   const { address } = req.params;
 
@@ -117,12 +104,10 @@ app.get('/balance/:address', (req, res) => {
     const balance = getBalanceFromDB(address);
     res.json({ address, balance });
   } catch (err) {
-    console.error("❌ Error in /balance:", err);
     res.status(500).json({ error: 'Failed to get balance' });
   }
 });
 
-// 🆕 POST /register-wallet
 app.post('/register-wallet', (req, res) => {
   const { address } = req.body;
   if (!address) return res.status(400).json({ error: 'Missing address' });
@@ -156,12 +141,11 @@ app.post('/register-wallet', (req, res) => {
 
     res.json({ success: true });
   } catch (err) {
-    console.error("❌ Error in /register-wallet:", err);
     res.status(500).json({ error: 'Failed to register wallet' });
   }
 });
 
-// 🆕 POST /add-block (ajout d’un seul bloc)
+// ✅ POST /add-block (ajout d’un seul bloc)
 app.post('/add-block', (req, res) => {
   const rawBlock = req.body;
 
@@ -184,17 +168,13 @@ app.post('/add-block', (req, res) => {
     for (const sender in totalBySender) {
       const balance = getBalanceFromDB(sender);
       if (balance < totalBySender[sender]) {
-        console.warn("❌ Balance too low:", sender, "has", balance, "needs", totalBySender[sender]);
-        return res.status(400).json({
-          error: `Insufficient balance for ${sender}`
-        });
+        return res.status(400).json({ error: `Insufficient balance for ${sender}` });
       }
     }
 
-    // ✅ Ne vérifie la difficulté que si ce n’est pas un transfert manuel
-    const isManualTransfer = !txs.every(tx => tx.sender === "System");
-    if (isManualTransfer && !isValidHashDifficulty(rawBlock.hash)) {
-      console.warn("❌ Invalid difficulty:", rawBlock.hash);
+    // ✅ Seulement si le bloc est miné par "System", on vérifie la difficulté
+    const isFromSystem = txs.every(tx => tx.sender === "System");
+    if (isFromSystem && !isValidHashDifficulty(rawBlock.hash)) {
       return res.status(400).json({ error: 'Invalid hash difficulty' });
     }
 
@@ -221,7 +201,6 @@ app.post('/add-block', (req, res) => {
   }
 });
 
-// 🚀 Start server
 app.listen(PORT, () => {
   console.log(`🚀 Oridium API running on PORT ${PORT}`);
 });
