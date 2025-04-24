@@ -200,7 +200,6 @@ function dynamicBatchLoop() {
   batchTimeout = setTimeout(dynamicBatchLoop, getDynamicInterval());
 }
 
-
 function stopMining() {
   miningActive = false;
   if (worker) {
