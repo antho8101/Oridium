@@ -56,16 +56,17 @@ function updateBalance() {
         for (const block of chain) {
           if (block.timestamp <= lastTs) continue;
 
-          // ✅ Ignore les blocs où je suis sender
-          const blockFromMe = block.transactions.some(tx => tx.sender?.toLowerCase() === lowerAddress);
-          if (blockFromMe) continue;
+          // 🔒 Skip block si je suis sender ou receiver de n'importe quelle transaction
+          const blockForMe = block.transactions.some(tx =>
+            tx.sender?.toLowerCase() === lowerAddress || tx.receiver?.toLowerCase() === lowerAddress
+          );
+          if (blockForMe) continue;
 
-          // ✅ Si une transaction m’envoie des ORID : alerte
+          // ✅ Une vraie transaction entrante
           for (const tx of block.transactions) {
             const isValid = (
               tx.receiver?.toLowerCase() === lowerAddress &&
-              tx.sender?.toLowerCase() !== "system" &&
-              tx.sender?.toLowerCase() !== lowerAddress
+              tx.sender?.toLowerCase() !== "system"
             );
 
             if (isValid) {
