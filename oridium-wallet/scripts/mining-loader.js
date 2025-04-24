@@ -196,20 +196,6 @@ function dynamicBatchLoop() {
         if (result.success) {
           const myAddress = getConnectedWalletAddress();
 
-          // 🔔 Check des transactions reçues
-          cleaned.forEach(block => {
-            block.transactions.forEach(tx => {
-              if (
-                tx.receiver === myAddress &&
-                tx.sender !== "System" &&
-                tx.sender !== myAddress
-              ) {
-                const pseudo = localStorage.getItem(`orid_wallet_${tx.sender}_pseudo`) || "Someone";
-                showOridAlert(pseudo, tx.amount, tx.receiver);
-              }
-            });
-          });
-
           const accepted = cleaned.length;
           oridiumEarned += accepted * 0.0001;
           document.getElementById("oridium-earned").textContent = `${oridiumEarned.toFixed(4)} ORID`;
