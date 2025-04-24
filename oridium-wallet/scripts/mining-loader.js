@@ -29,6 +29,8 @@ function updateBalance() {
   const address = window.walletAddress;
   if (!address) return;
 
+  const lowerAddress = address.toLowerCase();
+
   getBalance(address).then(balance => {
     // 💰 Mise à jour affichage
     document.querySelectorAll('.balance-amount').forEach(el => {
@@ -54,16 +56,16 @@ function updateBalance() {
         for (const block of chain) {
           if (block.timestamp <= lastTs) continue;
 
-          // ✅ Securité : on ignore les blocs contenant *mes* transactions (même si je ne suis que sender)
-          const blockFromMe = block.transactions.some(tx => tx.sender === address);
+          // ✅ Ignore les blocs où je suis sender
+          const blockFromMe = block.transactions.some(tx => tx.sender?.toLowerCase() === lowerAddress);
           if (blockFromMe) continue;
 
           // ✅ Si une transaction m’envoie des ORID : alerte
           for (const tx of block.transactions) {
             const isValid = (
-              tx.receiver === address &&
-              tx.sender !== "System" &&
-              tx.sender !== address
+              tx.receiver?.toLowerCase() === lowerAddress &&
+              tx.sender?.toLowerCase() !== "system" &&
+              tx.sender?.toLowerCase() !== lowerAddress
             );
 
             if (isValid) {
