@@ -1,6 +1,6 @@
 // scripts/orid-pricing.js
 
-let currentOridValueUSD = 150;
+let currentOridValueUSD = 720;
 
 export function getOridPriceUSD() {
   return currentOridValueUSD;
