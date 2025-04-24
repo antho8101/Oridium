@@ -237,3 +237,4 @@ window.updateWalletBalanceUI = updateBalanceUI;
 window.displayPublicKey = displayPublicKey;
 window.showAccessDeniedModal = showAccessDeniedModal;
 window.showOridAlert = showOridAlert;
+window.updateBalance?.();

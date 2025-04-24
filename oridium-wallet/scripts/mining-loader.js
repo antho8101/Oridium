@@ -11,7 +11,7 @@ let blockCounter = 0;
 let miningActive = false;
 let runtimeInterval = null;
 let pendingBlocks = [];
-let lastSentHash = "0";
+let lastSentHash = localStorage.getItem("orid_last_sent_hash") || "0";
 let batchTimeout = null;
 let pollingInterval = null;
 
@@ -305,3 +305,4 @@ export function showNetworkBusyModal(seconds = 10) {
 
 window.toggleMining = toggleMining;
 window.showNetworkBusyModal = showNetworkBusyModal;
+window.updateBalance = updateBalance;
