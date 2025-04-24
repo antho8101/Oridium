@@ -4,7 +4,6 @@ import { getBalance } from './orid-network.js';
 import { getOridPriceUSD } from "./orid-pricing.js";
 import { showOridAlert } from "./orid-alert.js";
 
-
 let worker = null;
 let runtimeSeconds = 0;
 let oridiumEarned = 0;
@@ -13,7 +12,8 @@ let miningActive = false;
 let runtimeInterval = null;
 let pendingBlocks = [];
 let lastSentHash = "0";
-let batchTimeout = null; // ⏳ envoi dynamique
+let batchTimeout = null;
+let pollingInterval = null;
 
 window.addEventListener("DOMContentLoaded", async () => {
   const toggleBtn = document.getElementById("mining-toggle");
@@ -22,12 +22,10 @@ window.addEventListener("DOMContentLoaded", async () => {
   const address = getConnectedWalletAddress();
   if (address) {
     window.walletAddress = address;
-    updateBalance();       // 🔄 premier update immédiat
-    startBalancePolling(); // ⏱ ensuite boucle passive
+    updateBalance();
+    startBalancePolling();
   }
 });
-
-let pollingInterval = null;
 
 function updateBalance() {
   const address = window.walletAddress;
@@ -36,7 +34,6 @@ function updateBalance() {
   const lowerAddress = address.toLowerCase();
 
   getBalance(address).then(balance => {
-    // 💰 Mise à jour affichage
     document.querySelectorAll('.balance-amount').forEach(el => {
       if (el.closest('.wallet-balance')) {
         el.textContent = `${balance.toFixed(4)} ORID`;
@@ -51,7 +48,6 @@ function updateBalance() {
       usdElement.textContent = `$${valueInUSD.toFixed(2)}`;
     }
 
-    // 🔍 Détection de réception d'ORID
     fetch("https://oridium-production.up.railway.app/blockchain")
       .then(res => res.ok ? res.json() : Promise.reject(res.status))
       .then(chain => {
@@ -80,21 +76,17 @@ function updateBalance() {
               showOridAlert(pseudo, tx.amount, tx.receiver);
               localStorage.setItem("orid_last_alert_ts", block.timestamp.toString());
               localStorage.setItem("orid_last_alert_hash", block.hash);
-              break; // 🔒 une seule alerte par bloc
+              break;
             }
           }
         }
       })
-      .catch(() => {
-        // silence
-      });
-
+      .catch(() => {});
   }).catch(err => {
     console.error("❌ Failed to update balance:", err);
   });
 }
 
-// ⏱ Polling régulier si non-mining
 function startBalancePolling() {
   if (pollingInterval) return;
   pollingInterval = setInterval(() => {
@@ -189,8 +181,7 @@ function startMining() {
     document.getElementById("runtime").textContent = formatRuntime(runtimeSeconds);
   }, 1000);
 
-  dynamicBatchLoop(); // ⬅️ démarre l’envoi dynamique
-  
+  dynamicBatchLoop();
 }
 
 function getDynamicInterval() {
@@ -228,14 +219,11 @@ function dynamicBatchLoop() {
     .then(result => {
       if (result.success) {
         const myAddress = getConnectedWalletAddress();
-    
         const accepted = cleaned.length;
         oridiumEarned += accepted * 0.0001;
         document.getElementById("oridium-earned").textContent = `${oridiumEarned.toFixed(4)} ORID`;
-    
+
         updateBalance();
-    
-        // ✅ Enregistrement du dernier hash accepté par le serveur
         lastSentHash = cleaned[cleaned.length - 1].hash;
         localStorage.setItem("orid_last_sent_hash", lastSentHash);
       } else {
@@ -244,11 +232,11 @@ function dynamicBatchLoop() {
         showNetworkBusyModal(10);
       }
     }).catch(err => {
-        console.error("❌ Batch send failed:", err);
-        pendingBlocks.push(...blocksToSend);
-        stopMining();
-        showNetworkBusyModal(10);
-      });
+      console.error("❌ Batch send failed:", err);
+      pendingBlocks.push(...blocksToSend);
+      stopMining();
+      showNetworkBusyModal(10);
+    });
   }
 
   batchTimeout = setTimeout(dynamicBatchLoop, getDynamicInterval());
@@ -311,14 +299,6 @@ export function showNetworkBusyModal(seconds = 10) {
     content.classList.add("fade-out");
     setTimeout(() => modal.classList.add("hidden"), 300);
   }, { once: true });
-}
-
-function startBalancePolling() {
-  setInterval(() => {
-    if (window.walletAddress) {
-      updateBalance();
-    }
-  }, 10000); // toutes les 10s
 }
 
 window.toggleMining = toggleMining;
