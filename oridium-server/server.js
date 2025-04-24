@@ -15,7 +15,7 @@ app.use(express.json({ limit: '5mb' }));
 
 // 🚫 Blacklist
 const BLACKLIST = new Set([
-  "0x000000000000000000000000000000000000dead", // Exemple
+  "0x000000000000000000000000000000000000dead",
 ]);
 
 function isBlacklisted(block) {
@@ -23,7 +23,6 @@ function isBlacklisted(block) {
   return senders.some(sender => sender !== "System" && BLACKLIST.has(sender));
 }
 
-// ✅ Vérifie la difficulté (4 zéros en début de hash pour test)
 function isValidHashDifficulty(hash, difficulty = 4) {
   return hash.startsWith('0'.repeat(difficulty));
 }
@@ -162,11 +161,6 @@ app.post('/register-wallet', (req, res) => {
   }
 });
 
-// 🚀 Start server
-app.listen(PORT, () => {
-  console.log(`🚀 Oridium API running on PORT ${PORT}`);
-});
-
 // 🆕 POST /add-block (ajout d’un seul bloc)
 app.post('/add-block', (req, res) => {
   const rawBlock = req.body;
@@ -197,7 +191,9 @@ app.post('/add-block', (req, res) => {
       }
     }
 
-    if (!isValidHashDifficulty(rawBlock.hash)) {
+    // ✅ Ne vérifie la difficulté que si ce n’est pas un transfert manuel
+    const isManualTransfer = !txs.every(tx => tx.sender === "System");
+    if (isManualTransfer && !isValidHashDifficulty(rawBlock.hash)) {
       console.warn("❌ Invalid difficulty:", rawBlock.hash);
       return res.status(400).json({ error: 'Invalid hash difficulty' });
     }
@@ -225,4 +221,7 @@ app.post('/add-block', (req, res) => {
   }
 });
 
-// here is a useless comment)
+// 🚀 Start server
+app.listen(PORT, () => {
+  console.log(`🚀 Oridium API running on PORT ${PORT}`);
+});
