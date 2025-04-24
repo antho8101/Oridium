@@ -45,13 +45,14 @@ function updateBalance() {
       usdElement.textContent = `$${valueInUSD.toFixed(2)}`;
     }
 
-    // 🔍 Vérifie les blocs pour détecter un virement reçu
+    // 🔍 Tentative de détection de réception ORID (mais silencieuse si erreur)
     fetch("https://oridium-production.up.railway.app/chain")
-      .then(res => res.json())
+      .then(res => {
+        if (!res.ok) throw new Error(`Status ${res.status}`);
+        return res.json();
+      })
       .then(chain => {
         const lastTs = parseInt(localStorage.getItem("orid_last_alert_ts") || "0");
-        console.log("🔎 Analyse des blocs. Dernier timestamp connu :", lastTs);
-
         chain.forEach(block => {
           if (block.timestamp > lastTs) {
             block.transactions.forEach(tx => {
@@ -61,15 +62,15 @@ function updateBalance() {
                 tx.sender !== address
               ) {
                 const pseudo = localStorage.getItem(`orid_wallet_${tx.sender}_pseudo`) || "Someone";
-                console.log(`🟡 Nouvelle alerte ! ${pseudo} t'a envoyé ${tx.amount} ORID`);
                 showOridAlert(pseudo, tx.amount);
                 localStorage.setItem("orid_last_alert_ts", block.timestamp.toString());
               }
             });
           }
         });
-      }).catch(err => {
-        console.warn("⚠️ Impossible de récupérer la chaîne pour détecter les transferts:", err);
+      })
+      .catch(() => {
+        // 👻 Silence total en cas d’erreur, pas de log chiant
       });
 
   }).catch(err => {
