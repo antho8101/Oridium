@@ -21,7 +21,8 @@ window.addEventListener("DOMContentLoaded", async () => {
   const address = getConnectedWalletAddress();
   if (address) {
     window.walletAddress = address;
-    updateBalance();
+    updateBalance();       // 🔄 premier update immédiat
+    startBalancePolling(); // ⏱ ensuite boucle passive
   }
 });
 
@@ -290,6 +291,14 @@ export function showNetworkBusyModal(seconds = 10) {
     content.classList.add("fade-out");
     setTimeout(() => modal.classList.add("hidden"), 300);
   }, { once: true });
+}
+
+function startBalancePolling() {
+  setInterval(() => {
+    if (window.walletAddress) {
+      updateBalance();
+    }
+  }, 10000); // toutes les 10s
 }
 
 window.toggleMining = toggleMining;
