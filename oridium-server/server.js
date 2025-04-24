@@ -224,3 +224,5 @@ app.post('/add-block', (req, res) => {
     res.status(500).json({ error: 'Add block server error' });
   }
 });
+
+// here is a useless comment)
