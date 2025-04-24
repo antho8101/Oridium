@@ -166,3 +166,61 @@ app.post('/register-wallet', (req, res) => {
 app.listen(PORT, () => {
   console.log(`🚀 Oridium API running on PORT ${PORT}`);
 });
+
+// 🆕 POST /add-block (ajout d’un seul bloc)
+app.post('/add-block', (req, res) => {
+  const rawBlock = req.body;
+
+  console.log("📥 Received single block:", rawBlock);
+
+  try {
+    if (isBlacklisted(rawBlock)) {
+      return res.status(403).json({ error: 'Sender is blacklisted' });
+    }
+
+    const txs = rawBlock.transactions || [];
+
+    const totalBySender = {};
+    for (const tx of txs) {
+      if (tx.sender === "System") continue;
+      if (!totalBySender[tx.sender]) totalBySender[tx.sender] = 0;
+      totalBySender[tx.sender] += tx.amount;
+    }
+
+    for (const sender in totalBySender) {
+      const balance = getBalanceFromDB(sender);
+      if (balance < totalBySender[sender]) {
+        console.warn("❌ Balance too low:", sender, "has", balance, "needs", totalBySender[sender]);
+        return res.status(400).json({
+          error: `Insufficient balance for ${sender}`
+        });
+      }
+    }
+
+    if (!isValidHashDifficulty(rawBlock.hash)) {
+      console.warn("❌ Invalid difficulty:", rawBlock.hash);
+      return res.status(400).json({ error: 'Invalid hash difficulty' });
+    }
+
+    const blockchain = getBlockchainFromDB();
+    const lastHash = blockchain.length > 0 ? blockchain[blockchain.length - 1].hash : "0";
+    const index = blockchain.length;
+
+    const block = {
+      index,
+      timestamp: rawBlock.timestamp,
+      transactions: txs,
+      previousHash: lastHash,
+      hash: rawBlock.hash,
+      nonce: rawBlock.nonce
+    };
+
+    addBlockToDB(block);
+    console.log(`📦 Block ${block.index} added`);
+    res.json({ success: true });
+
+  } catch (err) {
+    console.error("❌ Error in /add-block:", err);
+    res.status(500).json({ error: 'Add block server error' });
+  }
+});
