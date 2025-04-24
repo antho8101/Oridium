@@ -3,6 +3,7 @@
 import { getBalance, registerWallet } from "./orid-network.js";
 import { getOridPriceUSD } from "./orid-pricing.js";
 import { showOridAlert } from './orid-alert.js';
+import { analyzeIncomingBlocks } from "./incoming-transactions.js";
 
 let walletConnected = false;
 let currentWalletAddress = null;
@@ -227,8 +228,24 @@ window.addEventListener("orid-wallet-connected", () => {
   getBalance(address).then(balance => {
     previousBalance = balance;
     pollWalletBalance();
+    pollIncomingTransactions();
   });
 });
+
+async function pollIncomingTransactions(interval = 5000) {
+  setInterval(async () => {
+    const address = getConnectedWalletAddress();
+    if (!address) return;
+
+    try {
+      const res = await fetch("https://oridium-production.up.railway.app/blockchain");
+      const chain = await res.json();
+      analyzeIncomingBlocks(chain, address);
+    } catch (err) {
+      console.error("❌ Erreur lors du polling des transactions entrantes :", err);
+    }
+  }, interval);
+}
 
 // ⬇️ Fonctions globales exposées
 window.disconnectWallet = disconnectWallet;
