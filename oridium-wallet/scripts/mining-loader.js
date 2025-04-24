@@ -53,10 +53,13 @@ function updateBalance() {
       })
       .then(chain => {
         const lastTs = parseInt(localStorage.getItem("orid_last_alert_ts") || "0");
-        const lastSentHash = localStorage.getItem("orid_last_sent_hash");
-
+        const address = window.walletAddress;
+      
         chain.forEach(block => {
-          if (block.timestamp > lastTs && block.hash !== lastSentHash) {
+          if (block.timestamp > lastTs) {
+            const isMine = block.transactions.some(tx => tx.sender === address);
+            if (isMine) return; // ⛔️ on ignore les blocs que j'ai émis
+      
             block.transactions.forEach(tx => {
               if (
                 tx.receiver === address &&
@@ -70,7 +73,7 @@ function updateBalance() {
             });
           }
         });
-      })
+      })      
       .catch(() => {
       });
 
