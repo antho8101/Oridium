@@ -90,8 +90,8 @@ document.getElementById("confirm-send")?.addEventListener("click", async () => {
     const previousHash = lastBlock?.hash || "0";
     const index = chain.length;
     const timestamp = Date.now();
-    const transactions = [{ sender, receiver, amount }];
-
+    const pseudo = localStorage.getItem("orid_wallet_pseudo") || "Anonymous";
+    const transactions = [{ sender, receiver, amount, pseudo }];
     const rawData = `${index}${timestamp}${JSON.stringify(transactions)}${previousHash}`;
     const hash = await sha256(rawData);
 
