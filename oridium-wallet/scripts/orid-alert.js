@@ -20,14 +20,12 @@ export function showOridAlert(pseudo, amount) {
     amountEl.textContent = `${amount.toFixed(4)} ORID`;
     console.log("📦 Contenu injecté");
   
-    // Révèle l'alerte
     wrapper.classList.remove("hidden");
     requestAnimationFrame(() => {
       wrapper.classList.add("visible");
       console.log("🎉 Alerte affichée");
     });
   
-    // Bouton de fermeture
     const closeBtn = wrapper.querySelector(".orid-alert-close");
     if (closeBtn) {
       closeBtn.onclick = () => {
@@ -37,14 +35,12 @@ export function showOridAlert(pseudo, amount) {
       };
     }
   
-    // Fermeture auto
     setTimeout(() => {
       console.log("⏱ Fermeture automatique");
       wrapper.classList.remove("visible");
       setTimeout(() => wrapper.classList.add("hidden"), 400);
     }, 5000);
   
-    // Son
     const audio = new Audio("assets/audio/alert.mp3");
     audio.play().then(() => {
       console.log("🔊 Son joué avec succès");

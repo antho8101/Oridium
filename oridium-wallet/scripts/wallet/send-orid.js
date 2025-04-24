@@ -1,5 +1,6 @@
 import { getConnectedWalletAddress } from "../wallet-session.js";
 import { getBalance, updateBalanceDisplay } from "../orid-network.js";
+import { showOridAlert } from "../orid-alert.js";
 
 const API_BASE = "https://oridium-production.up.railway.app";
 
@@ -114,6 +115,10 @@ document.getElementById("confirm-send")?.addEventListener("click", async () => {
     if (result.success) {
       confirmationMsg.textContent = `✅ ${amount.toFixed(4)} ORID sent successfully from ${sender}`;
       updateBalanceDisplay();
+    
+      // ✨ Affiche l’alerte visuelle + son
+      const pseudo = sender.slice(0, 6) + "...";
+      showOridAlert(pseudo, amount);
     } else {
       confirmationMsg.textContent = "❌ Server error: " + (result.error || "Unknown error");
     }
