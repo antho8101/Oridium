@@ -205,7 +205,7 @@ function dynamicBatchLoop() {
                 tx.sender !== myAddress
               ) {
                 const pseudo = localStorage.getItem(`orid_wallet_${tx.sender}_pseudo`) || "Someone";
-                showOridAlert(pseudo, tx.amount);
+                showOridAlert(pseudo, tx.amount, tx.receiver);
               }
             });
           });
