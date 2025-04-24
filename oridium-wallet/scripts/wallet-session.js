@@ -194,6 +194,33 @@ window.addEventListener("message", (event) => {
   }
 });
 
+// 🔁 Vérifie périodiquement si le solde a changé
+let previousBalance = 0;
+
+async function pollWalletBalance(interval = 5000) {
+  setInterval(async () => {
+    const address = getConnectedWalletAddress();
+    if (!address) return;
+
+    const currentBalance = await getBalance(address);
+    if (currentBalance !== previousBalance) {
+      previousBalance = currentBalance;
+      updateBalanceUI(currentBalance);
+      console.log("🔄 Balance updated via polling:", currentBalance.toFixed(4));
+    }
+  }, interval);
+}
+
+// 🚀 Lancer le polling une fois connecté
+window.addEventListener("orid-wallet-connected", () => {
+  const address = getConnectedWalletAddress();
+  if (!address) return;
+  getBalance(address).then(balance => {
+    previousBalance = balance;
+    pollWalletBalance(); // ⏱️ 5s
+  });
+});
+
 // ⬇️ Expose les fonctions globalement si besoin
 window.disconnectWallet = disconnectWallet;
 window.setWalletConnected = setWalletConnected;
