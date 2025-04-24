@@ -2,9 +2,17 @@ import { getConnectedWalletAddress } from "./wallet-session.js";
 
 export function showOridAlert(pseudo, amount, receiver = null) {
   const myAddress = getConnectedWalletAddress();
+
+  // 🛡 Ignore si je suis l’émetteur
+  if (pseudo.toLowerCase() === myAddress?.toLowerCase()) {
+    console.log("🚫 Alerte bloquée (pseudo == moi)");
+    return;
+  }
+
+  // ✅ Si c’est bien pour moi, j’affiche
   if (receiver && receiver.toLowerCase() === myAddress?.toLowerCase()) {
     console.log("✅ Alerte légitime reçue, affichage OK");
-  } else if (receiver) {
+  } else {
     console.log("🚫 Alerte ignorée, ce n’est pas pour moi.");
     return;
   }
