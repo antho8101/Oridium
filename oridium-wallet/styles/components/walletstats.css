@@ -10,9 +10,10 @@
   
   .stat-card {
     display: flex;
-    align-items: center;
-    justify-content: space-between;
-    flex: 1;
+    padding: 10px 20px;
+    flex-direction: column;
+    align-items: flex-start;
+    flex: 1 0 0;
     background-color: #DCCB92;
     border-radius: 20px;
     padding: 10px 20px;
@@ -20,9 +21,10 @@
   
   /* ===== Stat Card Title ===== */
   
-  .stat-card .title-thin {
+  .title-thin {
+    align-self: stretch;
     color: #282A36;
-    max-width: 95px;
+    width: 100%;
   }
   
   /* ===== Stat Value Block ===== */
@@ -31,6 +33,7 @@
     display: flex;
     flex-direction: column;
     align-items: flex-end;
+    align-self: stretch;
   }
   
   .stat-value .value {
