@@ -45,7 +45,7 @@ function updateBalance() {
       usdElement.textContent = `$${valueInUSD.toFixed(2)}`;
     }
 
-    // 🔍 Tentative de détection de réception ORID (mais silencieuse si erreur)
+    // 🔍 Détection de réception d'ORID (mais ignorer les blocs qu'on vient d'envoyer)
     fetch("https://oridium-production.up.railway.app/blockchain")
       .then(res => {
         if (!res.ok) throw new Error(`Status ${res.status}`);
@@ -53,8 +53,10 @@ function updateBalance() {
       })
       .then(chain => {
         const lastTs = parseInt(localStorage.getItem("orid_last_alert_ts") || "0");
+        const lastSentHash = localStorage.getItem("orid_last_sent_hash");
+
         chain.forEach(block => {
-          if (block.timestamp > lastTs) {
+          if (block.timestamp > lastTs && block.hash !== lastSentHash) {
             block.transactions.forEach(tx => {
               if (
                 tx.receiver === address &&
@@ -70,13 +72,13 @@ function updateBalance() {
         });
       })
       .catch(() => {
-        // 👻 Silence total en cas d’erreur, pas de log chiant
       });
 
   }).catch(err => {
     console.error("❌ Failed to update balance:", err);
   });
 }
+
 
 function toggleMining() {
   const playIcon = document.getElementById("icon-play");
@@ -159,6 +161,7 @@ function startMining() {
   }, 1000);
 
   dynamicBatchLoop(); // ⬅️ démarre l’envoi dynamique
+  
 }
 
 function getDynamicInterval() {
@@ -191,22 +194,27 @@ function dynamicBatchLoop() {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(cleaned)
-    }).then(res => res.json())
-      .then(result => {
-        if (result.success) {
-          const myAddress = getConnectedWalletAddress();
-
-          const accepted = cleaned.length;
-          oridiumEarned += accepted * 0.0001;
-          document.getElementById("oridium-earned").textContent = `${oridiumEarned.toFixed(4)} ORID`;
-          updateBalance();
-          lastSentHash = cleaned[cleaned.length - 1].hash;
-        } else {
-          pendingBlocks.push(...blocksToSend);
-          stopMining();
-          showNetworkBusyModal(10);
-        }
-      }).catch(err => {
+    })
+    .then(res => res.json())
+    .then(result => {
+      if (result.success) {
+        const myAddress = getConnectedWalletAddress();
+    
+        const accepted = cleaned.length;
+        oridiumEarned += accepted * 0.0001;
+        document.getElementById("oridium-earned").textContent = `${oridiumEarned.toFixed(4)} ORID`;
+    
+        updateBalance();
+    
+        // ✅ Enregistrement du dernier hash accepté par le serveur
+        lastSentHash = cleaned[cleaned.length - 1].hash;
+        localStorage.setItem("orid_last_sent_hash", lastSentHash);
+      } else {
+        pendingBlocks.push(...blocksToSend);
+        stopMining();
+        showNetworkBusyModal(10);
+      }
+    }).catch(err => {
         console.error("❌ Batch send failed:", err);
         pendingBlocks.push(...blocksToSend);
         stopMining();
