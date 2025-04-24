@@ -30,7 +30,7 @@ function updateBalance() {
   if (!address) return;
 
   getBalance(address).then(balance => {
-    // 💰 Mise à jour de l'affichage du solde
+    // 💰 Mise à jour affichage
     document.querySelectorAll('.balance-amount').forEach(el => {
       if (el.closest('.wallet-balance')) {
         el.textContent = `${balance.toFixed(4)} ORID`;
@@ -45,36 +45,38 @@ function updateBalance() {
       usdElement.textContent = `$${valueInUSD.toFixed(2)}`;
     }
 
-    // 🔍 Détection de réception d'ORID (mais ignorer les blocs qu'on vient d'envoyer)
+    // 🔍 Détection de réception d'ORID
     fetch("https://oridium-production.up.railway.app/blockchain")
-      .then(res => {
-        if (!res.ok) throw new Error(`Status ${res.status}`);
-        return res.json();
-      })
+      .then(res => res.ok ? res.json() : Promise.reject(res.status))
       .then(chain => {
         const lastTs = parseInt(localStorage.getItem("orid_last_alert_ts") || "0");
-        const address = window.walletAddress;
-      
-        chain.forEach(block => {
-          if (block.timestamp > lastTs) {
-            const isMine = block.transactions.some(tx => tx.sender === address);
-            if (isMine) return; // ⛔️ on ignore les blocs que j'ai émis
-      
-            block.transactions.forEach(tx => {
-              if (
-                tx.receiver === address &&
-                tx.sender !== "System" &&
-                tx.sender !== address
-              ) {
-                const pseudo = localStorage.getItem(`orid_wallet_${tx.sender}_pseudo`) || "Someone";
-                showOridAlert(pseudo, tx.amount, tx.receiver);
-                localStorage.setItem("orid_last_alert_ts", block.timestamp.toString());
-              }
-            });
+
+        for (const block of chain) {
+          if (block.timestamp <= lastTs) continue;
+
+          // ✅ Securité : on ignore les blocs contenant *mes* transactions (même si je ne suis que sender)
+          const blockFromMe = block.transactions.some(tx => tx.sender === address);
+          if (blockFromMe) continue;
+
+          // ✅ Si une transaction m’envoie des ORID : alerte
+          for (const tx of block.transactions) {
+            const isValid = (
+              tx.receiver === address &&
+              tx.sender !== "System" &&
+              tx.sender !== address
+            );
+
+            if (isValid) {
+              const pseudo = localStorage.getItem(`orid_wallet_${tx.sender}_pseudo`) || "Someone";
+              showOridAlert(pseudo, tx.amount, tx.receiver);
+              localStorage.setItem("orid_last_alert_ts", block.timestamp.toString());
+              break; // 🔒 une seule alerte par bloc
+            }
           }
-        });
-      })      
+        }
+      })
       .catch(() => {
+        // 🧼 Silence radio
       });
 
   }).catch(err => {
