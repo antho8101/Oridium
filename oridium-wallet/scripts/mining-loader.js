@@ -2,6 +2,7 @@ import { getGlobalDifficulty } from "./utils/difficulty.js";
 import { getConnectedWalletAddress } from './wallet-session.js';
 import { getBalance } from './orid-network.js';
 import { getOridPriceUSD } from "./orid-pricing.js";
+import { showOridAlert } from "./orid-alert.js";
 
 let worker = null;
 let runtimeSeconds = 0;
@@ -29,6 +30,7 @@ function updateBalance() {
   if (!address) return;
 
   getBalance(address).then(balance => {
+    // 💰 Mise à jour de l'affichage du solde
     document.querySelectorAll('.balance-amount').forEach(el => {
       if (el.closest('.wallet-balance')) {
         el.textContent = `${balance.toFixed(4)} ORID`;
@@ -42,6 +44,34 @@ function updateBalance() {
       const valueInUSD = balance * getOridPriceUSD();
       usdElement.textContent = `$${valueInUSD.toFixed(2)}`;
     }
+
+    // 🔍 Vérifie les blocs pour détecter un virement reçu
+    fetch("https://oridium-production.up.railway.app/chain")
+      .then(res => res.json())
+      .then(chain => {
+        const lastTs = parseInt(localStorage.getItem("orid_last_alert_ts") || "0");
+        console.log("🔎 Analyse des blocs. Dernier timestamp connu :", lastTs);
+
+        chain.forEach(block => {
+          if (block.timestamp > lastTs) {
+            block.transactions.forEach(tx => {
+              if (
+                tx.receiver === address &&
+                tx.sender !== "System" &&
+                tx.sender !== address
+              ) {
+                const pseudo = localStorage.getItem(`orid_wallet_${tx.sender}_pseudo`) || "Someone";
+                console.log(`🟡 Nouvelle alerte ! ${pseudo} t'a envoyé ${tx.amount} ORID`);
+                showOridAlert(pseudo, tx.amount);
+                localStorage.setItem("orid_last_alert_ts", block.timestamp.toString());
+              }
+            });
+          }
+        });
+      }).catch(err => {
+        console.warn("⚠️ Impossible de récupérer la chaîne pour détecter les transferts:", err);
+      });
+
   }).catch(err => {
     console.error("❌ Failed to update balance:", err);
   });
