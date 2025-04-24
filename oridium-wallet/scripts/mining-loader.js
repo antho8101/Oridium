@@ -52,18 +52,19 @@ function updateBalance() {
       .then(res => res.ok ? res.json() : Promise.reject(res.status))
       .then(chain => {
         const lastTs = parseInt(localStorage.getItem("orid_last_alert_ts") || "0");
-        const lastSentHash = localStorage.getItem("orid_last_sent_hash");
         const lastAlertedHash = localStorage.getItem("orid_last_alert_hash");
 
         for (const block of chain) {
           if (block.timestamp <= lastTs) continue;
-          if (block.hash === lastSentHash) continue;
           if (block.hash === lastAlertedHash) continue;
 
-          const iAmSender = block.transactions.some(tx =>
-            tx.sender?.toLowerCase() === lowerAddress
+          // ✅ Nouvelle logique : on alerte même si je suis sender, tant qu’il y a une réception vers moi
+          const hasIncoming = block.transactions.some(tx =>
+            tx.receiver?.toLowerCase() === lowerAddress &&
+            tx.sender?.toLowerCase() !== "system"
           );
-          if (iAmSender) continue;
+
+          if (!hasIncoming) continue;
 
           for (const tx of block.transactions) {
             const isValid = (
@@ -76,12 +77,13 @@ function updateBalance() {
               showOridAlert(pseudo, tx.amount, tx.receiver);
               localStorage.setItem("orid_last_alert_ts", block.timestamp.toString());
               localStorage.setItem("orid_last_alert_hash", block.hash);
-              break;
+              break; // 🔒 une seule alerte par bloc
             }
           }
         }
       })
-      .catch(() => {});
+      .catch(() => { /* silence */ });
+
   }).catch(err => {
     console.error("❌ Failed to update balance:", err);
   });
