@@ -1,0 +1,68 @@
+.orid-alert {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    z-index: 9999;
+    display: flex;
+    flex-direction: column;
+    width: 292px;
+    padding: 5px 10px 15px 10px;
+    border-radius: 10px;
+    border: 1px solid #282A36;
+    background: linear-gradient(180deg, #DCCB92 0%, #9D9169 100%);
+    box-shadow: 0 0 8px #DCCB92;
+    transform: translateY(50px);
+    opacity: 0;
+    transition: transform 0.4s ease, opacity 0.4s ease;
+  }
+  
+  .orid-alert.visible {
+    transform: translateY(0);
+    opacity: 1;
+  }
+  
+  .hidden {
+    display: none;
+  }
+  
+  .orid-alert-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+  
+  .orid-alert-logo {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+  }
+  
+  .orid-alert-title {
+    font-family: "Space Grotesk";
+    font-weight: 700;
+    font-size: 14px;
+    color: #282A36;
+  }
+  
+  .orid-alert-content {
+    text-align: right;
+    padding-top: 10px;
+  }
+  
+  #orid-alert-from {
+    font-size: 14px;
+    font-family: "Space Grotesk";
+    font-weight: 400;
+    color: #282A36;
+  }
+  
+  #orid-alert-amount {
+    font-size: 20px;
+    font-weight: 300;
+    font-family: "Space Grotesk";
+    color: #282A36;
+  }
+  
+  .orid-alert-close {
+    cursor: pointer;
+  }  

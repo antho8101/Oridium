@@ -2,6 +2,7 @@
 
 import { getBalance, registerWallet } from "./orid-network.js";
 import { getOridPriceUSD } from "./orid-pricing.js";
+import { showOridAlert } from './orid-alert.js';
 
 let walletConnected = false;
 let currentWalletAddress = null;
@@ -227,3 +228,4 @@ window.setWalletConnected = setWalletConnected;
 window.updateWalletBalanceUI = updateBalanceUI;
 window.displayPublicKey = displayPublicKey;
 window.showAccessDeniedModal = showAccessDeniedModal;
+window.showOridAlert = showOridAlert;
