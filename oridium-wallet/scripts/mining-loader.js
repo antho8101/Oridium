@@ -4,6 +4,7 @@ import { getBalance } from './orid-network.js';
 import { getOridPriceUSD } from "./orid-pricing.js";
 import { showOridAlert } from "./orid-alert.js";
 
+
 let worker = null;
 let runtimeSeconds = 0;
 let oridiumEarned = 0;
@@ -25,6 +26,8 @@ window.addEventListener("DOMContentLoaded", async () => {
     startBalancePolling(); // ⏱ ensuite boucle passive
   }
 });
+
+let pollingInterval = null;
 
 function updateBalance() {
   const address = window.walletAddress;
@@ -53,17 +56,19 @@ function updateBalance() {
       .then(res => res.ok ? res.json() : Promise.reject(res.status))
       .then(chain => {
         const lastTs = parseInt(localStorage.getItem("orid_last_alert_ts") || "0");
+        const lastSentHash = localStorage.getItem("orid_last_sent_hash");
+        const lastAlertedHash = localStorage.getItem("orid_last_alert_hash");
 
         for (const block of chain) {
           if (block.timestamp <= lastTs) continue;
+          if (block.hash === lastSentHash) continue;
+          if (block.hash === lastAlertedHash) continue;
 
-          // 🔒 Si une seule tx du bloc a été envoyée par moi, on skip tout le bloc
           const iAmSender = block.transactions.some(tx =>
             tx.sender?.toLowerCase() === lowerAddress
           );
           if (iAmSender) continue;
 
-          // ✅ On détecte une vraie réception extérieure
           for (const tx of block.transactions) {
             const isValid = (
               tx.receiver?.toLowerCase() === lowerAddress &&
@@ -74,7 +79,8 @@ function updateBalance() {
               const pseudo = localStorage.getItem(`orid_wallet_${tx.sender}_pseudo`) || "Someone";
               showOridAlert(pseudo, tx.amount, tx.receiver);
               localStorage.setItem("orid_last_alert_ts", block.timestamp.toString());
-              break; // une seule alerte par bloc
+              localStorage.setItem("orid_last_alert_hash", block.hash);
+              break; // 🔒 une seule alerte par bloc
             }
           }
         }
@@ -88,6 +94,20 @@ function updateBalance() {
   });
 }
 
+// ⏱ Polling régulier si non-mining
+function startBalancePolling() {
+  if (pollingInterval) return;
+  pollingInterval = setInterval(() => {
+    if (!miningActive && window.walletAddress) {
+      updateBalance();
+    }
+  }, 10000);
+}
+
+export function stopBalancePolling() {
+  clearInterval(pollingInterval);
+  pollingInterval = null;
+}
 
 function toggleMining() {
   const playIcon = document.getElementById("icon-play");
