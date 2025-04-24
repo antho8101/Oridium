@@ -32,6 +32,11 @@
     display: none;
 }
 
+.public-key-display {
+    width: 100%;
+    min-width: 100px
+}
+
 input[type="password"],
 input[readonly] {
     border-radius: 99px;
