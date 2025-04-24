@@ -92,6 +92,8 @@ document.getElementById("confirm-send")?.addEventListener("click", async () => {
     const timestamp = Date.now();
     const pseudo = localStorage.getItem("orid_wallet_pseudo") || "Anonymous";
     const transactions = [{ sender, receiver, amount, pseudo }];
+      console.log("📦 Transactions prêtes à être envoyées :", transactions);
+
     const rawData = `${index}${timestamp}${JSON.stringify(transactions)}${previousHash}`;
     const hash = await sha256(rawData);
 
@@ -104,6 +106,9 @@ document.getElementById("confirm-send")?.addEventListener("click", async () => {
       nonce: 0
     };
 
+    console.log("🚀 Bloc envoyé au serveur :", block);
+
+
     const postRes = await fetch(`${API_BASE}/add-block`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -115,10 +120,7 @@ document.getElementById("confirm-send")?.addEventListener("click", async () => {
     if (result.success) {
       confirmationMsg.textContent = `✅ ${amount.toFixed(4)} ORID sent successfully from ${sender}`;
       updateBalanceDisplay();
-    
-      // ✨ Affiche l’alerte visuelle + son
-      const pseudo = sender.slice(0, 6) + "...";
-      showOridAlert(pseudo, amount);
+
     } else {
       confirmationMsg.textContent = "❌ Server error: " + (result.error || "Unknown error");
     }
