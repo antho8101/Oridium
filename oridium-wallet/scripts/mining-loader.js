@@ -62,7 +62,7 @@ function updateBalance() {
                 tx.sender !== address
               ) {
                 const pseudo = localStorage.getItem(`orid_wallet_${tx.sender}_pseudo`) || "Someone";
-                showOridAlert(pseudo, tx.amount);
+                showOridAlert(pseudo, tx.amount, tx.receiver);
                 localStorage.setItem("orid_last_alert_ts", block.timestamp.toString());
               }
             });
