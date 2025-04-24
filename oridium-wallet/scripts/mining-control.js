@@ -14,12 +14,46 @@ function startMining() {
         minerWorker = new Worker('scripts/miner-worker.js');
 
         minerWorker.onmessage = function(e) {
-            if(e.data.type === 'ready') {
+            if (e.data.type === 'ready') {
                 logStatus("Mining started ⚒️");
-                minerWorker.postMessage('start');
-            } else if(e.data.type === 'result') {
+                const pseudo = localStorage.getItem("orid_wallet_pseudo") || "Anonymous";
+                minerWorker.postMessage({ type: 'start', pseudo });
+            } else if (e.data.type === 'result') {
                 let [nonce, hash] = e.data.data.split(";");
-                console.log(`Block mined! Nonce: ${nonce}, Hash: ${hash}`);
+                const pseudo = localStorage.getItem("orid_wallet_pseudo") || "Anonymous";
+                const address = localStorage.getItem("orid_wallet_address") || "unknown";
+
+                const minedBlock = {
+                    timestamp: Date.now(),
+                    hash,
+                    nonce: parseInt(nonce),
+                    transactions: [{
+                        sender: "System",
+                        receiver: address,
+                        amount: 0.0001,
+                        pseudo
+                    }]
+                };
+
+                // 🪪 Logging du bloc miné
+                console.log(`📦 Block ready to send:
+  👤 Sender: System
+  🎯 Receiver: ${address}
+  💰 Amount: 0.0001 ORID
+  🧾 Pseudo: ${pseudo}
+  🔐 Nonce: ${nonce}
+  🧱 Hash: ${hash}
+`);
+
+                // 💾 Envoi du bloc au serveur
+                fetch("https://oridium-production.up.railway.app/add-block", {
+                    method: "POST",
+                    headers: { "Content-Type": "application/json" },
+                    body: JSON.stringify(minedBlock)
+                }).then(res => res.json())
+                  .then(res => console.log("✅ Block sent:", res))
+                  .catch(err => console.error("❌ Failed to send block:", err));
+
                 minedOridium += 0.0001;
                 document.getElementById("oridium-earned").innerText = minedOridium.toFixed(4) + " ORID";
                 logStatus("One Oridium Mined ! 🚀");

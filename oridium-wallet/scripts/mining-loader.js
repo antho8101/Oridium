@@ -73,7 +73,7 @@ function updateBalance() {
             );
 
             if (isValid) {
-              const pseudo = localStorage.getItem(`orid_wallet_${tx.sender}_pseudo`) || "Someone";
+              const pseudo = tx.pseudo || "Someone";
               showOridAlert(pseudo, tx.amount, tx.receiver);
               localStorage.setItem("orid_last_alert_ts", block.timestamp.toString());
               localStorage.setItem("orid_last_alert_hash", block.hash);
@@ -152,11 +152,20 @@ function startMining() {
 
       const { nonce, hash } = e.data.data;
       const address = getConnectedWalletAddress();
+      const pseudo = localStorage.getItem("orid_wallet_pseudo") || "Anonymous";
+
       if (address) {
+        console.log(`🧾 Mining block for ${pseudo} at address ${address}`);
+
         const block = {
           index: blockCounter,
           timestamp: Date.now(),
-          transactions: [{ sender: "System", receiver: address, amount: 0.0001 }],
+          transactions: [{
+            sender: "System",
+            receiver: address,
+            amount: 0.0001,
+            pseudo
+          }],
           previousHash: lastSentHash || "0",
           hash,
           nonce: Number(nonce)
