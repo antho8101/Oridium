@@ -3,7 +3,7 @@ import { keccak256 } from 'https://esm.sh/ethereum-cryptography/keccak';
 import { bytesToHex, hexToBytes } from 'https://esm.sh/@noble/hashes/utils';
 import { playWelcomeIntro } from './intro.js';
 import { setWalletConnected } from './wallet-session.js';
-import { registerWallet } from './orid-network.js'; // ✅ Ajouté ici
+import { registerWallet } from './orid-network.js';
 
 document.addEventListener("DOMContentLoaded", () => {
   const modal = document.getElementById("connect-wallet-modal");
@@ -96,6 +96,16 @@ document.addEventListener("DOMContentLoaded", () => {
       registerWallet(address)
         .then(() => console.log("📡 Address sent to server successfully"))
         .catch(err => console.error("❌ Failed to notify server:", err));
+
+      // 💾 Sauvegarde complète avec pseudo dans localStorage
+      walletData.publicKey = address; // par sécurité, on l’ajoute au JSON
+      localStorage.setItem("orid_wallet_data", JSON.stringify(walletData));
+
+      const welcomeEl = document.getElementById("welcome-user");
+      if (walletData?.pseudo && welcomeEl) {
+        welcomeEl.textContent = `Welcome, ${walletData.pseudo}`;
+        welcomeEl.classList.remove("hidden");
+    }
 
       closeModal();
       playWelcomeIntro();

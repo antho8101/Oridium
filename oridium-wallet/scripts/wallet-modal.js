@@ -111,12 +111,18 @@ document.addEventListener("DOMContentLoaded", () => {
 
     downloadBtn.addEventListener("click", async () => {
       if (!currentKeys) return;
-
+    
+      const rawPseudo = document.getElementById("wallet-pseudo").value.trim();
+      const pseudo = rawPseudo ? rawPseudo.toLowerCase().replace(/\s+/g, "-") : "anonymous";
+    
       const password = passwordInput.value.trim();
       const useEncryption = encryptToggle.checked && password;
-
-      let content = { publicKey: currentKeys.publicKey };
-
+    
+      let content = {
+        pseudo: rawPseudo || "Anonymous",
+        publicKey: currentKeys.publicKey,
+      };
+    
       if (useEncryption) {
         const encrypted = await encryptPrivateKey(currentKeys.privateKey, password);
         content = {
@@ -128,17 +134,17 @@ document.addEventListener("DOMContentLoaded", () => {
       } else {
         content.privateKey = currentKeys.privateKey;
       }
-
+    
       const blob = new Blob([JSON.stringify(content, null, 2)], {
         type: "application/json",
       });
       const url = URL.createObjectURL(blob);
       const a = document.createElement("a");
       a.href = url;
-      a.download = "oridium-wallet.json";
+      a.download = `oridium-wallet-${pseudo}.json`;
       a.click();
       URL.revokeObjectURL(url);
-    });
+    });     
 
     copyBtn.addEventListener("click", () => {
       navigator.clipboard.writeText(publicKeyInput.value);

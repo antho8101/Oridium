@@ -28,11 +28,22 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("👋 Wallet disconnected");
   });
 
-  const saved = localStorage.getItem("orid_wallet_address");
-  if (saved) {
-    console.log("🧠 Restoring saved wallet from localStorage:", saved);
+  // 🔄 Restauration depuis localStorage
+  const savedAddress = localStorage.getItem("orid_wallet_address");
+  const savedWalletRaw = localStorage.getItem("orid_wallet_data");
+  const savedWallet = savedWalletRaw ? JSON.parse(savedWalletRaw) : null;
+
+  if (savedAddress) {
+    console.log("🧠 Restoring saved wallet from localStorage:", savedAddress);
+    if (savedWallet?.pseudo) {
+      const welcomeEl = document.getElementById("welcome-user");
+      if (welcomeEl) {
+        welcomeEl.textContent = `Welcome, ${savedWallet.pseudo}`;
+        welcomeEl.classList.remove("hidden");
+      }
+    }
     setTimeout(() => {
-      setWalletConnected(saved);
+      setWalletConnected(savedAddress);
     }, 200);
   } else {
     updateWalletButtons(false);
@@ -64,10 +75,17 @@ export function disconnectWallet() {
   walletConnected = false;
   currentWalletAddress = null;
   localStorage.removeItem("orid_wallet_address");
+  localStorage.removeItem("orid_wallet_data");
 
   updateWalletButtons(false);
   displayPublicKey(null);
   updateBalanceUI(0);
+
+  const welcomeEl = document.getElementById("welcome-user");
+  if (welcomeEl) {
+    welcomeEl.classList.add("hidden");
+    welcomeEl.textContent = "";
+  }
 }
 
 export function getConnectedWalletAddress() {
@@ -106,7 +124,7 @@ export function updateBalanceUI(balance) {
   }
 }
 
-// ✅ Gère l’affichage + la copie
+// ✅ Affiche et permet la copie de la clé publique
 export function displayPublicKey(address) {
   console.log("🔍 displayPublicKey called with:", address);
 
@@ -150,33 +168,25 @@ export function showAccessDeniedModal() {
   const supportBtn = document.getElementById("contact-support");
   const switchBtn = document.getElementById("switch-wallet");
 
-  // Reset the buttons to remove old event listeners
   const newSupportBtn = supportBtn.cloneNode(true);
   const newSwitchBtn = switchBtn.cloneNode(true);
   supportBtn.replaceWith(newSupportBtn);
   switchBtn.replaceWith(newSwitchBtn);
 
-  // Show the access denied modal
   modal.classList.remove("hidden", "no-blur");
   content.classList.remove("fade-out");
   content.classList.add("fade-in");
 
-  // Contact support button
   newSupportBtn.addEventListener("click", () => {
     window.open("mailto:support@getoridium.com?subject=Blacklisted Wallet Access", "_blank");
   });
 
-  // Switch wallet button
   newSwitchBtn.addEventListener("click", () => {
-    localStorage.removeItem("orid_wallet_address");
-
-    // Close Access Denied modal
+    disconnectWallet();
     content.classList.remove("fade-in");
     content.classList.add("fade-out");
     setTimeout(() => {
       modal.classList.add("hidden");
-
-      // Show Connect Wallet modal
       connectModal.classList.remove("hidden", "no-blur");
       connectContent.classList.remove("fade-out");
       connectContent.classList.add("fade-in");
@@ -184,8 +194,7 @@ export function showAccessDeniedModal() {
   });
 }
 
-
-// ✅ Rafraîchit le solde automatiquement si blockchain modifiée par WASM
+// 🔁 Sync balance si bloc ajouté par miner WASM
 window.addEventListener("message", (event) => {
   if (event.data?.type === "orid-balance-updated") {
     const address = getConnectedWalletAddress();
@@ -195,9 +204,8 @@ window.addEventListener("message", (event) => {
   }
 });
 
-// 🔁 Vérifie périodiquement si le solde a changé
+// 🔁 Polling du solde toutes les 5s
 let previousBalance = 0;
-
 async function pollWalletBalance(interval = 5000) {
   setInterval(async () => {
     const address = getConnectedWalletAddress();
@@ -212,17 +220,17 @@ async function pollWalletBalance(interval = 5000) {
   }, interval);
 }
 
-// 🚀 Lancer le polling une fois connecté
+// 🔁 Démarrage du polling
 window.addEventListener("orid-wallet-connected", () => {
   const address = getConnectedWalletAddress();
   if (!address) return;
   getBalance(address).then(balance => {
     previousBalance = balance;
-    pollWalletBalance(); // ⏱️ 5s
+    pollWalletBalance();
   });
 });
 
-// ⬇️ Expose les fonctions globalement si besoin
+// ⬇️ Fonctions globales exposées
 window.disconnectWallet = disconnectWallet;
 window.setWalletConnected = setWalletConnected;
 window.updateWalletBalanceUI = updateBalanceUI;
