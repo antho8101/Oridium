@@ -46,7 +46,7 @@ function updateBalance() {
     }
 
     // 🔍 Tentative de détection de réception ORID (mais silencieuse si erreur)
-    fetch("https://oridium-production.up.railway.app/chain")
+    fetch("https://oridium-production.up.railway.app/blockchain")
       .then(res => {
         if (!res.ok) throw new Error(`Status ${res.status}`);
         return res.json();
