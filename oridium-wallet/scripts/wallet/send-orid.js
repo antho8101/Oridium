@@ -90,7 +90,10 @@ document.getElementById("confirm-send")?.addEventListener("click", async () => {
     const previousHash = lastBlock?.hash || "0";
     const index = chain.length;
     const timestamp = Date.now();
-    const pseudo = localStorage.getItem("orid_wallet_pseudo") || "Anonymous";
+    const pseudoEl = document.getElementById("welcome-user");
+    const pseudo = pseudoEl && !pseudoEl.classList.contains("hidden")
+        ? pseudoEl.textContent.replace("Welcome, ", "").trim()
+        : "Anonymous";
     const transactions = [{ sender, receiver, amount, pseudo }];
       console.log("📦 Transactions prêtes à être envoyées :", transactions);
 
