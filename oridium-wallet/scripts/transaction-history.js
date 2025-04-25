@@ -1,4 +1,5 @@
 export function updateTransactionHistory(transactions, myAddress) {
+    console.log("🧾 updateTransactionHistory()", { transactions, myAddress });  
     const container = document.querySelector(".transaction-list");
     if (!container) {
       console.warn("⚠️ .transaction-list non trouvée");
@@ -8,15 +9,16 @@ export function updateTransactionHistory(transactions, myAddress) {
     // Nettoie le contenu existant
     container.innerHTML = "";
   
-    if (!transactions.length) {
-      const emptyRow = document.createElement("div");
-      emptyRow.className = "transaction-row";
-      emptyRow.innerHTML = `<span class="transaction-desc text">No history yet.</span>`;
-      container.appendChild(emptyRow);
+    // Si aucune transaction : on affiche un message
+    if (!transactions || transactions.length === 0) {
+      const empty = document.createElement("div");
+      empty.className = "transaction-row";
+      empty.innerHTML = `<span class="transaction-desc text">No transactions yet</span><span></span>`;
+      container.appendChild(empty);
       return;
     }
   
-    // Trie les transactions du plus récent au plus ancien
+    // Sinon : on trie et on affiche
     transactions.sort((a, b) => b.blockTimestamp - a.blockTimestamp);
   
     for (const tx of transactions) {
@@ -33,7 +35,6 @@ export function updateTransactionHistory(transactions, myAddress) {
       const counterparty = isSender
         ? tx.receiverName || tx.receiver?.slice(0, 6) + "..."
         : tx.senderName || tx.sender?.slice(0, 6) + "...";
-  
       const direction = isSender
         ? `You to ${counterparty}`
         : `${counterparty} to You`;
@@ -41,15 +42,8 @@ export function updateTransactionHistory(transactions, myAddress) {
       desc.textContent = direction;
       amount.textContent = `${parseFloat(tx.amount).toFixed(4)} ($ORID)`;
   
-      // 🕒 Affiche la date au survol
-      desc.title = new Date(tx.blockTimestamp).toLocaleString();
-  
       row.appendChild(desc);
       row.appendChild(amount);
       container.appendChild(row);
-  
-      // // 🎯 (Optionnel) Ajoute une animation légère
-      // row.classList.add("highlight");
-      // setTimeout(() => row.classList.remove("highlight"), 1000);
     }
   }  
