@@ -74,5 +74,3 @@ function enableAlertTestOnceClicked() {
 
   document.addEventListener("click", clickHandler);
 }
-
-enableAlertTestOnceClicked();
