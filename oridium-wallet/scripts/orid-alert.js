@@ -64,3 +64,15 @@ export function showOridAlert(pseudo, amount, receiver = null) {
     document.addEventListener("click", allowOnce);
   });
 }
+
+function enableAlertTestOnceClicked() {
+  const clickHandler = () => {
+    document.removeEventListener("click", clickHandler);
+    console.log("🖱️ Interaction détectée, test de l'alerte déclenché !");
+    showOridAlert("Gérard", 0.012);
+  };
+
+  document.addEventListener("click", clickHandler);
+}
+
+enableAlertTestOnceClicked();
