@@ -59,4 +59,11 @@
   .transaction-amount {
     color: #DCCB92;
     font-weight: 500;
-  }  
+  }
+
+  .transaction-row.highlight {
+    background-color: #DCCB92 !important;
+    color: #191A21;
+    transition: background-color 0.6s ease;
+  }
+  

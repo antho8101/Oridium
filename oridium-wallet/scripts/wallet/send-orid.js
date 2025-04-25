@@ -1,5 +1,6 @@
 import { getConnectedWalletAddress } from "../wallet-session.js";
 import { getBalance, updateBalanceDisplay } from "../orid-network.js";
+import { updateTransactionHistory } from "../transaction-history.js";
 import { showOridAlert } from "../orid-alert.js";
 
 const API_BASE = "https://oridium-production.up.railway.app";
@@ -123,6 +124,19 @@ document.getElementById("confirm-send")?.addEventListener("click", async () => {
     if (result.success) {
       confirmationMsg.textContent = `✅ ${amount.toFixed(4)} ORID sent successfully from ${sender}`;
       updateBalanceDisplay();
+    
+      // 🧾 Historique local
+      if (window.__oridTransactionList) {
+        const newTx = {
+          sender,
+          receiver,
+          amount,
+          blockTimestamp: Date.now(),
+          receiverName: getPseudoFromAddress(receiver) || receiver.slice(0, 6) + "..."
+        };
+        window.__oridTransactionList.unshift(newTx);
+        updateTransactionHistory(window.__oridTransactionList, sender);
+      }    
 
     } else {
       confirmationMsg.textContent = "❌ Server error: " + (result.error || "Unknown error");
