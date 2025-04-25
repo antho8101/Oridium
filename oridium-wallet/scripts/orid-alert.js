@@ -53,24 +53,28 @@ export function showOridAlert(pseudo, amount, receiver = null) {
 
   audio.play().then(() => {
     console.log("🔊 Son joué avec succès");
+  
+    // 🎉 Confettis si montant ≥ 1 ORID
+    if (window.__oridConfetti) {
+      const intensity = Math.min(300, 100 + Math.floor(amount * 80)); // max 300 particules
+      window.__oridConfetti({
+        particleCount: intensity,
+        spread: 100,
+        origin: { y: 0.6 },
+        scalar: 1.2
+      });
+      console.log(`🎊 Confettis déclenchés pour ${amount} ORID (${intensity} particules)`);
+    }   
+  
   }).catch(err => {
     console.warn("🔇 Audio not allowed yet. Waiting for user interaction…");
-
+  
     const allowOnce = () => {
       audio.play().catch(e => console.warn("🔇 Still blocked", e));
       document.removeEventListener("click", allowOnce);
     };
-
+  
     document.addEventListener("click", allowOnce);
   });
-}
-
-function enableAlertTestOnceClicked() {
-  const clickHandler = () => {
-    document.removeEventListener("click", clickHandler);
-    console.log("🖱️ Interaction détectée, test de l'alerte déclenché !");
-    showOridAlert("Gérard", 0.012);
-  };
-
-  document.addEventListener("click", clickHandler);
+  
 }

@@ -667,6 +667,10 @@
 <script type="module" src="scripts/wallet/send-orid.js"></script>
 <script type="module" src="scripts/wallet-session.js"></script>
 
+<script type="module">
+  import confetti from "https://cdn.skypack.dev/canvas-confetti";
+  window.__oridConfetti = confetti;
+</script>
 
 
 <input type="file" id="connect-wallet-file" accept="application/json" style="display: none;">
