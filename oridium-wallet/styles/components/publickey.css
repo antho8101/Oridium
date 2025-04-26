@@ -8,6 +8,7 @@
 }
 
 .public-key-info {
+  flex: 0 0 500px;
   display: flex;
   align-items: center;
   flex: 1;
