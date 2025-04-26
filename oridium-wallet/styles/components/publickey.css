@@ -8,17 +8,17 @@
 }
 
 .public-key-info {
-  flex: 0 0 500px;
   display: flex;
   align-items: center;
-  flex: 1;
-  min-width: 0; /* ✅ important pour flexbox pour éviter les débordements */
+  flex: 1 1 auto; /* ✅ pas 0 0 500px comme tu avais fait avant */
+  min-width: 0; /* ✅ important */
   height: 100%;
   padding: 0 20px;
   background-color: #282A36;
   border: 1px solid #DCCB92;
   border-radius: 99px;
   color: var(--Pure-White, #FFF);
+  overflow: hidden; /* ✅ pour éviter tout débordement */
 }
 
 .public-key-info:hover {
@@ -31,13 +31,9 @@
   justify-content: space-between;
   gap: 10px;
   width: 100%;
-  overflow: hidden;
-  max-width: 100%;
-  overflow: hidden;
-  flex-shrink: 1;
   min-width: 0;
-
-} 
+  overflow: hidden;
+}
 
 .key-display .title {
   flex-shrink: 0;
@@ -50,7 +46,7 @@
   color: #EBE6D9;
   user-select: text;
   flex: 1 1 auto;
-  min-width: 0;
+  min-width: 0; /* ✅ absolument nécessaire */
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
