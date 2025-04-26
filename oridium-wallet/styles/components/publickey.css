@@ -51,7 +51,6 @@
   user-select: text;
   flex: 1 1 auto;
   min-width: 0;
-  max-width: 200px; /* ✅ ajoute un max-width ici */
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
@@ -64,4 +63,14 @@
   width: 18px;
   height: 18px;
   flex-shrink: 0;
+}
+
+.public-key-btn {
+  flex: 1 1 auto;       /* ✅ Grandit et shrink si besoin */
+  padding: 0 60px;      /* ✅ 60px de base comme ton design original */
+  min-width: 120px;     /* ✅ Protège contre l'écrasement total */
+  max-width: 220px;     /* ✅ Ne devient pas géant non plus sur grand écran */
+  white-space: nowrap;  /* ✅ Pas de retour à la ligne */
+  text-align: center;
+  transition: padding 0.2s ease; /* ✅ Transition douce si besoin */
 }
