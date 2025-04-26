@@ -12,18 +12,19 @@
     display: flex;
     padding: 10px 20px;
     flex-direction: column;
-    align-items: flex-start;
+    align-items: center;
     flex: 1 0 0;
-    background-color: #DCCB92;
+    align-self: stretch;
     border-radius: 20px;
-    padding: 10px 20px;
+    border: 1px solid var(--Oridium, #DCCB92);
+    background: var(--clear-black, #282A36);
   }
   
   /* ===== Stat Card Title ===== */
   
   .title-thin {
     align-self: stretch;
-    color: #282A36;
+    color: var(--Pure-White, #FFF);
     width: 100%;
   }
   
@@ -37,9 +38,9 @@
   }
   
   .stat-value .value {
-    color: #282A36;
+    color: var(--Pure-White, #FFF);
   }
   
   .stat-value .text {
-    color: #575449;
+    color: var(--Oridium, #DCCB92);
   }

@@ -9,6 +9,7 @@
 .mining-bar {
   background-color: #DCCB92;
   display: flex;
+  width: 100%;
   justify-content: space-between;
   align-items: center;
   padding: 5px 30px 5px 5px;

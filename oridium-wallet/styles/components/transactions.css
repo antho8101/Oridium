@@ -23,15 +23,6 @@
     font-family: 'Space Grotesk', sans-serif;
     font-size: 14px;
   }
-  
-  .transaction-row:nth-child(odd) {
-    background-color: #282A36;
-  }
-  
-  .transaction-row:nth-child(even) {
-    background-color: #191A21;
-  }
-  
   /* ===== Transaction List ===== */
   
   .transaction-list {
@@ -65,10 +56,6 @@
     background-color: #DCCB92 !important;
     color: #191A21;
     transition: background-color 0.6s ease;
-  }
-
-  .transaction-list {
-    background: rgba(255, 0, 0, 0.1); /* temporaire pour debug visuel */
   }
   
   .no-transaction {

@@ -31,8 +31,10 @@
 /* Valeur importante */
 .value {
     font-family: 'Space Grotesk', sans-serif;
-    font-weight: 300;
     font-size: 48px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
 }
 
 /* Clés ou hash */

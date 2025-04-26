@@ -1,26 +1,46 @@
 /* ===== Layout: Main App Container ===== */
 .main-container {
-    background-color: #191A21;
+    background: radial-gradient(50% 50% at 50% 50%, #393427 0%, #191A21 100%);
+    background-size: cover;
+    overflow: hidden;
+    z-index: 0;
     display: flex;
     gap: 20px;
     width: 100%;
     height: 100dvh;
     padding: 20px;
+  }  
+  /* Pattern en overlay avec opacité */
+  .main-container::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url('https://github.com/antho8101/Oridium/blob/main/oridium-website/assets/pattern.png?raw=true');
+    background-repeat: repeat;
+    background-size: 100px 100px;
+    opacity: 0.25;
+    z-index: 1;
+    pointer-events: none;
+  }
+  
+  /* Le contenu reste au-dessus */
+  .main-container > * {
+    position: relative;
+    z-index: 2;
   }
   
   /* ===== Layout: Main Content Panel ===== */
   .content {
-    background-color: #282A36;
-    border: 1px solid #DCCB92;
-    border-radius: 30px;
-    box-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
-    color: white;
     display: flex;
-    flex: 1;
-    flex-direction: row;
     padding: 30px;
-    width: 100%;
-    overflow-x: visible;
+    align-items: flex-start;
+    gap: 30px;
+    flex: 1 0 0;
+    align-self: stretch;
+    border-radius: 30px;
+    border: 1px solid var(--Oridium, #DCCB92);
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(4px);
   }
   
   /* ===== Left Column (Transactions) ===== */
@@ -29,27 +49,27 @@
     flex: none;
     flex-direction: column;
     gap: 20px;
-    width: 280px;
+    width: 300px;
   }
   
   /* ===== Right Column (Stats, Chart, etc.) ===== */
   .content-right {
     display: flex;
-    flex: 1;
     flex-direction: column;
-    gap: 20px;
-    overflow: visible;
-    min-width: 0;
+    align-items: flex-start;
+    gap: 30px;
+    flex: 1 0 0;
+    align-self: stretch;
+    height: 100%;
+    width: 100%;
   }
   
   /* ===== Vertical Divider Between Columns ===== */
   .vertical-separator {
-    background-color: #575449;
-    border-radius: 1px;
-    box-shadow: 0 0 4px rgba(255, 255, 255, 0.25);
-    margin: 0 30px;
-    width: 2px;
-  }  
+    width: 1px;
+    height: 100%;
+    background: var(--Dividers, #575449);
+  }
 
   .keycode.copied {
     color: #4caf50;

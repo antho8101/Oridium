@@ -47,7 +47,6 @@
     margin: 0;
     padding: 0;
     text-align: left;
-    text-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
   }
   
   .wallet-version {
@@ -55,7 +54,6 @@
     margin: 0;
     padding: 0;
     text-align: left;
-    text-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
   }
   
   /* ===== Wallet Balance Summary ===== */
@@ -78,7 +76,6 @@
   .welcome-user {
     align-self: stretch;
     color: #FFF;
-    text-shadow: 0px 0px 4px rgba(255, 255, 255, 0.50);
     font-family: "Space Grotesk";
     font-size: 14px;
     font-style: normal;
