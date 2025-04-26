@@ -27,13 +27,15 @@
 .key-display {
   display: flex;
   align-items: center;
-  justify-content: center;
+  justify-content: space-between;
   gap: 10px;
   width: 100%;
   overflow: hidden;
-  min-width: 0;
   max-width: 100%;
   overflow: hidden;
+  flex-shrink: 1;
+  min-width: 0;
+
 } 
 
 .key-display .title {
@@ -45,17 +47,16 @@
   font-family: 'Space Grotesk', sans-serif;
   font-size: 14px;
   color: #EBE6D9;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  white-space: nowrap;
   user-select: text;
   flex: 1 1 auto;
-  min-width: 0;
-  text-align: center;max-width: 100%;
+  min-width: 0; /* ✅ Ajoute bien ça */
+  max-width: 100%;
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
+  text-align: center;
 }
+
 
 .copy-icon {
   cursor: pointer;
