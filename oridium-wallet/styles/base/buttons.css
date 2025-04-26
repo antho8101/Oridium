@@ -2,7 +2,6 @@
     background-color: #DCCB92;
     border: 1px solid #DCCB92;
     border-radius: 99px;
-    box-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
     color: #282A36;
     cursor: pointer;
     padding: 10px;
@@ -37,7 +36,6 @@
     background-color: #282A36;
     border: 1px solid #DCCB92;
     border-radius: 99px;
-    box-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
     color: #EBE6D9;
     cursor: pointer;
     padding: 10px;
@@ -73,7 +71,6 @@
     background-color: #282A36;
     border: 1px solid #DCCB92;
     border-radius: 99px;
-    box-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
     color: #EBE6D9;
     cursor: pointer;
     max-width: 220px;
@@ -110,7 +107,6 @@
     background-color: #282A36;
     border: 1px solid #DCCB92;
     border-radius: 99px;
-    box-shadow: 0 0 4px rgba(255, 255, 255, 0.5);
     color: #EBE6D9;
     cursor: pointer;
     max-width: 220px;

@@ -59,7 +59,7 @@
   }
   
   .no-transaction {
-    color: var(--Dividers, #575449);
+    color: rgba(220, 203, 146, 0.50);
     font-family: "Space Grotesk", sans-serif;
     font-size: 14px;
     font-style: normal;
