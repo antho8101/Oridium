@@ -11,13 +11,13 @@
   display: flex;
   align-items: center;
   flex: 1;
+  min-width: 0; /* ✅ important pour flexbox pour éviter les débordements */
   height: 100%;
   padding: 0 20px;
   background-color: #282A36;
   border: 1px solid #DCCB92;
   border-radius: 99px;
-  color: #EBE6D9;
-  overflow: hidden; /* 👈 Important pour tout clipper proprement */
+  color: var(--Pure-White, #FFF);
 }
 
 .public-key-info:hover {
@@ -27,10 +27,11 @@
 .key-display {
   display: flex;
   align-items: center;
-  justify-content: center; /* 👈 Centre par défaut */
+  justify-content: center;
   gap: 10px;
   width: 100%;
   overflow: hidden;
+  min-width: 0; /* ✅ */
 }
 
 .key-display .title {
