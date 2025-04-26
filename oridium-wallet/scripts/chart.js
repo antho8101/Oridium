@@ -1,25 +1,27 @@
 const container = document.getElementById('priceChart');
 
-const chartOptions = {
-  layout: {
-      textColor: 'black',
-      background: { type: 'solid', color: 'white' },
-  },
-};
-
 const chart = LightweightCharts.createChart(container, {
-  width: container.clientWidth,
-  height: container.clientHeight,
+  autoSize: true, // 👉 corrige ton souci sans bricoler manuellement width/height
   layout: {
-    background: { color: '#282A36' },
-    textColor: '#ffffff'
+    background: { color: 'transparent' },
+    textColor: '#ffffff',
   },
+  grid: {
+    vertLines: { color: 'transparent' },
+    horzLines: { color: 'transparent' },
+  },
+  timeScale: {
+    borderColor: '#DCCB92',
+  },
+  priceScale: {
+    borderColor: '#DCCB92',
+  }
 });
 
 // Exemple de série
 const areaSeries = chart.addAreaSeries({
   topColor: '#DCCB92',
-  bottomColor: '#282A36',
+  bottomColor: 'rgba(220, 203, 146, 0.05)',
   lineColor: '#575449',
   lineWidth: 1,
   crossHairMarkerVisible: false,
@@ -178,11 +180,17 @@ areaSeries.setData([
   { time: '2019-05-28', value: 26.23 },
 ]);
 
+// ⛔️ Plus besoin de resize à la main si on met autoSize: true
+
+// Mais pour être 100% safe, on garde une légère sécurité
 function resizeChart() {
-  chart.resize(container.clientWidth, container.clientHeight);
   chart.timeScale().fitContent();
 }
+
 window.addEventListener('resize', resizeChart);
 
 // Premier fit au chargement
 resizeChart();
+
+// 🔵 Expose le chart globalement pour d'autres scripts (ex: responsive-fix.js)
+window.priceChart = chart;
