@@ -50,8 +50,8 @@
   color: #EBE6D9;
   user-select: text;
   flex: 1 1 auto;
-  min-width: 0; /* ✅ Ajoute bien ça */
-  max-width: 100%;
+  min-width: 0;
+  max-width: 200px; /* ✅ ajoute un max-width ici */
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
