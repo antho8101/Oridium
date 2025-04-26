@@ -1,7 +1,7 @@
 function triggerResponsiveFix() {
   console.log("🔄 Forcing responsive recalculation...");
 
-  // 1. Fix temporaire du body (très léger)
+  // 1. Fix temporaire du body (léger et propre)
   document.body.style.width = "99.9%";
   document.body.style.height = "99.9vh";
 
@@ -18,7 +18,6 @@ function triggerResponsiveFix() {
     const width = chartContainer.clientWidth;
     const height = chartContainer.clientHeight;
 
-    // 🛠️ Ajuste aussi directement l'élément #priceChart
     priceChartElement.style.width = width + "px";
     priceChartElement.style.height = height + "px";
 
@@ -28,12 +27,20 @@ function triggerResponsiveFix() {
     console.log('📈 Chart and container resized:', width, height);
   }
 
-  // 3. Toujours forcer un petit scrollTo pour éviter décalages
+  // 3. Toujours forcer un petit scroll pour recaler
   window.scrollTo(0, 0);
 }
 
-// 👉 Démarre au chargement
-window.addEventListener('load', triggerResponsiveFix);
+// 👉 Corrige tout au load ET au resize
+function setupResponsiveFix() {
+  triggerResponsiveFix();
 
-// 👉 Recalcule à chaque resize
+  setTimeout(() => {
+    triggerResponsiveFix();
+    console.log('🛠 Forcing extra recalculation after wallet data');
+  }, 300); // Re-trigger après 300ms pour compenser le load wallet
+}
+
+// Branche proprement
+window.addEventListener('load', setupResponsiveFix);
 window.addEventListener('resize', triggerResponsiveFix);
