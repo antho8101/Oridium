@@ -18,6 +18,10 @@
     border-radius: 99px;
     color: #EBE6D9;
   }
+
+  .public-key-info:hover {
+    box-shadow: 0px 0px 8px 0px #DCCB92;
+  }
   
   .copy-icon {
     cursor: pointer;

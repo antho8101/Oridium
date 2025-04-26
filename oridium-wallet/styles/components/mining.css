@@ -15,6 +15,11 @@
   padding: 5px 30px 5px 5px;
   border-radius: 99px;
   margin-top: 20px;
+  box-shadow: 0px 8px 12px 6px rgba(0, 0, 0, 0.15), 0px 4px 4px 0px rgba(0, 0, 0, 0.30);
+}
+
+.mining-bar:hover {
+  box-shadow: 0px 0px 8px 0px #DCCB92;
 }
 
 /* ===== Mining Panel: Left Side (Button + Status) ===== */
