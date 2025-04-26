@@ -4,7 +4,7 @@
   display: flex;
   align-items: center;
   gap: 20px;
-  width: 100%;
+  align-self: stretch;
 }
 
 .public-key-info {
@@ -32,7 +32,7 @@
   width: 100%;
   overflow: hidden;
   min-width: 0; /* ✅ */
-}
+} 
 
 .key-display .title {
   flex-shrink: 0;
