@@ -11,12 +11,12 @@
     background-color: #191A21;
     color: #EBE6D9;
     width: 100%;
-    min-height: 100vh;
+    height: 100%; /* ⚡ ici : pas de min-height: 100vh, juste height: 100% */
     overflow-x: hidden;
     overflow-y: hidden;
     user-select: none;
     font-family: 'Space Grotesk', sans-serif;
-  }
+}
   
   /* Utilitaires */
   .hidden {

@@ -1,42 +1,59 @@
 /* ===== Public Key Section ===== */
 
 .public-key-container {
-    display: flex;
-    align-items: center;
-    gap: 20px;
-    width: 100%;
-  }
-  
-  .public-key-info {
-    display: flex;
-    align-items: center;
-    flex: 1;
-    height: 100%;
-    padding: 0 20px;
-    background-color: #282A36;
-    border: 1px solid #DCCB92;
-    border-radius: 99px;
-    color: #EBE6D9;
-  }
+  display: flex;
+  align-items: center;
+  gap: 20px;
+  width: 100%;
+}
 
-  .public-key-info:hover {
-    box-shadow: 0px 0px 8px 0px #DCCB92;
-  }
-  
-  .copy-icon {
-    cursor: pointer;
-    width: 18px;
-    height: 18px;
-  }
-  
-  /* ===== Truncated Public Key Display ===== */
-  
-  .keycode {
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 14px;
-    color: #EBE6D9;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-    user-select: text;
-  }
+.public-key-info {
+  display: flex;
+  align-items: center;
+  flex: 1;
+  height: 100%;
+  padding: 0 20px;
+  background-color: #282A36;
+  border: 1px solid #DCCB92;
+  border-radius: 99px;
+  color: #EBE6D9;
+  overflow: hidden; /* 👈 Important pour tout clipper proprement */
+}
+
+.public-key-info:hover {
+  box-shadow: 0px 0px 8px 0px #DCCB92;
+}
+
+.key-display {
+  display: flex;
+  align-items: center;
+  justify-content: center; /* 👈 Centre par défaut */
+  gap: 10px;
+  width: 100%;
+  overflow: hidden;
+}
+
+.key-display .title {
+  flex-shrink: 0;
+  white-space: nowrap;
+}
+
+.keycode {
+  font-family: 'Space Grotesk', sans-serif;
+  font-size: 14px;
+  color: #EBE6D9;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  user-select: text;
+  flex: 1 1 auto;
+  min-width: 0;
+  text-align: center; /* 👈 Centre le texte dans sa propre zone */
+}
+
+.copy-icon {
+  cursor: pointer;
+  width: 18px;
+  height: 18px;
+  flex-shrink: 0;
+}

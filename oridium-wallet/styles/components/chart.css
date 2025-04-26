@@ -1,7 +1,15 @@
 /* === chart.css === */
 /* Styles pour l'intégration de Lightweight Charts */
 
-.chart-container,
+.chart-container {
+  flex: 1 1 auto;
+  width: 100%;
+  min-height: 200px; /* Minimum visuel, à ajuster */
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
 #priceChart {
   width: 100%;
   height: 100%;

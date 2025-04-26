@@ -47,6 +47,12 @@
     text-align: left;
   }
   
+  .logo-sup {
+    font-size: 0.6em;
+    vertical-align: super;
+    margin-left: 2px;
+}
+
   .wallet-version {
     color: #DCCB92;
     margin: 0;
