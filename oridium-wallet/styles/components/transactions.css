@@ -71,3 +71,13 @@
     background: rgba(255, 0, 0, 0.1); /* temporaire pour debug visuel */
   }
   
+  .no-transaction {
+    color: var(--Dividers, #575449);
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+    text-align: center;
+    padding: 10px;
+  }  

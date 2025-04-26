@@ -5,7 +5,7 @@ import { getTransactionsForWallet } from './helpers/getTransactionsForWallet.js'
 
 // 🔁 Check toutes les 3 secondes
 setInterval(() => {
-  const chain = window.blockchain; // récupère ta vraie blockchain ici
+  const chain = window.blockchain;
   const myAddress = getConnectedWalletAddress();
 
   if (chain && myAddress) {
@@ -14,6 +14,10 @@ setInterval(() => {
 
     // 🧾 Met à jour l'historique des transactions
     const myTransactions = getTransactionsForWallet(chain, myAddress);
+
+    // 🆕 ✅ Corrige ici : on stocke les transactions localement !
+    window.__oridTransactionList = myTransactions;
+
     updateTransactionHistory(myTransactions, myAddress);
   }
 }, 3000);

@@ -34,7 +34,6 @@ async function sha256(message) {
 }
 
 // Open first modal
-
 document.getElementById("open-send-orid-btn")?.addEventListener("click", () => {
   resetStep1();
   openModal(step1Modal);
@@ -49,7 +48,6 @@ recipientInput?.addEventListener("input", () => {
 
 nextToStep2Btn?.addEventListener("click", async () => {
   closeModal(step1Modal);
-
   const sender = getConnectedWalletAddress();
   if (!sender) return alert("Please connect your wallet first.");
 
@@ -93,10 +91,10 @@ document.getElementById("confirm-send")?.addEventListener("click", async () => {
     const timestamp = Date.now();
     const pseudoEl = document.getElementById("welcome-user");
     const pseudo = pseudoEl && !pseudoEl.classList.contains("hidden")
-        ? pseudoEl.textContent.replace("Welcome, ", "").trim()
-        : "Anonymous";
+      ? pseudoEl.textContent.replace("Welcome, ", "").trim()
+      : "Anonymous";
     const transactions = [{ sender, receiver, amount, pseudo }];
-      console.log("📦 Transactions prêtes à être envoyées :", transactions);
+    console.log("📦 Transactions prêtes à être envoyées :", transactions);
 
     const rawData = `${index}${timestamp}${JSON.stringify(transactions)}${previousHash}`;
     const hash = await sha256(rawData);
@@ -112,7 +110,6 @@ document.getElementById("confirm-send")?.addEventListener("click", async () => {
 
     console.log("🚀 Bloc envoyé au serveur :", block);
 
-
     const postRes = await fetch(`${API_BASE}/add-block`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
@@ -124,7 +121,13 @@ document.getElementById("confirm-send")?.addEventListener("click", async () => {
     if (result.success) {
       confirmationMsg.textContent = `✅ ${amount.toFixed(4)} ORID sent successfully from ${sender}`;
       updateBalanceDisplay();
-    
+
+      // 🧹 Cache le message "No transaction yet"
+      const noTx = document.getElementById("no-transaction-placeholder");
+      if (noTx) {
+        noTx.style.display = "none";
+      }
+
       // 🧾 Historique local
       if (window.__oridTransactionList) {
         const newTx = {
@@ -132,11 +135,11 @@ document.getElementById("confirm-send")?.addEventListener("click", async () => {
           receiver,
           amount,
           blockTimestamp: Date.now(),
-          receiverName: getPseudoFromAddress(receiver) || receiver.slice(0, 6) + "..."
+          receiverName: receiver.slice(0, 6) + "..."
         };
         window.__oridTransactionList.unshift(newTx);
         updateTransactionHistory(window.__oridTransactionList, sender);
-      }    
+      }
 
     } else {
       confirmationMsg.textContent = "❌ Server error: " + (result.error || "Unknown error");

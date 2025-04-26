@@ -3,6 +3,7 @@ import { updateTransactionHistory } from "./transaction-history.js";
 
 export function showOridAlert(pseudo, amount, receiver = null) {
   const myAddress = getConnectedWalletAddress();
+  const noTx = document.getElementById("no-transaction-placeholder");
 
   // 🛡 Ignore si je suis l’émetteur
   if (pseudo.toLowerCase() === myAddress?.toLowerCase()) {
@@ -10,10 +11,15 @@ export function showOridAlert(pseudo, amount, receiver = null) {
     return;
   }
 
-  // ✅ Si ce n’est pas pour moi, on ignore
+  // ✅ Ignore si ce n’est pas pour moi
   if (receiver && receiver.toLowerCase() !== myAddress?.toLowerCase()) {
     console.log("🚫 Alerte ignorée, ce n’est pas pour moi.");
     return;
+  }
+
+  // 🧹 Cache le message "No transaction yet"
+  if (noTx) {
+    noTx.style.display = "none";
   }
 
   // 🧾 Ajoute la transaction dans l'historique
@@ -25,7 +31,6 @@ export function showOridAlert(pseudo, amount, receiver = null) {
       blockTimestamp: Date.now(),
       senderName: pseudo
     };
-
     window.__oridTransactionList.unshift(newTx);
     updateTransactionHistory(window.__oridTransactionList, myAddress);
   }
@@ -80,15 +85,12 @@ export function showOridAlert(pseudo, amount, receiver = null) {
       });
       console.log(`🎊 Confettis déclenchés pour ${amount} ORID (${intensity} particules)`);
     }
-
   }).catch(err => {
     console.warn("🔇 Audio not allowed yet. Waiting for user interaction…");
-
     const allowOnce = () => {
       audio.play().catch(e => console.warn("🔇 Still blocked", e));
       document.removeEventListener("click", allowOnce);
     };
-
     document.addEventListener("click", allowOnce);
   });
 }
