@@ -4,6 +4,7 @@ import { getBalance, registerWallet } from "./orid-network.js";
 import { getOridPriceUSD } from "./orid-pricing.js";
 import { showOridAlert } from './orid-alert.js';
 import { analyzeIncomingBlocks } from "./incoming-transactions.js";
+import { finishLoading } from './loader.js';
 
 let walletConnected = false;
 let currentWalletAddress = null;
@@ -58,6 +59,7 @@ export async function setWalletConnected(address) {
 
   updateWalletButtons(true);
   displayPublicKey(address);
+
   window.dispatchEvent(new Event("orid-wallet-connected"));
 
   registerWallet(address)
@@ -70,6 +72,9 @@ export async function setWalletConnected(address) {
   } catch (err) {
     console.error("❌ Failed to fetch balance from server:", err);
   }
+
+  // ⚡ Ajoute ceci tout à la fin :
+  finishLoading(); // ✅ Enfin, on enlève le loader quand tout est prêt !
 }
 
 export function disconnectWallet() {
@@ -221,12 +226,13 @@ async function pollWalletBalance(interval = 5000) {
   }, interval);
 }
 
-// 🔁 Démarrage du polling
 window.addEventListener("orid-wallet-connected", () => {
   const address = getConnectedWalletAddress();
   if (!address) return;
+
   getBalance(address).then(balance => {
     previousBalance = balance;
+    updateBalanceUI(balance); // ⚡ très important de MAJ l'UI avant de finir le loading
     pollWalletBalance();
     pollIncomingTransactions();
   });
