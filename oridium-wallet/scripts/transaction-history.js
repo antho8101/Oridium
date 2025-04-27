@@ -1,7 +1,12 @@
+// scripts/transaction-history.js
+
+import { addTransaction, formatDateISO } from './transaction-builder.js';
+
 export function updateTransactionHistory(transactions, myAddress) {
   console.log("🧾 updateTransactionHistory()", { transactions, myAddress });
-  
+
   const container = document.querySelector(".transaction-list");
+  const bottom = document.querySelector(".transaction-bottom");
   const placeholder = document.getElementById("no-transaction-placeholder");
 
   if (!container) {
@@ -9,49 +14,44 @@ export function updateTransactionHistory(transactions, myAddress) {
     return;
   }
 
-  // Si aucune transaction
+  // 🔄 Nettoyage : ne touche pas au champ de recherche ni au placeholder
+  const days = container.querySelectorAll('.transaction-day, .transaction-spacer');
+  days.forEach(day => day.remove());
+
   if (!transactions || transactions.length === 0) {
-    if (placeholder) {
-      placeholder.style.display = "block"; // Affiche le message
-    }
+    if (placeholder) placeholder.style.display = "block";
+    if (bottom) bottom.style.display = "none";
     return;
+  } else {
+    if (placeholder) placeholder.style.display = "none";
+    if (bottom) bottom.style.display = "block";
   }
 
-  // Si transactions présentes
-  if (placeholder) {
-    placeholder.style.display = "none"; // Cache le message
-  }
-
-  // Nettoie les transactions existantes sans toucher au placeholder
-  const existingRows = container.querySelectorAll(".transaction-row:not(#no-transaction-placeholder)");
-  existingRows.forEach(row => row.remove());
-
-  // Trie et affiche les transactions
+  // 📋 Trie décroissant (plus récent en haut)
   transactions.sort((a, b) => b.blockTimestamp - a.blockTimestamp);
 
   for (const tx of transactions) {
-    const row = document.createElement("div");
-    row.className = "transaction-row";
+    // 🛡️ Ignore les blocs qui ne sont pas des vraies transactions utilisateur
+    if (!tx.pseudo) continue;
 
-    const desc = document.createElement("span");
-    desc.className = "transaction-desc text";
-
-    const amount = document.createElement("span");
-    amount.className = "transaction-amount text";
-
-    const isSender = tx.sender?.toLowerCase() === myAddress.toLowerCase();
+    const isSender = tx.sender?.toLowerCase() === myAddress?.toLowerCase();
     const counterparty = isSender
-      ? tx.receiverName || tx.receiver?.slice(0, 6) + "..."
-      : tx.senderName || tx.sender?.slice(0, 6) + "...";
+      ? tx.receiverName || shortenAddress(tx.receiver)
+      : tx.senderName || shortenAddress(tx.sender);
+
     const direction = isSender
       ? `You to ${counterparty}`
       : `${counterparty} to You`;
 
-    desc.textContent = direction;
-    amount.textContent = `${parseFloat(tx.amount).toFixed(4)} ($ORID)`;
+    const formattedAmount = `${parseFloat(tx.amount).toFixed(4)} ($ORID)`;
+    const transactionDate = formatDateISO(tx.blockTimestamp);
 
-    row.appendChild(desc);
-    row.appendChild(amount);
-    container.appendChild(row);
+    addTransaction(transactionDate, direction, formattedAmount);
   }
+}
+
+// 🔗 Utilitaire raccourci pour afficher l'adresse
+function shortenAddress(address) {
+  if (!address) return "";
+  return address.slice(0, 6) + "...";
 }

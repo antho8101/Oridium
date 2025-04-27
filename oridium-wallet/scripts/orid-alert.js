@@ -1,5 +1,6 @@
 import { getConnectedWalletAddress } from "./wallet-session.js";
 import { updateTransactionHistory } from "./transaction-history.js";
+import { getTransactionsForWallet } from "./helpers/getTransactionsForWallet.js"; // 🆕 import ici
 
 export function showOridAlert(pseudo, amount, receiver = null) {
   const myAddress = getConnectedWalletAddress();
@@ -17,22 +18,19 @@ export function showOridAlert(pseudo, amount, receiver = null) {
     return;
   }
 
-  // 🧹 Cache le message "No transaction yet"
-  if (noTx) {
-    noTx.style.display = "none";
-  }
+  // 🧹 Cache "no transaction yet"
+  if (noTx) noTx.style.display = "none";
 
-  // 🧾 Ajoute la transaction dans l'historique
-  if (window.__oridTransactionList && myAddress) {
-    const newTx = {
-      sender: pseudo,
-      receiver: myAddress,
-      amount: amount,
-      blockTimestamp: Date.now(),
-      senderName: pseudo
-    };
-    window.__oridTransactionList.unshift(newTx);
-    updateTransactionHistory(window.__oridTransactionList, myAddress);
+  // 🧾 Recharge l'historique complet proprement (🆕 plus propre que unshift manuel)
+  try {
+    const chain = window.blockchain;
+    if (chain && myAddress) {
+      const myTransactions = getTransactionsForWallet(chain, myAddress);
+      window.__oridTransactionList = myTransactions;
+      updateTransactionHistory(myTransactions, myAddress);
+    }
+  } catch (err) {
+    console.error("❌ Failed to update transaction history after alert:", err);
   }
 
   console.log("✅ Alerte légitime reçue, affichage OK");

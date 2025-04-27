@@ -2,6 +2,7 @@ import { getConnectedWalletAddress } from "../wallet-session.js";
 import { getBalance, updateBalanceDisplay } from "../orid-network.js";
 import { updateTransactionHistory } from "../transaction-history.js";
 import { showOridAlert } from "../orid-alert.js";
+import { getTransactionsForWallet } from "../helpers/getTransactionsForWallet.js";
 
 const API_BASE = "https://oridium-production.up.railway.app";
 
@@ -122,24 +123,15 @@ document.getElementById("confirm-send")?.addEventListener("click", async () => {
       confirmationMsg.textContent = `✅ ${amount.toFixed(4)} ORID sent successfully from ${sender}`;
       updateBalanceDisplay();
 
-      // 🧹 Cache le message "No transaction yet"
+      // 🧹 Cache "no transactions yet"
       const noTx = document.getElementById("no-transaction-placeholder");
-      if (noTx) {
-        noTx.style.display = "none";
-      }
+      if (noTx) noTx.style.display = "none";
 
-      // 🧾 Historique local
-      if (window.__oridTransactionList) {
-        const newTx = {
-          sender,
-          receiver,
-          amount,
-          blockTimestamp: Date.now(),
-          receiverName: receiver.slice(0, 6) + "..."
-        };
-        window.__oridTransactionList.unshift(newTx);
-        updateTransactionHistory(window.__oridTransactionList, sender);
-      }
+      // 🧾 Recharge l'historique complet (🆕 beaucoup plus clean)
+      const updatedChain = await fetch(`${API_BASE}/blockchain`).then(r => r.json());
+      const myTransactions = getTransactionsForWallet(updatedChain, sender);
+      window.__oridTransactionList = myTransactions;
+      updateTransactionHistory(myTransactions, sender);
 
     } else {
       confirmationMsg.textContent = "❌ Server error: " + (result.error || "Unknown error");

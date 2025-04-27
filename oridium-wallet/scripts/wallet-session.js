@@ -4,7 +4,9 @@ import { getBalance, registerWallet } from "./orid-network.js";
 import { getOridPriceUSD } from "./orid-pricing.js";
 import { showOridAlert } from './orid-alert.js';
 import { analyzeIncomingBlocks } from "./incoming-transactions.js";
-import { resetSearchInput, initTransactionSearch } from './transaction-search.js'; // ← Correction ici
+import { resetSearchInput, initTransactionSearch } from './transaction-search.js';
+import { updateTransactionHistory } from './transaction-history.js';
+import { getTransactionsForWallet } from './helpers/getTransactionsForWallet.js';
 
 let walletConnected = false;
 let currentWalletAddress = null;
@@ -30,7 +32,6 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("👋 Wallet disconnected");
   });
 
-  // 🔄 Restauration depuis localStorage
   const savedAddress = localStorage.getItem("orid_wallet_address");
   const savedWalletRaw = localStorage.getItem("orid_wallet_data");
   const savedWallet = savedWalletRaw ? JSON.parse(savedWalletRaw) : null;
@@ -69,11 +70,31 @@ export async function setWalletConnected(address) {
   try {
     const balance = await getBalance(address);
     updateBalanceUI(balance);
+
+    const chain = window.blockchain;
+    if (chain) {
+      let myTransactions = getTransactionsForWallet(chain, address);
+
+      // 🔥 Nettoyage des doublons par sécurité
+      const uniqueTransactions = [];
+      const seen = new Set();
+      for (const tx of myTransactions) {
+        const key = `${tx.blockTimestamp}-${tx.sender}-${tx.receiver}-${tx.amount}`;
+        if (!seen.has(key)) {
+          seen.add(key);
+          uniqueTransactions.push(tx);
+        }
+      }
+
+      window.__oridTransactionList = uniqueTransactions;
+      updateTransactionHistory(uniqueTransactions, address);
+    }
+
   } catch (err) {
     console.error("❌ Failed to fetch balance from server:", err);
   }
 
-  // D'abord on reset correctement la search bar
+  // ⚡ Rafraîchit correctement la barre de recherche
   setTimeout(() => {
     resetSearchInput();
     initTransactionSearch();
@@ -133,7 +154,6 @@ export function updateBalanceUI(balance) {
   }
 }
 
-// ✅ Affiche et permet la copie de la clé publique
 export function displayPublicKey(address) {
   console.log("🔍 displayPublicKey called with:", address);
 
@@ -156,7 +176,6 @@ export function displayPublicKey(address) {
         }, 1500);
       });
     };
-
   } else {
     el.textContent = "Connect your wallet to see your public key";
     copyIcon.style.opacity = "0.3";
@@ -203,7 +222,7 @@ export function showAccessDeniedModal() {
   });
 }
 
-// 🔁 Sync balance si bloc ajouté par miner WASM
+// 🔄 Synchro automatique du solde si minage
 window.addEventListener("message", (event) => {
   if (event.data?.type === "orid-balance-updated") {
     const address = getConnectedWalletAddress();
@@ -213,7 +232,7 @@ window.addEventListener("message", (event) => {
   }
 });
 
-// 🔁 Polling du solde toutes les 5s
+// 🔁 Polling balance toutes les 5 secondes
 let previousBalance = 0;
 async function pollWalletBalance(interval = 5000) {
   setInterval(async () => {
@@ -229,13 +248,14 @@ async function pollWalletBalance(interval = 5000) {
   }, interval);
 }
 
+// 🔁 Polling incoming transactions
 window.addEventListener("orid-wallet-connected", () => {
   const address = getConnectedWalletAddress();
   if (!address) return;
 
   getBalance(address).then(balance => {
     previousBalance = balance;
-    updateBalanceUI(balance); // ⚡ très important de MAJ l'UI avant de finir le loading
+    updateBalanceUI(balance);
     pollWalletBalance();
     pollIncomingTransactions();
   });
@@ -256,7 +276,7 @@ async function pollIncomingTransactions(interval = 5000) {
   }, interval);
 }
 
-// ⬇️ Fonctions globales exposées
+// ⬇️ Fonctions accessibles globalement
 window.disconnectWallet = disconnectWallet;
 window.setWalletConnected = setWalletConnected;
 window.updateWalletBalanceUI = updateBalanceUI;
