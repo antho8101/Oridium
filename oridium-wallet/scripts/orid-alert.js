@@ -1,36 +1,52 @@
+// scripts/orid-alert.js
+
 import { getConnectedWalletAddress } from "./wallet-session.js";
 import { updateTransactionHistory } from "./transaction-history.js";
-import { getTransactionsForWallet } from "./helpers/getTransactionsForWallet.js"; // 🆕 import ici
+import { getTransactionsForWallet } from "./helpers/getTransactionsForWallet.js";
 
-export function showOridAlert(pseudo, amount, receiver = null) {
+export async function showOridAlert(pseudo, amount, receiver = null) {
   const myAddress = getConnectedWalletAddress();
   const noTx = document.getElementById("no-transaction-placeholder");
 
+  if (!myAddress) return;
+
   // 🛡 Ignore si je suis l’émetteur
-  if (pseudo.toLowerCase() === myAddress?.toLowerCase()) {
+  if (pseudo.toLowerCase() === myAddress.toLowerCase()) {
     console.log("🚫 Alerte bloquée (pseudo == moi)");
     return;
   }
 
   // ✅ Ignore si ce n’est pas pour moi
-  if (receiver && receiver.toLowerCase() !== myAddress?.toLowerCase()) {
+  if (receiver && receiver.toLowerCase() !== myAddress.toLowerCase()) {
     console.log("🚫 Alerte ignorée, ce n’est pas pour moi.");
     return;
   }
 
-  // 🧹 Cache "no transaction yet"
-  if (noTx) noTx.style.display = "none";
+  // 🧹 Cache le message "No transaction yet"
+  if (noTx) {
+    noTx.style.display = "none";
+  }
 
-  // 🧾 Recharge l'historique complet proprement (🆕 plus propre que unshift manuel)
+  // 🎯 À la réception ➔ FORCER une mise à jour de l'historique
   try {
-    const chain = window.blockchain;
-    if (chain && myAddress) {
-      const myTransactions = getTransactionsForWallet(chain, myAddress);
-      window.__oridTransactionList = myTransactions;
-      updateTransactionHistory(myTransactions, myAddress);
+    // Quand on reçoit un ORID
+const chain = window.blockchain;
+if (chain) {
+  const myTransactions = getTransactionsForWallet(chain, myAddress);
+
+  // ➡️ On injecte le pseudo proprement
+  myTransactions.forEach(tx => {
+    if (tx.receiver?.toLowerCase() === myAddress.toLowerCase() && !tx.senderName) {
+      tx.senderName = pseudo; // Ajoute ici
     }
+  });
+
+  window.__oridTransactionList = myTransactions;
+  updateTransactionHistory(myTransactions, myAddress);
+  console.log("📜 Historique mis à jour après réception");
+}
   } catch (err) {
-    console.error("❌ Failed to update transaction history after alert:", err);
+    console.error("❌ Erreur MAJ historique réception :", err);
   }
 
   console.log("✅ Alerte légitime reçue, affichage OK");
@@ -72,7 +88,6 @@ export function showOridAlert(pseudo, amount, receiver = null) {
   audio.play().then(() => {
     console.log("🔊 Son joué avec succès");
 
-    // 🎉 Confettis si montant ≥ 1 ORID
     if (window.__oridConfetti) {
       const intensity = Math.min(300, 100 + Math.floor(amount * 80));
       window.__oridConfetti({
