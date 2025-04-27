@@ -43,10 +43,14 @@ export function updateTransactionHistory(transactions, myAddress) {
       continue; // 🛡️ Ignore si la transaction ne me concerne pas
     }
 
-    // ✨ Correction ici : préfère pseudo > name > clé raccourcie
-    const counterparty = isSender
-      ? tx.receiverPseudo || tx.receiverName || shortenAddress(tx.receiver)
-      : tx.senderPseudo || tx.senderName || shortenAddress(tx.sender);
+    let counterparty = "";
+
+    if (isSender) {
+      counterparty = tx.receiverName || shortenAddress(tx.receiver);
+    } else if (isReceiver) {
+      counterparty = tx.senderName || tx.pseudo || shortenAddress(tx.sender);
+      // 🆕 Ajout du fallback sur tx.pseudo
+    }
 
     const direction = isSender
       ? `You to ${counterparty}`
@@ -64,3 +68,5 @@ function shortenAddress(address) {
   if (!address) return "";
   return address.slice(0, 6) + "...";
 }
+
+window.updateTransactionHistory = updateTransactionHistory;
