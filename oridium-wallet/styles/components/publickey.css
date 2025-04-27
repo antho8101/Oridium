@@ -71,3 +71,9 @@
   text-align: center;
   transition: padding 0.2s ease; /* ✅ Transition douce si besoin */
 }
+
+@media (max-width: 1080px) {
+  .keycode {
+    max-width: 200px;
+  }
+}
