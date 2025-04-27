@@ -31,10 +31,18 @@ export function updateTransactionHistory(transactions, myAddress) {
   transactions.sort((a, b) => b.blockTimestamp - a.blockTimestamp);
 
   for (const tx of transactions) {
-    // 🛡️ Ignore les blocs qui ne sont pas des vraies transactions utilisateur
-    if (!tx.pseudo) continue;
+    // 🛡️ Ignore les récompenses de mining (émises par "System")
+    if (tx.sender?.toLowerCase() === "system") {
+      continue;
+    }
 
     const isSender = tx.sender?.toLowerCase() === myAddress?.toLowerCase();
+    const isReceiver = tx.receiver?.toLowerCase() === myAddress?.toLowerCase();
+
+    if (!isSender && !isReceiver) {
+      continue; // 🛡️ Ignore si la transaction ne me concerne pas
+    }
+
     const counterparty = isSender
       ? tx.receiverName || shortenAddress(tx.receiver)
       : tx.senderName || shortenAddress(tx.sender);
