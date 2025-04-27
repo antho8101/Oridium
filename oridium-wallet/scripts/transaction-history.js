@@ -43,9 +43,10 @@ export function updateTransactionHistory(transactions, myAddress) {
       continue; // 🛡️ Ignore si la transaction ne me concerne pas
     }
 
+    // ✨ Correction ici : préfère pseudo > name > clé raccourcie
     const counterparty = isSender
-      ? tx.receiverName || shortenAddress(tx.receiver)
-      : tx.senderName || shortenAddress(tx.sender);
+      ? tx.receiverPseudo || tx.receiverName || shortenAddress(tx.receiver)
+      : tx.senderPseudo || tx.senderName || shortenAddress(tx.sender);
 
     const direction = isSender
       ? `You to ${counterparty}`
