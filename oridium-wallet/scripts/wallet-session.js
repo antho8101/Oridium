@@ -4,6 +4,7 @@ import { getBalance, registerWallet } from "./orid-network.js";
 import { getOridPriceUSD } from "./orid-pricing.js";
 import { showOridAlert } from './orid-alert.js';
 import { analyzeIncomingBlocks } from "./incoming-transactions.js";
+import { resetSearchInput, initTransactionSearch } from './scripts/transaction-search.js';
 
 let walletConnected = false;
 let currentWalletAddress = null;
@@ -72,8 +73,12 @@ export async function setWalletConnected(address) {
     console.error("❌ Failed to fetch balance from server:", err);
   }
 
-  // ⚡ Ajoute ceci tout à la fin :
-  finishLoading(); // ✅ Enfin, on enlève le loader quand tout est prêt !
+  // D'abord on reset correctement la search bar
+  setTimeout(() => {
+    resetSearchInput();
+    initTransactionSearch();
+    finishLoading(); // ✅ Le loader part **après** que tout soit prêt
+  }, 100);
 }
 
 export function disconnectWallet() {

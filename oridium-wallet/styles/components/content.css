@@ -52,7 +52,8 @@
     flex: none;
     flex-direction: column;
     gap: 20px;
-    width: 280px;
+    width: fit-content;
+    height: 100%;
   }
   
   /* ===== Right Column (Stats, Chart, etc.) ===== */

@@ -87,22 +87,117 @@
       </div>      
     </div>
 
+
+
+
+
     <!-- Contenu principal -->
     <div class="content">
 
-      <!-- Colonne gauche -->
+
+
+
+
       <div class="content-left">
         <div class="transaction-container">
-          <h2 class="title">Transaction History</h2>
-          <div class="transaction-list">
-            <div id="no-transaction-placeholder" class="transaction-row no-transaction">
-              No transactions yet
-            </div>
-            <!-- Les lignes statiques ci-dessous doivent disparaître -->
-            <!-- Le JavaScript injectera les vraies transactions ici -->
+
+          <div class="transaction-top">
+        
+            <div class="transaction-title">Transaction History</div>
+        
+            <div class="transaction-search">
+              <img src="assets/images/icons/ri_search-line.svg" alt="Search Icon" class="search-icon" />
+              <input type="text" placeholder="Search a transaction" class="search-input" id="search-tx" autocomplete="off" />
+            </div>                               
+        
+            <div class="transaction-list">
+
+              <!-- Bloc jour : 26/04/2025 -->
+              <div class="transaction-day">
+                <div class="transaction-date">26/04/2025</div>
+                <div class="transaction-rows">
+                  <div class="transaction-row">
+                    <span class="transaction-desc">You to Bob</span>
+                    <span class="transaction-amount">0.05 ($ORID)</span>
+                  </div>
+                  <div class="transaction-row alt">
+                    <span class="transaction-desc">Serviettesky to You</span>
+                    <span class="transaction-amount">0.05 ($ORID)</span>
+                  </div>
+                  <div class="transaction-row">
+                    <span class="transaction-desc">You to Anthony</span>
+                    <span class="transaction-amount">0.05 ($ORID)</span>
+                  </div>
+                  <div class="transaction-row alt">
+                    <span class="transaction-desc">Cartman to You</span>
+                    <span class="transaction-amount">0.05 ($ORID)</span>
+                  </div>
+                  <div class="transaction-row">
+                    <span class="transaction-desc">You to Loc Dog</span>
+                    <span class="transaction-amount">0.05 ($ORID)</span>
+                  </div>
+                  <div class="transaction-row alt">
+                    <span class="transaction-desc">Cendar to You</span>
+                    <span class="transaction-amount">0.05 ($ORID)</span>
+                  </div>
+                  <div class="transaction-row">
+                    <span class="transaction-desc">You to Stalone</span>
+                    <span class="transaction-amount">0.05 ($ORID)</span>
+                  </div>
+                </div>
+              </div>
+            
+              <!-- Spacer -->
+              <div class="transaction-spacer"></div>
+            
+              <!-- Bloc jour : 25/04/2025 -->
+              <div class="transaction-day">
+                <div class="transaction-date">25/04/2025</div>
+                <div class="transaction-rows">
+                  <div class="transaction-row">
+                    <span class="transaction-desc">Charly to You</span>
+                    <span class="transaction-amount">0.05 ($ORID)</span>
+                  </div>
+                  <div class="transaction-row alt">
+                    <span class="transaction-desc">You to Charly</span>
+                    <span class="transaction-amount">0.05 ($ORID)</span>
+                  </div>
+                </div>
+              </div>
+            
+              <!-- Spacer -->
+              <div class="transaction-spacer"></div>
+            
+              <!-- Bloc jour : 24/04/2025 -->
+              <div class="transaction-day">
+                <div class="transaction-date">24/04/2025</div>
+                <div class="transaction-rows">
+                  <div class="transaction-row">
+                    <span class="transaction-desc">Charly to You</span>
+                    <span class="transaction-amount">0.05 ($ORID)</span>
+                  </div>
+                  <div class="transaction-row alt">
+                    <span class="transaction-desc">You to Charly</span>
+                    <span class="transaction-amount">0.05 ($ORID)</span>
+                  </div>
+                </div>
+              </div>
+            
+            </div> <!-- FIN .transaction-list -->            
+        
           </div>
-        </div>
-      </div>
+        
+          <div class="transaction-bottom">
+            No more transaction yet
+          </div>
+        
+        </div>                
+        
+      </div> <!-- fin .content-left -->      
+
+
+
+
 
       <div class="vertical-separator"></div>
 
@@ -651,6 +746,7 @@
 <script type="module" src="scripts/restore-wallet-modal.js"></script>
 <script type="module" src="scripts/connect-wallet.js"></script>
 <script type="module" src="scripts/intro.js"></script>
+<script type="module" src="scripts/transaction-search.js"></script>
 <script type="module" src="scripts/update-public-key.js"></script>
 <script type="module" src="scripts/blockchain-bridge.js"></script>
 <script type="module" src="./scripts/main.js"></script>
@@ -659,6 +755,7 @@
 <script type="module" src="scripts/wallet/send-publickey.js"></script>
 <script type="module" src="scripts/wallet/send-orid.js"></script>
 <script src="scripts/responsive-fix.js"></script>
+
 
 <script type="module">
   import confetti from "https://cdn.skypack.dev/canvas-confetti";

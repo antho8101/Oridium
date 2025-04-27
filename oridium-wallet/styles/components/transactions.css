@@ -1,70 +1,107 @@
-/* ===== Transaction Container ===== */
-
 .transaction-container {
-    display: flex;
-    flex-direction: column;
-    flex: 1;
-    height: 100%;
-    border-radius: 10px;
-  }
-  
-  .transaction-container h2 {
-    margin-bottom: 20px;
-  }
-  
-  /* ===== Transaction Rows ===== */
-  
-  .transaction-row {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    height: 40px;
-    padding: 0 15px;
-    font-family: 'Space Grotesk', sans-serif;
-    font-size: 14px;
-  }
-  /* ===== Transaction List ===== */
-  
-  .transaction-list {
-    border-radius: 8px;
-    flex: 1 1 auto;
-    min-height: 0;
-    overflow-y: auto;
-  }
-  
-  .transaction-list::-webkit-scrollbar {
-    width: 8px;
-  }
-  
-  .transaction-list::-webkit-scrollbar-thumb {
-    background-color: #DCCB92;
-    border-radius: 6px;
-  }
-  
-  /* ===== Transaction Details ===== */
-  
-  .transaction-desc {
-    color: #EBE6D9;
-  }
-  
-  .transaction-amount {
-    color: #DCCB92;
-    font-weight: 500;
-  }
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  align-items: center;
+  height: 100%;
+  width: fit-content;
+}
 
-  .transaction-row.highlight {
-    background-color: #DCCB92 !important;
-    color: #191A21;
-    transition: background-color 0.6s ease;
-  }
-  
-  .no-transaction {
-    color: rgba(220, 203, 146, 0.50);
-    font-family: "Space Grotesk", sans-serif;
-    font-size: 14px;
-    font-style: normal;
-    font-weight: 500;
-    line-height: normal;
-    text-align: center;
-    padding: 10px;
-  }  
+.transaction-top {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 10px;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.transaction-title {
+  color: #FFF;
+  font-family: "Space Grotesk";
+  font-size: 14px;
+  font-weight: 500;
+  align-self: stretch;
+  padding-bottom: 10px;
+  padding-left: 10px;
+}
+
+.transaction-search {
+  display: flex;
+  align-items: center;
+  padding: 5px 15px;
+  gap: 5px;
+  width: 100%;
+  border-radius: 99px;
+  border: 1px solid #575449;
+  background: #282A36;
+}
+
+.transaction-search::placeholder {
+  border: 1px solid var(--Oridium, #DCCB92);
+  background: var(--Oridium, #DCCB92);
+}
+
+.transaction-search input {
+  background: transparent;
+  border: none;
+  outline: none;
+  color: #FFF;
+  flex: 1;
+  font-family: 'Space Grotesk';
+  font-size: 14px;
+}
+
+.transaction-list {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  width: 100%;
+  gap: 10px;
+}
+
+.transaction-date {
+  padding-top: 10px;
+  padding-left: 10px;
+  padding-bottom: 10px;
+  color: #DCCB92;
+  font-family: 'Space Grotesk';
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.transaction-day {
+  padding-bottom: 10px;
+}
+
+.transaction-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  width: 100%;
+  min-width: 280px; 
+  padding: 5px 10px;
+  font-family: 'Space Grotesk';
+  font-size: 14px;
+  color: #FFF;
+  font-weight: 300;
+}
+
+.transaction-row.alt {
+  background: rgba(25, 26, 33, 0.5);
+  border-radius: 10px;
+}
+
+.transaction-bottom {
+  margin-top: 10px;
+  color: rgba(220, 203, 146, 0.5);
+  font-family: 'Space Grotesk';
+  font-size: 14px;
+  font-weight: 500;
+}
+
+.transaction-spacer {
+  height: 1px;
+  width: 100%;
+  background: var(--Dividers, #575449);
+}
