@@ -7,6 +7,7 @@ import { analyzeIncomingBlocks } from "./incoming-transactions.js";
 import { resetSearchInput, initTransactionSearch } from './transaction-search.js';
 import { updateTransactionHistory } from './transaction-history.js';
 import { getTransactionsForWallet } from './helpers/getTransactionsForWallet.js';
+import { getBlockchain } from './helpers/getBlockchain.js';
 
 let walletConnected = false;
 let currentWalletAddress = null;
@@ -45,8 +46,21 @@ document.addEventListener("DOMContentLoaded", () => {
         welcomeEl.classList.remove("hidden");
       }
     }
-    setTimeout(() => {
-      setWalletConnected(savedAddress);
+  
+    setTimeout(async () => {
+      await setWalletConnected(savedAddress);
+  
+      try {
+        const chain = await getBlockchain(); // 🆕 fetch propre
+        if (chain) {
+          const myTransactions = getTransactionsForWallet(chain, savedAddress);
+          window.__oridTransactionList = myTransactions;
+          updateTransactionHistory(myTransactions, savedAddress);
+        }
+      } catch (err) {
+        console.error("❌ Failed to reload blockchain:", err);
+      }
+  
     }, 200);
   } else {
     updateWalletButtons(false);
