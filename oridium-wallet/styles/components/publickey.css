@@ -31,8 +31,8 @@
   justify-content: space-between;
   gap: 10px;
   width: 100%;
-  min-width: 0;
-  overflow: hidden;
+  min-width: 0; /* ⚡ indispensable */
+  overflow: hidden; /* ⚡ bien présent */
 }
 
 .key-display .title {
@@ -46,7 +46,8 @@
   color: #EBE6D9;
   user-select: text;
   flex: 1 1 auto;
-  min-width: 0; /* ✅ absolument nécessaire */
+  min-width: 0; /* hyper important */
+  max-width: 100%; /* ⚡ ajoute ceci */
   overflow: hidden;
   text-overflow: ellipsis;
   white-space: nowrap;
