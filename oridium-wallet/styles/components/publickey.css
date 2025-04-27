@@ -72,7 +72,7 @@
   transition: padding 0.2s ease; /* ✅ Transition douce si besoin */
 }
 
-@media (max-width: 1080px) {
+@media (max-width: 1920px) {
   .keycode {
     max-width: 200px;
   }
