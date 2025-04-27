@@ -4,7 +4,6 @@ import { getBalance, registerWallet } from "./orid-network.js";
 import { getOridPriceUSD } from "./orid-pricing.js";
 import { showOridAlert } from './orid-alert.js';
 import { analyzeIncomingBlocks } from "./incoming-transactions.js";
-import { finishLoading } from './loader.js';
 
 let walletConnected = false;
 let currentWalletAddress = null;
