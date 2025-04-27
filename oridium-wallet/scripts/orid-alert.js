@@ -4,49 +4,37 @@ import { getConnectedWalletAddress } from "./wallet-session.js";
 import { updateTransactionHistory } from "./transaction-history.js";
 import { getTransactionsForWallet } from "./helpers/getTransactionsForWallet.js";
 
+const API_BASE = "https://oridium-production.up.railway.app";
+
 export async function showOridAlert(pseudo, amount, receiver = null) {
   const myAddress = getConnectedWalletAddress();
   const noTx = document.getElementById("no-transaction-placeholder");
 
-  if (!myAddress) return;
-
-  // 🛡 Ignore si je suis l’émetteur
-  if (pseudo.toLowerCase() === myAddress.toLowerCase()) {
+  if (pseudo.toLowerCase() === myAddress?.toLowerCase()) {
     console.log("🚫 Alerte bloquée (pseudo == moi)");
     return;
   }
 
-  // ✅ Ignore si ce n’est pas pour moi
-  if (receiver && receiver.toLowerCase() !== myAddress.toLowerCase()) {
+  if (receiver && receiver.toLowerCase() !== myAddress?.toLowerCase()) {
     console.log("🚫 Alerte ignorée, ce n’est pas pour moi.");
     return;
   }
 
-  // 🧹 Cache le message "No transaction yet"
   if (noTx) {
     noTx.style.display = "none";
   }
 
-  // 🎯 À la réception ➔ FORCER une mise à jour de l'historique
   try {
-    // Quand on reçoit un ORID
-const chain = window.blockchain;
-if (chain) {
-  const myTransactions = getTransactionsForWallet(chain, myAddress);
+    const res = await fetch(`${API_BASE}/blockchain`);
+    const chain = await res.json();
+    const myTransactions = getTransactionsForWallet(chain, myAddress);
 
-  // ➡️ On injecte le pseudo proprement
-  myTransactions.forEach(tx => {
-    if (tx.receiver?.toLowerCase() === myAddress.toLowerCase() && !tx.senderName) {
-      tx.senderName = pseudo; // Ajoute ici
-    }
-  });
+    window.__oridTransactionList = myTransactions;
+    updateTransactionHistory(myTransactions, myAddress);
 
-  window.__oridTransactionList = myTransactions;
-  updateTransactionHistory(myTransactions, myAddress);
-  console.log("📜 Historique mis à jour après réception");
-}
+    console.log("✅ Historique rafraîchi après réception.");
   } catch (err) {
-    console.error("❌ Erreur MAJ historique réception :", err);
+    console.error("❌ Impossible de rafraîchir les transactions après réception :", err);
   }
 
   console.log("✅ Alerte légitime reçue, affichage OK");
