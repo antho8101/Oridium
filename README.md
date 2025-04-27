@@ -2,7 +2,7 @@
 
 # 💎 Oridium — The Digital Gold of Tomorrow
 
-🚧 **Status:** Early Development • `██████████-------` 60% Complete
+🚧 **Status:** Early Development • `████████████----` 70% Complete
 📅 **Launch target:** Q3 2025
 
 Oridium is a **modern, high-performance blockchain** inspired by Bitcoin’s fundamentals, but redesigned with a **modular architecture**, modern cryptography, and real-world usability in mind.
