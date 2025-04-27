@@ -14,33 +14,19 @@ export function updateTransactionHistory(transactions, myAddress) {
     return;
   }
 
-  // 🔄 Nettoyage : ne touche pas au champ de recherche ni au placeholder
+  // 🔄 Nettoyage visuel
   const days = container.querySelectorAll('.transaction-day, .transaction-spacer');
   days.forEach(day => day.remove());
 
-  if (!transactions || transactions.length === 0) {
-    if (placeholder) placeholder.style.display = "block";
-    if (bottom) bottom.style.display = "none";
-    return;
-  }
-
-  // 📋 Trie décroissant (plus récent en haut)
+  // 📋 Trie décroissant
   transactions.sort((a, b) => b.blockTimestamp - a.blockTimestamp);
 
-  let validTransactionCount = 0;
-
   for (const tx of transactions) {
-    // 🛡️ Ignore les récompenses de mining (émises par "System")
-    if (tx.sender?.toLowerCase() === "system") {
-      continue;
-    }
+    if (tx.sender?.toLowerCase() === "system") continue;
 
     const isSender = tx.sender?.toLowerCase() === myAddress?.toLowerCase();
     const isReceiver = tx.receiver?.toLowerCase() === myAddress?.toLowerCase();
-
-    if (!isSender && !isReceiver) {
-      continue; // 🛡️ Ignore si la transaction ne me concerne pas
-    }
+    if (!isSender && !isReceiver) continue;
 
     let counterparty = "";
 
@@ -48,7 +34,6 @@ export function updateTransactionHistory(transactions, myAddress) {
       counterparty = tx.receiverName || shortenAddress(tx.receiver);
     } else if (isReceiver) {
       counterparty = tx.senderName || tx.pseudo || shortenAddress(tx.sender);
-      // 🆕 Fallback propre pour afficher pseudo si présent
     }
 
     const direction = isSender
@@ -59,25 +44,25 @@ export function updateTransactionHistory(transactions, myAddress) {
     const transactionDate = formatDateISO(tx.blockTimestamp);
 
     addTransaction(transactionDate, direction, formattedAmount);
-
-    validTransactionCount++;
   }
 
-  // ✅ À la toute fin : affiche ou masque le placeholder
-  if (validTransactionCount === 0) {
-    if (placeholder) placeholder.style.display = "block";
-    if (bottom) bottom.style.display = "none";
-  } else {
+  // ✅ FINAL : Vérifie s'il y a vraiment des transactions
+  const hasTransactions = container.querySelector('.transaction-day');
+
+  if (hasTransactions) {
     if (placeholder) placeholder.style.display = "none";
     if (bottom) bottom.style.display = "block";
+  } else {
+    if (placeholder) placeholder.style.display = "block";
+    if (bottom) bottom.style.display = "none";
   }
 }
 
-// 🔗 Utilitaire raccourci pour afficher l'adresse
+// 🔗 Utilitaire pour raccourcir une adresse
 function shortenAddress(address) {
   if (!address) return "";
   return address.slice(0, 6) + "...";
 }
 
-// 🧹 Pour pouvoir tester dans console
+// 🧹 Pour pouvoir appeler updateTransactionHistory depuis la console
 window.updateTransactionHistory = updateTransactionHistory;

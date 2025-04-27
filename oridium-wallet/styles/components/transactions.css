@@ -108,3 +108,13 @@
   width: 100%;
   background: var(--Dividers, #575449);
 }
+
+.no-transaction-placeholder {
+  width: 100%;
+  padding: 20px;
+  text-align: center;
+  font-family: 'Space Grotesk';
+  font-size: 14px;
+  color: rgba(220, 203, 146, 0.5);
+  display: none; /* caché par défaut */
+}
