@@ -4,7 +4,7 @@ import { getBalance, registerWallet } from "./orid-network.js";
 import { getOridPriceUSD } from "./orid-pricing.js";
 import { showOridAlert } from './orid-alert.js';
 import { analyzeIncomingBlocks } from "./incoming-transactions.js";
-import { resetSearchInput, initTransactionSearch } from './scripts/transaction-search.js';
+import { resetSearchInput, initTransactionSearch } from './transaction-search.js'; // ← Correction ici
 
 let walletConnected = false;
 let currentWalletAddress = null;
@@ -77,7 +77,6 @@ export async function setWalletConnected(address) {
   setTimeout(() => {
     resetSearchInput();
     initTransactionSearch();
-    finishLoading(); // ✅ Le loader part **après** que tout soit prêt
   }, 100);
 }
 

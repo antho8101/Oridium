@@ -5,6 +5,8 @@ const transactionListSelector = '.transaction-list';
 const transactionRowSelector = '.transaction-row';
 const transactionGroupSelector = '.transaction-group';
 
+let searchInput; // 👉 maintenant en global pour pouvoir y accéder tout le temps
+
 export function resetSearchInput() {
   const oldInput = document.querySelector(searchInputSelector);
   if (!oldInput) return;
@@ -19,6 +21,9 @@ export function resetSearchInput() {
   newInput.setAttribute('name', 'no-autocomplete-' + Date.now());
 
   parent.replaceChild(newInput, oldInput);
+
+  // 🔥 Mise à jour de la référence du nouvel input
+  searchInput = newInput;
 }
 
 export function initTransactionSearch() {
@@ -31,33 +36,31 @@ export function initTransactionSearch() {
   noTransactionMessage.style.display = 'none';
   transactionList.appendChild(noTransactionMessage);
 
-  function addSearchListener() {
-    const searchInput = document.querySelector(searchInputSelector);
-    if (!searchInput) return;
-
-    searchInput.addEventListener('input', () => {
-      const searchValue = searchInput.value.toLowerCase();
-      let anyVisible = false;
-
-      document.querySelectorAll(transactionRowSelector).forEach(row => {
-        const desc = row.querySelector('.transaction-desc')?.textContent.toLowerCase() || '';
-        if (desc.includes(searchValue)) {
-          row.style.display = 'flex';
-          anyVisible = true;
-        } else {
-          row.style.display = 'none';
-        }
-      });
-
-      document.querySelectorAll(transactionGroupSelector).forEach(group => {
-        const visibleRows = group.querySelectorAll(`${transactionRowSelector}:not([style*="display: none"])`);
-        group.style.display = visibleRows.length > 0 ? 'flex' : 'none';
-      });
-
-      noTransactionMessage.style.display = anyVisible ? 'none' : 'block';
-    });
+  if (!searchInput) {
+    searchInput = document.querySelector(searchInputSelector); // fallback si jamais pas encore set
   }
 
-  // Appelle ça après avoir reset le champ
-  addSearchListener();
+  if (!searchInput) return;
+
+  searchInput.addEventListener('input', () => {
+    const searchValue = searchInput.value.toLowerCase();
+    let anyVisible = false;
+
+    document.querySelectorAll(transactionRowSelector).forEach(row => {
+      const desc = row.querySelector('.transaction-desc')?.textContent.toLowerCase() || '';
+      if (desc.includes(searchValue)) {
+        row.style.display = 'flex';
+        anyVisible = true;
+      } else {
+        row.style.display = 'none';
+      }
+    });
+
+    document.querySelectorAll(transactionGroupSelector).forEach(group => {
+      const visibleRows = group.querySelectorAll(`${transactionRowSelector}:not([style*="display: none"])`);
+      group.style.display = visibleRows.length > 0 ? 'flex' : 'none';
+    });
+
+    noTransactionMessage.style.display = anyVisible ? 'none' : 'block';
+  });
 }
