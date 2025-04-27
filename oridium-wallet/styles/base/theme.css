@@ -33,4 +33,11 @@
     font-size: 14px;
     margin-top: 6px;
     padding-right: 30px;
+  }
+
+  #app {
+    display: none;
+    flex-direction: column;
+    height: 100%; /* <- AJOUTER CA */
   }  
+  

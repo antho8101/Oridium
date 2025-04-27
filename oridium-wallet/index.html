@@ -11,6 +11,8 @@
   <link rel="stylesheet" href="styles/base/styles.css" />
   <link rel="stylesheet" href="styles/base/share-icon.css" />
 
+  <link rel="stylesheet" href="styles/base/loader.css">
+
   <link rel="stylesheet" href="styles/components/orid-alert.css" />
 
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
@@ -36,6 +38,13 @@
   <script type="module" src="scripts/orid-pricing.js"></script>
 </head>
 <body>
+
+  <div id="loader">
+    Loading...
+  </div>
+  
+  <div id="app" style="display: none;">
+
   <div class="main-container">
 
     <!-- Menu latéral -->
@@ -109,7 +118,7 @@
           <div class="public-key-info" id="public-key-box">
             <div class="key-display">
               <h2 class="title">My public key</h2>
-              
+              <span class="keycode" id="public-key-display">Connect your wallet to see your public key</span>
               <img src="assets/images/icons/ph_copy.svg" alt="Copy Icon" class="copy-icon" id="copy-public-key">
             </div>
           </div>
@@ -640,6 +649,7 @@
 <script src="https://unpkg.com/lightweight-charts@4.1.1/dist/lightweight-charts.standalone.production.js"></script>
 
 <!-- Scripts internes -->
+<script src="scripts/loader.js"></script>
 <script src="scripts/chart.js"></script>
 <script src="scripts/wallet-logic.js"></script>
 <script type="module" src="scripts/wallet-modal.js"></script>
@@ -704,9 +714,8 @@
 </div>
 
 
-
-
-
+</div>
+</div>
 
 
 </body>

@@ -1,0 +1,20 @@
+/* ===== Loader Style ===== */
+
+#loader {
+    position: fixed;
+    inset: 0;
+    background: #191A21;
+    color: #DCCB92;
+    font-family: 'Space Grotesk', sans-serif;
+    font-size: 24px;
+    font-weight: bold;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 9999;
+  }
+  
+  #app {
+    display: none; /* App cachée tant que chargement pas terminé */
+  }
+  
