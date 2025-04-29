@@ -327,3 +327,166 @@
     width: 100%;
   }
   
+  .market-price-box {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    align-self: stretch;
+  }
+  
+  /* Titre "Oridium value in $" */
+  .market-price-title {
+    align-self: stretch;
+    color: var(--Pure-White, #FFF);
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+  }
+  
+  /* Container principal */
+  .market-price-content {
+    display: flex;
+    height: 87px;
+    flex-direction: column;
+    align-items: flex-end;
+    align-self: stretch;
+  }
+  
+  /* Valeur principale */
+  .market-price-main-value {
+    color: var(--Pure-White, #FFF);
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+  }
+  
+  /* Détail sous la valeur */
+  .market-price-details {
+    display: flex;
+    justify-content: flex-end;
+    align-items: flex-start;
+    gap: 5px;
+    align-self: stretch;
+  }
+  
+  /* /1 ORID */
+  .market-price-per-orid {
+    color: var(--Oridium, #DCCB92);
+    text-align: right;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  }
+  
+  /* Variation du prix */
+  .market-price-change {
+    display: flex;
+    align-items: center;
+    gap: 3px;
+    color: #4CCE00;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  }
+  
+  .market-price-icon {
+    width: 14px;
+    height: 14px;
+  }
+
+  .market-live-feed {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    align-self: stretch;
+  }
+  
+  /* Conteneur interne pour appliquer le gap */
+  .market-live-feed-container {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    flex: 1 0 0;
+    align-self: stretch;
+  }
+  
+  /* En-tête : titre + heure */
+  .market-live-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    align-self: stretch;
+  }
+  
+  /* Titre "Live Feed" */
+  .market-live-title {
+    color: var(--Oridium, #DCCB92);
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 500;
+    line-height: normal;
+  }
+  
+  /* Heure actuelle */
+  .market-live-time {
+    color: rgba(255, 255, 255, 0.50);
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+  }
+  
+  /* Séparateur horizontal */
+  .market-live-separator {
+    width: 100%;
+    height: 1px;
+    background: var(--Dividers, #575449);
+  }
+  
+  /* Liste des événements */
+  .market-live-events {
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    align-self: stretch;
+  }
+  
+  /* Un événement */
+  .market-live-event {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  /* Heure d'un événement */
+  .market-live-event-time {
+    color: #FFF;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+  }
+  
+  /* Texte d'un événement */
+  .market-live-event-text {
+    color: #FFF;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+  }
+  

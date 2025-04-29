@@ -76,7 +76,7 @@
       <span class="market-timer-label">Timer :</span>
   
       <!-- Timer dynamique -->
-      <span class="market-timer-value">03d : 14h : 07m</span>
+      <span class="market-timer-value">03d : 14h : 07m : 05s</span>
     </div>
   
     <!-- Bloc prix + input achat -->
@@ -153,14 +153,61 @@
             <!-- Bloc latéral avec prix et live feed -->
             <div class="market-side-panels">
               <!-- Cours de l'ORID -->
-              <div class="market-price-box">
-                Cours ORID
-              </div>
+              <!-- Bloc prix ORID -->
+<div class="market-price-box">
+    <!-- Titre -->
+    <div class="market-price-title">
+      Oridium value in $
+    </div>
+  
+    <!-- Valeur principale + détails -->
+    <div class="market-price-content">
+      <!-- Valeur de l'Orid -->
+      <div class="market-price-main-value">
+        674.00
+      </div>
+  
+      <!-- Détail sous la valeur -->
+      <div class="market-price-details">
+        <span class="market-price-per-orid">/1 ORID</span>
+        <span class="market-price-change">
+          +4.37 (2.21 %)
+          <img src="assets/ri_arrow-right-up-long-line.svg" alt="Arrow Up Icon" class="market-price-icon">
+        </span>
+      </div>
+    </div>
+  </div>  
           
-              <!-- Live feed -->
-              <div class="market-live-feed">
-                Live feed
-              </div>
+              <!-- Bloc Live Feed -->
+<div class="market-live-feed">
+    <div class="market-live-feed-container">
+      <!-- En-tête du live feed -->
+      <div class="market-live-header">
+        <span class="market-live-title">Live Feed</span>
+        <span class="market-live-time">{actual:time}</span>
+      </div>
+  
+      <!-- Séparateur -->
+      <div class="market-live-separator"></div>
+  
+      <!-- Liste des événements -->
+      <div class="market-live-events">
+        <div class="market-live-event">
+          <span class="market-live-event-time">18:45 :</span>
+          <span class="market-live-event-text">Market Close!</span>
+        </div>
+        <div class="market-live-event">
+          <span class="market-live-event-time">12:30 :</span>
+          <span class="market-live-event-text">ORID Price +2%</span>
+        </div>
+        <div class="market-live-event">
+          <span class="market-live-event-time">08:00 :</span>
+          <span class="market-live-event-text">Market Open!</span>
+        </div>
+      </div>
+    </div>
+  </div>
+  
             </div>
           </div>
           
