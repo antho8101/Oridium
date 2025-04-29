@@ -19,6 +19,9 @@
 @import url('./layout/movement.css');
 @import url('./layout/header-minimal.css');
 @import url('./layout/join.css');
+@import url('./layout//market-layout/market-header.css');
+@import url('./layout/market-layout/market-layout.css');
+@import url('./layout/market-layout/market-purchase.css');
 
 
 /* === BASE RESET SIMPLE === */
