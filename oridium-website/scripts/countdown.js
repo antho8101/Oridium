@@ -1,7 +1,7 @@
 const countdownElement = document.getElementById("countdown");
 
 // Date cible : 31 août 2025 à 08:00 UTC
-const targetDate = new Date("2025-06-02T20:00:00Z");
+const targetDate = new Date("2025-06-23T20:00:00Z");
 
 function updateCountdown() {
   const now = new Date();
