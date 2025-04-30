@@ -7,6 +7,10 @@
 
   <!-- Import principal CSS -->
   <link rel="stylesheet" href="assets/css/main.css">
+
+  <script src="../oridium-chart/apexcharts.min.js"></script>
+  <script src="../oridium-chart/oridium-chart.js"></script>
+
 </head>
 <body>
 
@@ -216,6 +220,77 @@
       
   </section>
 
+
+
+
+
+
+  <!-- Section graphique du marché -->
+<section class="market-graph-section">
+    <!-- Market transition box -->
+<div class="market-transition-box">
+    <div class="market-transition-infos">
+      <!-- Bloc 1 -->
+      <div class="market-transition-info-group">
+        <div class="market-transition-info">
+          <img src="assets/ri_door-open-line.svg" alt="Open Icon">
+          <span>Market opens every Monday at 08:00 am UTC</span>
+        </div>
+        <div class="market-transition-info">
+          <img src="assets/ri_bar-chart-grouped-line.svg" alt="Chart Icon">
+          <span>Price increases as the reserve drops</span>
+        </div>
+      </div>
+  
+      <!-- Bloc 2 -->
+      <div class="market-transition-info-group">
+        <div class="market-transition-info">
+          <img src="assets/ri_time-line.svg" alt="Time Icon">
+          <span>Buyers must wait if market is sold out</span>
+        </div>
+        <div class="market-transition-info">
+          <img src="assets/ri_notification-3-line.svg" alt="Notify Icon">
+          <span>Get notifier via Telegram</span>
+        </div>
+      </div>
+  
+      <!-- Bouton de notification -->
+      <button class="button-icon-black market-transition-notify">
+        Get notified
+        <img src="assets/ri_notification-3-line-WHITE.svg" alt="Notify Icon">
+      </button>
+    </div>
+  </div>  
+
+
+  <!-- Titre + sous-titre du graphique -->
+  <div class="market-graph-header">
+    <h1 class="market-graph-title">Follow the Price</h1>
+    <p class="market-graph-subtitle">Every block mined writes history. Follow the rise of a new digital legend.</p>
+  </div>
+
+  <section id="oridium-chart-section">
+
+    <div class="oridium-chart-toolbar">
+      <button class="chart-btn active" data-range="24h">24h</button>
+      <button class="chart-btn" data-range="7d">7d</button>
+      <button class="chart-btn" data-range="1m">1m</button>
+      <button class="chart-btn" data-range="1y">1y</button>
+      <button class="chart-btn" data-range="max">MAX</button>
+      <button class="chart-btn icon-btn" id="download-btn">
+        <img src="../oridium-chart/assets/ri_download-2-line.svg" alt="Download" />
+      </button>
+      <button class="chart-btn icon-btn" id="fullscreen-btn">
+        <img src="../oridium-chart/assets/ri_expand-diagonal-line.svg" alt="Fullscreen" />
+      </button>
+      
+    </div>
+
+    <div id="chart"></div> <!-- C’est ici que le chart Apex s’affichera -->
+  </section>
+  
+  
+  </section>  
 
 
 

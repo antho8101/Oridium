@@ -1,0 +1,18 @@
+html, body {
+    height: 100%;
+    margin: 0;
+    padding: 0;
+  }
+  
+  #chart-container-placeholder {
+    height: 100vh; /* ou une autre valeur selon tes besoins */
+    width: 100%;
+    padding: 2rem;
+    box-sizing: border-box;
+    background-color: transparent; /* ou une autre couleur de fond */
+  }
+  
+  #chart {
+    height: 100%;
+  }
+  

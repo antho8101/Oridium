@@ -490,3 +490,60 @@
     line-height: normal;
   }
   
+  .market-transition-box {
+    display: flex;
+    width: 920px;
+    padding: 30px 60px;
+    flex-direction: column;
+    align-items: center;
+    gap: 30px;
+    border-radius: 0px 0px 30px 30px;
+    border-right: 1px solid var(--Oridium, #DCCB92);
+    border-bottom: 1px solid var(--Oridium, #DCCB92);
+    border-left: 1px solid var(--Oridium, #DCCB92);
+    background: rgba(0, 0, 0, 0.50);
+    box-shadow: 0px 4px 4px 0px rgba(0, 0, 0, 0.50);
+    backdrop-filter: blur(2px);
+  }
+  
+  .market-transition-infos {
+    display: flex;
+    width: 100%;
+    justify-content: space-between;
+    gap: 30px;
+  }
+  
+  .market-transition-info-group {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+    flex: 1 0 0;
+  }
+  
+  .market-transition-info {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: 1 0 0;
+    color: var(--Pure-White, #FFF);
+    font-family: "Space Grotesk";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  }
+  
+  .market-transition-info img {
+    width: 18px;
+    height: 18px;
+  }
+  
+  .market-transition-notify {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    padding-right: 20px !important;
+    padding-left: 20px !important;
+    height: fit-content;
+  }

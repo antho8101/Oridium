@@ -22,6 +22,8 @@
 @import url('./layout//market-layout/market-header.css');
 @import url('./layout/market-layout/market-layout.css');
 @import url('./layout/market-layout/market-purchase.css');
+@import url('./layout/market-layout/market-graph.css');
+@import url("../../../oridium-chart/toolbar.css");
 
 
 /* === BASE RESET SIMPLE === */
@@ -117,6 +119,13 @@ body {
 .button-icon-gold {
   transform: none !important;
   transition: color 0.2s ease !important;
+}
+
+#chart {
+  width: 100%;
+  max-width: 1200px;
+  height: 400px;
+  margin: 0 auto;
 }
 
 /* === RESPONSIVE : TABLETTE & MOBILE === */
