@@ -128,6 +128,44 @@ body {
   margin: 0 auto;
 }
 
+/* --- MODALE GRAPHIQUE FULLSCREEN --- */
+
+.chart-modal {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  background-color: rgba(20, 20, 20, 0.95);
+  z-index: 9999;
+  padding: 30px;
+  box-sizing: border-box;
+}
+
+.chart-modal-content {
+  position: relative;
+  width: 100%;
+  height: 100%;
+}
+
+.chart-modal-close {
+  position: absolute;
+  top: 20px;
+  right: 25px;
+  font-size: 28px;
+  color: #fff;
+  background: none;
+  border: none;
+  cursor: pointer;
+  z-index: 10000;
+}
+
+#chart-fullscreen {
+  width: 100%;
+  height: 100%;
+}
+
 /* === RESPONSIVE : TABLETTE & MOBILE === */
 @media (max-width: 1024px) {
   .footer-columns-desktop {

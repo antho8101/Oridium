@@ -40,4 +40,14 @@
   .icon-btn img {
     width: 16px;
     height: 16px;
-  }  
+  }
+
+  .apexcharts-tooltip .custom-tooltip {
+    background: #282A36;
+    color: #dccb92;
+    padding: 8px 12px;
+    border-radius: 8px;
+    font-family: 'Space Grotesk';
+    font-size: 14px;
+    line-height: 1.4;
+  }
