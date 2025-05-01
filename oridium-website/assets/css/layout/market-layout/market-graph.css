@@ -1,6 +1,5 @@
 .market-graph-section {
     display: flex;
-    padding: 0 30px 60px;
     flex-direction: column;
     align-items: center;
     gap: 60px;
@@ -63,17 +62,31 @@
   }
 
   #oridium-chart-section {
+    flex: 1;                /* prend tout l'espace restant */
     display: flex;
-    width: 920px;
-    height: 452px;
     flex-direction: column;
-    justify-content: center;
     align-items: flex-end;
-    gap: 30px;
-    padding-top: 300px;
-    padding-bottom: 300px;
+    min-height: 0;          /* empêche les débordements */
+    margin-top: 10px;
+    width: 100%;       /* optionnel, pour respirer un peu */
   }
   
   #chart {
-    height: 400px; /* tu peux ajuster la hauteur ici */
-  }  
+    flex: 1;
+    width: 100%;
+    min-height: 0;
+  }
+
+
+  .chart-wrapper {
+    display: flex;
+    width: 100%;
+    max-width: 920px;
+    height: 450px;
+    flex-direction: column;
+    align-items: center;
+    gap: 10px;
+    margin: 0 auto;
+    padding-bottom: 30px;
+  }
+  

@@ -269,38 +269,22 @@
     <p class="market-graph-subtitle">Every block mined writes history. Follow the rise of a new digital legend.</p>
   </div>
 
-  <section id="oridium-chart-section">
-
-    <div class="oridium-chart-toolbar">
-      <button class="chart-btn active" data-range="24h">24h</button>
-      <button class="chart-btn" data-range="7d">7d</button>
-      <button class="chart-btn" data-range="1m">1m</button>
-      <button class="chart-btn" data-range="1y">1y</button>
-      <button class="chart-btn" data-range="max">MAX</button>
-      <button class="chart-btn icon-btn" id="download-btn">
-        <img src="../oridium-chart/assets/ri_download-2-line.svg" alt="Download" />
-      </button>
-      <button class="chart-btn icon-btn" id="fullscreen-btn">
-        <img src="../oridium-chart/assets/ri_expand-diagonal-line.svg" alt="Fullscreen" />
-      </button>
-      
-    </div>
-
-    <div id="chart"></div> <!-- C’est ici que le chart Apex s’affichera -->
-  </section>
+  <div class="chart-wrapper">
+    <section id="oridium-chart-section">
+      <div class="oridium-chart-toolbar">
+        <button class="chart-btn active" data-range="24h">24h</button>
+        <button class="chart-btn" data-range="7d">7d</button>
+        <button class="chart-btn" data-range="1m">1m</button>
+        <button class="chart-btn" data-range="1y">1y</button>
+        <button class="chart-btn" data-range="max">MAX</button>
+        <button class="chart-btn icon-btn" id="download-btn">
+          <img src="../oridium-chart/assets/ri_download-2-line.svg" alt="Download" />
+        </button>
+      </div>
   
-  
-  </section>
-
-  <!-- Plein écran chart -->
-
-<div id="chart-modal" class="chart-modal">
-  <div class="chart-modal-content">
-    <button id="close-modal" class="chart-modal-close">✕</button>
-    <div id="chart-fullscreen"></div>
-  </div>
-</div>
-
+      <div id="chart"></div>
+    </section>
+  </div>  
 
 
 

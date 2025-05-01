@@ -12,6 +12,12 @@ html, body {
     background-color: transparent; /* ou une autre couleur de fond */
   }
   
+  #oridium-chart-section {
+    flex: 1 1 auto; /* prend tout l’espace restant */
+    position: relative;
+    min-height: 0;  /* important pour éviter un dépassement */
+  }
+  
   #chart {
     height: 100%;
   }

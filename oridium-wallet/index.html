@@ -11,15 +11,23 @@
   <link rel="stylesheet" href="styles/base/styles.css" />
   <link rel="stylesheet" href="styles/base/share-icon.css" />
 
+  <link rel="stylesheet" href="../oridium-chart/toolbar.css" />
+
   <link rel="stylesheet" href="styles/components/orid-alert.css" />
 
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
+
+  <link rel="stylesheet" href="../oridium-chart/toolbar.css" />
+  <link rel="stylesheet" href="../layout/market-layout/market-graph.css" />
+  <link rel="stylesheet" href="../oridium-website/assets/css/layout/market-layout/market-graph.css" />
+
+
 
   <!-- Librairies externes -->
   <script type="module">
     import * as secp from "https://cdn.jsdelivr.net/npm/@noble/secp256k1@1.7.1/+esm";
     window.nobleSecp256k1 = secp;
-  </script>  
+  </script> 
 
 <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.0/build/qrcode.min.js"></script>
 
@@ -170,12 +178,28 @@
               </div>
             </div>
           </div>  
+    
+
+
+<!-- CHART section -->
+
+          <section id="oridium-chart-section">
+
+            <div class="oridium-chart-toolbar">
+              <button class="chart-btn active" data-range="24h">24h</button>
+              <button class="chart-btn" data-range="7d">7d</button>
+              <button class="chart-btn" data-range="1m">1m</button>
+              <button class="chart-btn" data-range="1y">1y</button>
+              <button class="chart-btn" data-range="max">MAX</button>
+              <button class="chart-btn icon-btn" id="download-btn">
+                <img src="../oridium-chart/assets/ri_download-2-line.svg" alt="Download" />
+              </button>
+              
+            </div>
         
-
-          <div class="chart-container">
-            <div id="priceChart"></div>
-          </div>
-
+            <div id="chart"></div> <!-- C’est ici que le chart Apex s’affichera -->
+          </section>
+          
           <div class="mining-bar">
             <div class="mining-left text">
               <button id="mining-toggle" class="mining-btn">
@@ -666,7 +690,6 @@
 <script src="https://unpkg.com/lightweight-charts@4.1.1/dist/lightweight-charts.standalone.production.js"></script>
 
 <!-- Scripts internes -->
-<script src="scripts/chart.js"></script>
 <script src="scripts/wallet-logic.js"></script>
 <script type="module" src="scripts/wallet-modal.js"></script>
 <script type="module" src="scripts/restore-wallet-modal.js"></script>
@@ -729,6 +752,9 @@
   </div>
 </div>
 
+
+<script src="../oridium-chart/apexcharts.min.js"></script>
+<script src="../oridium-chart/oridium-chart.js"></script>
 
 </body>
 </html>

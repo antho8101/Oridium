@@ -39,5 +39,9 @@
     display: none;
     flex-direction: column;
     height: 100%; /* <- AJOUTER CA */
-  }  
-  
+  } 
+
+  .oridium-chart-section-wallet {
+    width: 100%;
+    height: 100%;
+  }
