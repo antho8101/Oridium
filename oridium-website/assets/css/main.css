@@ -2,10 +2,6 @@
 @import url('./fonts.css');
 @import url('./buttons.css');
 
-/* === BASE / SYSTEM === */
-@import url('./base/reset.css');
-@import url('./base/variables.css');
-
 /* === LAYOUT === */
 @import url('./layout/header.css');
 @import url('./layout/hero.css');
