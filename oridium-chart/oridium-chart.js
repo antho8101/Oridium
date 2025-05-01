@@ -1,12 +1,16 @@
 document.addEventListener("DOMContentLoaded", function () {
+  if (typeof ApexCharts === "undefined") {
+    console.error("❌ ApexCharts is not defined. Make sure apexcharts.min.js is loaded before this script.");
+    return;
+  }
+
   const rawData = generateData();
-  const defaultRange = "7d"; // ← ici on change 24h en 7d
+  const defaultRange = "7d";
   let currentFilteredData = filterDataByRange(rawData, defaultRange);
 
   const chart = new ApexCharts(document.querySelector("#chart"), getChartOptions(currentFilteredData));
   chart.render();
 
-  // Activer le bouton 7d au démarrage
   document.querySelectorAll(".oridium-chart-toolbar .chart-btn").forEach(btn => {
     if (btn.dataset.range === defaultRange) {
       btn.classList.add("active");
@@ -15,7 +19,6 @@ document.addEventListener("DOMContentLoaded", function () {
     }
   });
 
-  // Gérer les boutons de période
   document.querySelectorAll(".oridium-chart-toolbar .chart-btn").forEach(btn => {
     btn.addEventListener("click", function () {
       const range = this.dataset.range;
@@ -29,7 +32,6 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   });
 
-  // Télécharger le graphique en PNG avec fond foncé
   const downloadBtn = document.getElementById("download-btn");
   if (downloadBtn) {
     downloadBtn.addEventListener("click", function () {
