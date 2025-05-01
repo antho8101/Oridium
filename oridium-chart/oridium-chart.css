@@ -14,7 +14,11 @@ html, body {
   
   #oridium-chart-section {
     flex: 1 1 auto; /* prend tout l’espace restant */
+    width: 100%;
     position: relative;
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-end;
     min-height: 0;  /* important pour éviter un dépassement */
   }
   
