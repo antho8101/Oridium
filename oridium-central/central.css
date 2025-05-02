@@ -7,58 +7,104 @@
   
   body {
     font-family: "Segoe UI", Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #0e0e0e;
+    background: var(--Deep-Black, #191A21);
     color: #f0f0f0;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    height: 100vh;
-    padding: 20px;
+    padding: 40px;
+    min-height: 100vh;
   }
   
   /* Container */
-  #login-container,
-  #dashboard {
+  #login-container {
     background: #1c1c1c;
     padding: 30px 40px;
     border-radius: 16px;
     box-shadow: 0 0 20px rgba(255, 215, 0, 0.1);
     max-width: 400px;
     width: 100%;
+    margin: auto;
     text-align: center;
   }
   
-  h1 {
-    margin-bottom: 20px;
-    font-size: 1.6rem;
-    color: #fcd253;
-  }
-  
-  /* Form elements */
-  form {
+  #dashboard {
     display: flex;
     flex-direction: column;
-    gap: 15px;
+    gap: 20px;
+    padding: 30px;
+    flex-wrap: wrap;
+    border-radius: 20px;
+    border: 1px solid var(--Oridium, #DCCB92);
+    background: var(--Deep-Black, #191A21);
   }
   
+  
+  /* Titre principal */
+  h1 {
+    grid-column: 1 / -1;
+    font-size: 1.6rem;
+    color: #DCCB92;
+    text-align: center;
+  }
+  
+  /* Sections dashboard */
+  .dashboard-section {
+    background: var(--Deep-Black, #191A21);
+    padding: 20px;
+    border-radius: 12px;
+    width: 420px;
+    border: 1px solid var(--Oridium, #DCCB92);
+    box-sizing: border-box;
+  }  
+
+  .dashboard-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 49px 77px;
+    justify-content: center;
+    margin-top: 30px;
+  }  
+  
+  /* Sous-titres */
+  .dashboard-section h2 {
+    color: #DCCB92;
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+  }
+  
+  /* Textes */
+  .dashboard-section p,
+  .dashboard-section li {
+    font-size: 0.95rem;
+    color: #ddd;
+  }
+  
+  .status-message {
+    margin-top: 10px;
+    font-size: 0.85rem;
+    color: #80ffb0;
+  }
+  
+  /* Inputs */
   input[type="email"],
-  input[type="password"] {
+  input[type="password"],
+  input[type="text"],
+  input[type="number"] {
     padding: 12px;
     border-radius: 8px;
     border: none;
     outline: none;
-    background: #2a2a2a;
+    background: #3a3a3a;
     color: #fff;
+    width: 100%;
   }
   
   input::placeholder {
     color: #aaa;
   }
   
+  /* Boutons */
   button {
     padding: 12px;
-    background-color: #fcd253;
+    background-color: #DCCB92;
     color: #000;
     font-weight: bold;
     border: none;
@@ -71,55 +117,39 @@
     background-color: #ffdd5c;
   }
   
-  /* Error message */
-  #login-error {
-    margin-top: 10px;
-    font-size: 0.9rem;
-  }
-
-  /* === Tableau de bord Oridium === */
-
-.dashboard-section {
-    margin-top: 30px;
-    background-color: #2a2a2a;
-    padding: 20px;
-    border-radius: 12px;
-    text-align: left;
-  }
-  
-  .dashboard-section h2 {
-    color: #fcd253;
-    margin-bottom: 15px;
-    font-size: 1.2rem;
-  }
-  
-  .dashboard-section p,
-  .dashboard-section li {
-    font-size: 0.95rem;
-    color: #ddd;
-  }
-  
-  input[type="text"],
-  input[type="number"] {
-    padding: 10px;
-    border-radius: 8px;
-    border: none;
-    outline: none;
-    background: #3a3a3a;
+  .btn-copy {
+    background: #444;
     color: #fff;
   }
   
-  input[type="text"]::placeholder,
-  input[type="number"]::placeholder {
-    color: #aaa;
+  .btn-ban {
+    background: #ff4d4d;
+    color: #fff;
   }
   
-  .status-message {
-    margin-top: 10px;
-    font-size: 0.85rem;
-    color: #80ffb0;
+  .btn-unban {
+    background: #4dff4d;
+    color: #000;
   }
   
+  /* Champs stock */
+  #orid-stock,
+  #manual-stock,
+  #countdown {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #DCCB92;
+    margin: 10px 0;
+  }
+  
+  /* Formulaires */
+  form {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+  }
+  
+  /* Listes bannis */
   .banned-list {
     margin-top: 10px;
     padding-left: 20px;
@@ -127,10 +157,43 @@
     color: #ff9d9d;
   }
   
-  #orid-stock {
-    font-size: 1.4rem;
-    font-weight: bold;
-    color: #fcd253;
-    margin: 10px 0;
+  /* Listes suspects */
+  .suspect-list {
+    margin-top: 10px;
+    padding-left: 0;
+    list-style-type: none;
   }
   
+  .suspect-item {
+    background: #333;
+    padding: 15px;
+    border-radius: 10px;
+    margin-bottom: 12px;
+  }
+  
+  .suspect-wallet {
+    font-family: monospace;
+    font-size: 0.9rem;
+    word-break: break-all;
+    color: #ffd97b;
+  }
+  
+  .suspect-reason {
+    font-size: 0.85rem;
+    color: #aaa;
+    margin: 8px 0;
+  }
+  
+  .suspect-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 10px;
+  }
+  
+  .suspect-actions button {
+    padding: 6px 12px;
+    font-size: 0.8rem;
+    border-radius: 6px;
+    border: none;
+    cursor: pointer;
+  }  
