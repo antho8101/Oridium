@@ -21,11 +21,23 @@
   <div id="dashboard" style="display: none;">
     <h1>🏛️ Banque Centrale Oridium</h1>
     <p>Bienvenue, Anthony.</p>
+
+    <div class="dashboard-grid">
   
     <section class="dashboard-section">
       <h2>📦 Stock actuel de la Banque Centrale</h2>
       <p id="orid-stock" class="data-value">...</p>
       <button id="refresh-stock">🔄 Actualiser</button>
+    </section>
+  
+    <section class="dashboard-section">
+      <h2>⏳ Prochain reset de quota hebdo</h2>
+      <p id="countdown" class="data-value">Chargement...</p>
+    </section>
+  
+    <section class="dashboard-section">
+      <h2>💼 Stock disponible pour envoi manuel</h2>
+      <p id="manual-stock" class="data-value">...</p>
     </section>
   
     <section class="dashboard-section">
@@ -39,7 +51,22 @@
     </section>
   
     <section class="dashboard-section">
-      <h2>🚫 Bannir un wallet</h2>
+      <h2>🧠 Wallets suspects détectés</h2>
+      <ul id="suspect-wallets-list" class="suspect-list">
+        <li class="suspect-item">
+          <div class="suspect-wallet">0x123...ABCD</div>
+          <div class="suspect-reason">➤ Suspicion : Minage massif inhabituel</div>
+          <div class="suspect-actions">
+            <button class="btn-copy" data-wallet="0x123...ABCD">📋 Copier</button>
+            <button class="btn-ban" data-wallet="0x123...ABCD">🚫 Bannir</button>
+            <button class="btn-unban" data-wallet="0x123...ABCD">✅ Débannir</button>
+          </div>
+        </li>
+      </ul>
+    </section>
+  
+    <section class="dashboard-section">
+      <h2>🚫 Bannir un wallet (manuel)</h2>
       <form id="ban-wallet-form">
         <input type="text" id="ban-wallet" placeholder="Wallet public key" required />
         <button type="submit">⛔ Bannir</button>
@@ -48,7 +75,7 @@
     </section>
   
     <section class="dashboard-section">
-      <h2>✅ Débannir un wallet</h2>
+      <h2>✅ Débannir un wallet (manuel)</h2>
       <form id="unban-wallet-form">
         <input type="text" id="unban-wallet" placeholder="Wallet public key" required />
         <button type="submit">♻️ Débannir</button>
@@ -65,9 +92,12 @@
     </section>
   
     <hr style="margin: 30px 0;" />
-  
-    <button id="logout">🚪 Se déconnecter</button>
-  </div>
+
+  </div>  
+
+  <button id="logout">🚪 Se déconnecter</button>
+
+</div>
   
 </body>
 </html>
