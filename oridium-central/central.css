@@ -75,4 +75,62 @@
   #login-error {
     margin-top: 10px;
     font-size: 0.9rem;
-  }  
+  }
+
+  /* === Tableau de bord Oridium === */
+
+.dashboard-section {
+    margin-top: 30px;
+    background-color: #2a2a2a;
+    padding: 20px;
+    border-radius: 12px;
+    text-align: left;
+  }
+  
+  .dashboard-section h2 {
+    color: #fcd253;
+    margin-bottom: 15px;
+    font-size: 1.2rem;
+  }
+  
+  .dashboard-section p,
+  .dashboard-section li {
+    font-size: 0.95rem;
+    color: #ddd;
+  }
+  
+  input[type="text"],
+  input[type="number"] {
+    padding: 10px;
+    border-radius: 8px;
+    border: none;
+    outline: none;
+    background: #3a3a3a;
+    color: #fff;
+  }
+  
+  input[type="text"]::placeholder,
+  input[type="number"]::placeholder {
+    color: #aaa;
+  }
+  
+  .status-message {
+    margin-top: 10px;
+    font-size: 0.85rem;
+    color: #80ffb0;
+  }
+  
+  .banned-list {
+    margin-top: 10px;
+    padding-left: 20px;
+    list-style-type: disc;
+    color: #ff9d9d;
+  }
+  
+  #orid-stock {
+    font-size: 1.4rem;
+    font-weight: bold;
+    color: #fcd253;
+    margin: 10px 0;
+  }
+  
