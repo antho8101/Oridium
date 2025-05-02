@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Oridium Central</title>
+  <script type="module" src="central.js" defer></script>
+  <link rel="stylesheet" href="central.css" />
+</head>
+<body>
+  <div id="login-container">
+    <h1>🔐 Oridium Central Login</h1>
+    <form id="login-form">
+      <input type="email" id="email" placeholder="Admin Email" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <button type="submit">Login</button>
+    </form>
+    <p id="login-error" style="color: red;"></p>
+  </div>
+
+  <div id="dashboard" style="display: none;">
+    <h1>🏛️ Banque Centrale Oridium</h1>
+    <p>Bienvenue, administrateur.</p>
+    <!-- Tes boutons, actions, stats ici -->
+    <button id="logout">Se déconnecter</button>
+  </div>
+</body>
+</html>
