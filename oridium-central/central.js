@@ -1,5 +1,6 @@
 // central.js
 import { initializeApp } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-app.js";
+import { GOOGLE_API_KEY } from "./config.js";
 import {
   getAuth,
   signInWithEmailAndPassword,
@@ -8,11 +9,11 @@ import {
 } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
 // 🔐 Charger la clé API depuis les variables d'environnement
-const firebaseApiKey = window?.GOOGLE_API_KEY || "default-key-if-needed";
+const firebaseApiKey = import.meta.env.VITE_GOOGLE_API_KEY;
 
 // 🔐 Configuration Firebase de Oridium Central
 const firebaseConfig = {
-  apiKey: firebaseApiKey,
+  apiKey: GOOGLE_API_KEY,
   authDomain: "oridium-central.firebaseapp.com",
   projectId: "oridium-central",
   storageBucket: "oridium-central.firebasestorage.app",

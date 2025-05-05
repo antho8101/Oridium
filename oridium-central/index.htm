@@ -6,10 +6,7 @@
   <title>Oridium Central Bank Management</title>
 
   <!-- 🔐 Import propre de la config -->
-  <script type="module">
-    import config from "./config.js";
-    window.GOOGLE_API_KEY = config.GOOGLE_API_KEY;
-  </script>
+  <script type="module" src="./config-loader.js"></script>
 
   <!-- ⚙️ Script principal -->
   <script type="module" src="central.js" defer></script>
