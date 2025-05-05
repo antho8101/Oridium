@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Oridium Central Bank Management</title>
+
+  <!-- 🔐 Import propre de la config -->
+  <script type="module">
+    import config from "./config.js";
+    window.GOOGLE_API_KEY = config.GOOGLE_API_KEY;
+  </script>
+
+  <!-- ⚙️ Script principal -->
+  <script type="module" src="central.js" defer></script>
+
+  <link rel="stylesheet" href="central.css" />
+</head>
+<body>
+  <div id="login-container">
+    <h1>🔐 Oridium Central Login</h1>
+    <form id="login-form">
+      <input type="email" id="email" placeholder="Admin Email" required />
+      <input type="password" id="password" placeholder="Password" required />
+      <button type="submit">Login</button>
+    </form>
+    <p id="login-error" style="color: red;"></p>
+  </div>
+
+  <div id="dashboard" style="display: none;">
+    <h1>🏛️ Banque Centrale Oridium</h1>
+    <p>Bienvenue, Anthony.</p>
+
+    <div class="dashboard-grid">
+
+      <section class="dashboard-section">
+        <h2>📦 Stock actuel de la Banque Centrale</h2>
+        <p id="orid-stock" class="data-value">...</p>
+        <button id="refresh-stock">🔄 Actualiser</button>
+      </section>
+
+      <section class="dashboard-section">
+        <h2>⏳ Prochain reset de quota hebdo</h2>
+        <p id="countdown" class="data-value">Chargement...</p>
+      </section>
+
+      <section class="dashboard-section">
+        <h2>💼 Stock disponible pour envoi manuel</h2>
+        <p id="manual-stock" class="data-value">...</p>
+      </section>
+
+      <section class="dashboard-section">
+        <h2>🎁 Envoyer des ORID</h2>
+        <form id="send-orid-form">
+          <input type="text" id="target-wallet" placeholder="Wallet public key" required />
+          <input type="number" id="amount-orid" placeholder="Montant ORID" required />
+          <button type="submit">🚀 Envoyer</button>
+        </form>
+        <p id="send-status" class="status-message"></p>
+      </section>
+
+      <section class="dashboard-section">
+        <h2>🧠 Wallets suspects détectés</h2>
+        <ul id="suspect-wallets-list" class="suspect-list">
+          <li class="suspect-item">
+            <div class="suspect-wallet">0x123...ABCD</div>
+            <div class="suspect-reason">➤ Suspicion : Minage massif inhabituel</div>
+            <div class="suspect-actions">
+              <button class="btn-copy" data-wallet="0x123...ABCD">📋 Copier</button>
+              <button class="btn-ban" data-wallet="0x123...ABCD">🚫 Bannir</button>
+              <button class="btn-unban" data-wallet="0x123...ABCD">✅ Débannir</button>
+            </div>
+          </li>
+        </ul>
+      </section>
+
+      <section class="dashboard-section">
+        <h2>🚫 Bannir un wallet (manuel)</h2>
+        <form id="ban-wallet-form">
+          <input type="text" id="ban-wallet" placeholder="Wallet public key" required />
+          <button type="submit">⛔ Bannir</button>
+        </form>
+        <p id="ban-status" class="status-message"></p>
+      </section>
+
+      <section class="dashboard-section">
+        <h2>✅ Débannir un wallet (manuel)</h2>
+        <form id="unban-wallet-form">
+          <input type="text" id="unban-wallet" placeholder="Wallet public key" required />
+          <button type="submit">♻️ Débannir</button>
+        </form>
+        <p id="unban-status" class="status-message"></p>
+      </section>
+
+      <section class="dashboard-section">
+        <h2>🗂️ Wallets bannis</h2>
+        <ul id="banned-wallets-list" class="banned-list">
+          <li>Chargement...</li>
+        </ul>
+        <button id="refresh-banned">🔄 Actualiser la liste</button>
+      </section>
+
+    </div>
+
+    <button id="logout">🚪 Se déconnecter</button>
+  </div>
+</body>
+</html>

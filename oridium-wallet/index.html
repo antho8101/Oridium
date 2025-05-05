@@ -15,26 +15,23 @@
 
   <link rel="icon" type="image/x-icon" href="favicon.ico" />
 
-
-
   <!-- Librairies externes -->
   <script type="module">
     import * as secp from "https://cdn.jsdelivr.net/npm/@noble/secp256k1@1.7.1/+esm";
     window.nobleSecp256k1 = secp;
   </script> 
 
-<script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.0/build/qrcode.min.js"></script>
-
+  <script src="https://cdn.jsdelivr.net/npm/qrcode@1.5.0/build/qrcode.min.js"></script>
 
   <!-- Scripts internes (non modules) -->
-    <script src="scripts/wallet-logic.js"></script>
+  <script src="scripts/wallet-logic.js"></script>
 
   <!-- Modules -->
+  <script type="module" src="scripts/config.js"></script> <!-- ✅ Ajouté ici -->
   <script type="module" src="scripts/orid-network.js"></script>
   <script type="module" src="scripts/wallet-modal.js"></script>
   <script type="module" src="scripts/bip39-loader.js"></script>
   <script type="module" src="scripts/mining-loader.js"></script>
-
   <script type="module" src="scripts/orid-pricing.js"></script>
 </head>
 <body>
