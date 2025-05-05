@@ -5,8 +5,10 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Oridium Central Bank Management</title>
 
-  <!-- 🔐 Import propre de la config -->
-  <script type="module" src="./config-loader.js"></script>
+  <!-- 🔐 Clé injectée dynamiquement en HTML via Vercel (pendant le build) -->
+  <script>
+    window.GOOGLE_API_KEY = "__GOOGLE_API_KEY__";
+  </script>
 
   <!-- ⚙️ Script principal -->
   <script type="module" src="central.js" defer></script>
