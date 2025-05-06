@@ -1,13 +1,18 @@
 export function getCurrentWallet() {
-    return localStorage.getItem("orid_wallet_address") || null;
+    const wallet = localStorage.getItem("orid_wallet_address") || null;
+    console.log("📦 getCurrentWallet:", wallet);
+    return wallet;
   }
   
   export function getWalletPseudo() {
     try {
       const raw = localStorage.getItem("orid_wallet_data");
       const parsed = raw ? JSON.parse(raw) : null;
-      return parsed?.pseudo || null;
-    } catch {
+      const pseudo = parsed?.pseudo || null;
+      console.log("📦 getWalletPseudo:", pseudo);
+      return pseudo;
+    } catch (err) {
+      console.warn("⚠️ Error parsing wallet data:", err);
       return null;
     }
   }
@@ -35,6 +40,8 @@ export function getCurrentWallet() {
   }
   
   export function updateWalletUI() {
+    console.log("🔁 updateWalletUI called");
+  
     const wallet = getCurrentWallet();
     const pseudo = getWalletPseudo();
   
@@ -42,9 +49,19 @@ export function getCurrentWallet() {
     const walletLink = document.getElementById("wallet-link");
     const welcomeEl = document.getElementById("welcome-user");
   
-    if (!buyBtn || !walletLink || !welcomeEl) return;
+    console.log("🔍 Elements found:", {
+      buyBtn: !!buyBtn,
+      walletLink: !!walletLink,
+      welcomeEl: !!welcomeEl
+    });
+  
+    if (!buyBtn || !walletLink || !welcomeEl) {
+      console.warn("❌ Missing DOM elements in updateWalletUI");
+      return;
+    }
   
     if (!wallet) {
+      console.log("🔌 No wallet connected");
       buyBtn.textContent = "Connect your wallet";
       buyBtn.onclick = connectWallet;
   
@@ -57,13 +74,13 @@ export function getCurrentWallet() {
   
       welcomeEl.textContent = "Welcome, guest";
     } else {
+      console.log("✅ Wallet connected with pseudo:", pseudo);
       buyBtn.textContent = "Buy ORID";
       buyBtn.onclick = null;
   
       walletLink.textContent = "Change wallet";
       walletLink.onclick = connectWallet;
   
-      // ✅ Affichage personnalisé avec le pseudo
       welcomeEl.textContent = `Welcome, ${pseudo || "User"}`;
     }
   }  
