@@ -5,17 +5,6 @@ import { creditOrid } from '../modules/central-bank/paddle-sales.js';
 const router = express.Router();
 
 router.post('/', express.json(), async (req, res) => {
-  const signature = req.headers['paddle-signature'];
-  const body = JSON.stringify(req.body);
-
-  const expectedSignature = crypto
-    .createHmac('sha256', process.env.PADDLE_WEBHOOK_SECRET)
-    .update(body)
-    .digest('hex');
-
-  if (signature !== expectedSignature) {
-    return res.status(400).send('Invalid signature');
-  }
 
   const event = req.body;
 
