@@ -1,22 +1,27 @@
 import express from 'express';
 import cors from 'cors';
 import crypto from 'crypto';
+
 import {
   getBlockchainFromDB,
   addBlockToDB,
   getBalanceFromDB
 } from './database.js';
 
-import paddleWebhook from './api/paddle-webhook.js'; // ✅ Nouvelle route webhook Paddle
-
+import paddleWebhook from './api/paddle-webhook.js';
 import stockRoute from './api/stock.js';
-app.use('/api/stock', stockRoute);
+import salesRoute from './api/sales.js';
 
-const app = express();
+const app = express(); // ✅ doit venir AVANT tout app.use()
+
 const PORT = process.env.PORT || 3000;
 
 app.use(cors());
 app.use(express.json({ limit: '5mb' }));
+
+app.use('/api/paddle-webhook', paddleWebhook);
+app.use('/api/stock', stockRoute);
+app.use('/api', salesRoute);
 
 const BLACKLIST = new Set(["0x000000000000000000000000000000000000dead"]);
 
@@ -41,9 +46,6 @@ app.get('/blockchain', (req, res) => {
 
 app.post('/batch-add-blocks', (req, res) => {
   const blocks = req.body;
-
-  console.log("📥 Received batch:", blocks);
-
   if (!Array.isArray(blocks)) {
     return res.status(400).json({ error: 'Expected an array of blocks' });
   }
@@ -150,11 +152,8 @@ app.post('/register-wallet', (req, res) => {
   }
 });
 
-// ✅ POST /add-block (ajout d’un seul bloc)
 app.post('/add-block', (req, res) => {
   const rawBlock = req.body;
-
-  console.log("📥 Received single block:", rawBlock);
 
   try {
     if (isBlacklisted(rawBlock)) {
@@ -177,7 +176,6 @@ app.post('/add-block', (req, res) => {
       }
     }
 
-    // ✅ Seulement si le bloc est miné par "System", on vérifie la difficulté
     const isFromSystem = txs.every(tx => tx.sender === "System");
     if (isFromSystem && !isValidHashDifficulty(rawBlock.hash)) {
       return res.status(400).json({ error: 'Invalid hash difficulty' });
@@ -205,12 +203,6 @@ app.post('/add-block', (req, res) => {
     res.status(500).json({ error: 'Add block server error' });
   }
 });
-
-// ✅ Intégration du webhook Paddle
-app.use('/api/paddle-webhook', paddleWebhook);
-
-import salesRoute from './api/sales.js';
-app.use('/api', salesRoute);
 
 app.listen(PORT, () => {
   console.log(`🚀 Oridium API running on PORT ${PORT}`);
