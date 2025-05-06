@@ -63,6 +63,7 @@ export function getCurrentWallet() {
       walletLink.textContent = "Change wallet";
       walletLink.onclick = connectWallet;
   
+      // ✅ Affichage personnalisé avec le pseudo
       welcomeEl.textContent = `Welcome, ${pseudo || "User"}`;
     }
   }  
