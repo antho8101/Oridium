@@ -7,7 +7,7 @@ import {
   getBalanceFromDB
 } from './database.js';
 
-import paddleWebhook from './api/paddle-webhook.js?commonjs'; // ✅ Nouvelle route webhook Paddle
+import paddleWebhook from './api/paddle-webhook.js'; // ✅ Nouvelle route webhook Paddle
 
 const app = express();
 const PORT = process.env.PORT || 3000;

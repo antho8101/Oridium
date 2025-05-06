@@ -1,13 +1,13 @@
-const express = require('express');
+import express from 'express';
+import crypto from 'crypto';
+import paddleSales from '../modules/central-bank/paddle-sales.js';
+
 const router = express.Router();
-const crypto = require('crypto');
-const paddleSales = require('../modules/central-bank/paddle-sales');
 
 router.post('/', express.json(), async (req, res) => {
   const signature = req.headers['paddle-signature'];
   const body = JSON.stringify(req.body);
 
-  // Vérification de la signature
   const expectedSignature = crypto
     .createHmac('sha256', process.env.PADDLE_WEBHOOK_SECRET)
     .update(body)
@@ -27,6 +27,7 @@ router.post('/', express.json(), async (req, res) => {
 
     if (userId && oridAmount) {
       await paddleSales.creditOrid(userId, oridAmount);
+      console.log(`✅ ORID credited: ${oridAmount} to ${userId}`);
     }
   }
 
