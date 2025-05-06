@@ -9,6 +9,9 @@ import {
 
 import paddleWebhook from './api/paddle-webhook.js'; // ✅ Nouvelle route webhook Paddle
 
+import stockRoute from './api/stock.js';
+app.use('/api/stock', stockRoute);
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
