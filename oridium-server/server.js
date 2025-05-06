@@ -7,6 +7,8 @@ import {
   getBalanceFromDB
 } from './database.js';
 
+import paddleWebhook from './api/paddle-webhook.js'; // ✅ Nouvelle route webhook Paddle
+
 const app = express();
 const PORT = process.env.PORT || 3000;
 
@@ -200,6 +202,9 @@ app.post('/add-block', (req, res) => {
     res.status(500).json({ error: 'Add block server error' });
   }
 });
+
+// ✅ Intégration du webhook Paddle
+app.use('/api/paddle-webhook', paddleWebhook);
 
 app.listen(PORT, () => {
   console.log(`🚀 Oridium API running on PORT ${PORT}`);

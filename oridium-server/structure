@@ -9,7 +9,7 @@ oridium-server/
 │       ├── detect-sold-out.js                # Tout vendu en fin de semaine ?
 │       ├── minage-check.js                   # Plus d’ORID minés aujourd’hui ?
 │       ├── behavior-check.js                 # Comportement suspect ?
-│       ├── stripe-sales.js                   # Achat via Stripe
+│       ├── paddle-sales.js                   # Achat via Stripe
 │       ├── manual-send.js                    # Envoi d’ORID (admin / amis / influenceurs)
 │       ├── ban-control.js                    # Ban / unban wallets
 │       └── suspect-accounts.js               # Liste et détection des wallets suspects
@@ -26,5 +26,5 @@ oridium-server/
 │   ├── ban.js
 │   ├── sales.js
 │   ├── dashboard.js
-│   └── stripe-webhook.js
+│   └── paddle-webhook.js
 └── server.js
