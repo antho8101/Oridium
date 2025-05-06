@@ -7,6 +7,7 @@
 @import "../components/sidebar.css";
 @import "../components/transactions.css";
 @import "../components/walletstats.css";
+@import "../components/cookie-banner.css";
 
 /* Base */
 @import "buttons.css";

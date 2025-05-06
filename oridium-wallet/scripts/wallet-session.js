@@ -46,12 +46,12 @@ document.addEventListener("DOMContentLoaded", () => {
         welcomeEl.classList.remove("hidden");
       }
     }
-  
+
     setTimeout(async () => {
       await setWalletConnected(savedAddress);
-  
+
       try {
-        const chain = await getBlockchain(); // 🆕 fetch propre
+        const chain = await getBlockchain();
         if (chain) {
           const myTransactions = getTransactionsForWallet(chain, savedAddress);
           window.__oridTransactionList = myTransactions;
@@ -60,11 +60,19 @@ document.addEventListener("DOMContentLoaded", () => {
       } catch (err) {
         console.error("❌ Failed to reload blockchain:", err);
       }
-  
     }, 200);
   } else {
     updateWalletButtons(false);
   }
+
+  if (!localStorage.getItem("orid_cookie_consent")) {
+    document.getElementById("cookie-banner").style.display = "flex";
+  }
+
+  document.getElementById("accept-cookies").addEventListener("click", () => {
+    localStorage.setItem("orid_cookie_consent", "true");
+    document.getElementById("cookie-banner").style.display = "none";
+  });
 });
 
 export async function setWalletConnected(address) {
@@ -72,9 +80,19 @@ export async function setWalletConnected(address) {
   currentWalletAddress = address;
   localStorage.setItem("orid_wallet_address", address);
 
+  const savedWalletRaw = localStorage.getItem("orid_wallet_data");
+  const savedWallet = savedWalletRaw ? JSON.parse(savedWalletRaw) : null;
+
+  if (localStorage.getItem("orid_cookie_consent")) {
+    const session = btoa(JSON.stringify({
+      address,
+      pseudo: savedWallet?.pseudo || "User"
+    }));
+    document.cookie = `orid_session=${session}; path=/; domain=.getoridium.com; secure; samesite=strict`;
+  }
+
   updateWalletButtons(true);
   displayPublicKey(address);
-
   window.dispatchEvent(new Event("orid-wallet-connected"));
 
   registerWallet(address)
@@ -89,7 +107,6 @@ export async function setWalletConnected(address) {
     if (chain) {
       let myTransactions = getTransactionsForWallet(chain, address);
 
-      // 🔥 Nettoyage des doublons par sécurité
       const uniqueTransactions = [];
       const seen = new Set();
       for (const tx of myTransactions) {
@@ -108,7 +125,6 @@ export async function setWalletConnected(address) {
     console.error("❌ Failed to fetch balance from server:", err);
   }
 
-  // ⚡ Rafraîchit correctement la barre de recherche
   setTimeout(() => {
     resetSearchInput();
     initTransactionSearch();
@@ -130,6 +146,8 @@ export function disconnectWallet() {
     welcomeEl.classList.add("hidden");
     welcomeEl.textContent = "";
   }
+
+  document.cookie = "orid_session=; path=/; domain=.getoridium.com; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
 }
 
 export function getConnectedWalletAddress() {
@@ -236,7 +254,6 @@ export function showAccessDeniedModal() {
   });
 }
 
-// 🔄 Synchro automatique du solde si minage
 window.addEventListener("message", (event) => {
   if (event.data?.type === "orid-balance-updated") {
     const address = getConnectedWalletAddress();
@@ -246,7 +263,6 @@ window.addEventListener("message", (event) => {
   }
 });
 
-// 🔁 Polling balance toutes les 5 secondes
 let previousBalance = 0;
 async function pollWalletBalance(interval = 5000) {
   setInterval(async () => {
@@ -262,7 +278,6 @@ async function pollWalletBalance(interval = 5000) {
   }, interval);
 }
 
-// 🔁 Polling incoming transactions
 window.addEventListener("orid-wallet-connected", () => {
   const address = getConnectedWalletAddress();
   if (!address) return;
@@ -290,7 +305,6 @@ async function pollIncomingTransactions(interval = 5000) {
   }, interval);
 }
 
-// ⬇️ Fonctions accessibles globalement
 window.disconnectWallet = disconnectWallet;
 window.setWalletConnected = setWalletConnected;
 window.updateWalletBalanceUI = updateBalanceUI;

@@ -31,6 +31,11 @@
     line-height: normal;
   }
   
+  .market-user-actions {
+    display: flex;
+    gap: 12px;
+  }
+  
   .market-user-change {
     color: rgba(255, 255, 255, 0.50);
     font-family: "Space Grotesk";
@@ -38,14 +43,9 @@
     font-style: normal;
     font-weight: 300;
     line-height: normal;
-    text-decoration-line: underline;
-    text-decoration-style: solid;
-    text-decoration-skip-ink: auto;
-    text-decoration-thickness: auto;
-    text-underline-offset: auto;
-    text-underline-position: from-font;
+    text-decoration: underline;
     cursor: pointer;
-  }
+  }  
   
   .market-buy-placeholder {
     color: rgba(255,255,255,0.3);
