@@ -33,4 +33,4 @@ router.post('/', express.json(), async (req, res) => {
   res.status(200).send('OK');
 });
 
-module.exports = router;
+export default router;
