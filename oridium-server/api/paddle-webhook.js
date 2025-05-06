@@ -1,6 +1,6 @@
 import express from 'express';
 import crypto from 'crypto';
-import paddleSales from '../modules/central-bank/paddle-sales.js';
+import { creditOrid } from '../modules/central-bank/paddle-sales.js';
 
 const router = express.Router();
 
@@ -26,7 +26,7 @@ router.post('/', express.json(), async (req, res) => {
     const oridAmount = customData.orid_amount;
 
     if (userId && oridAmount) {
-      await paddleSales.creditOrid(userId, oridAmount);
+      await creditOrid(userId, oridAmount);
       console.log(`✅ ORID credited: ${oridAmount} to ${userId}`);
     }
   }
