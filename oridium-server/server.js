@@ -206,6 +206,9 @@ app.post('/add-block', (req, res) => {
 // ✅ Intégration du webhook Paddle
 app.use('/api/paddle-webhook', paddleWebhook);
 
+import salesRoute from './api/sales.js';
+app.use('/api', salesRoute);
+
 app.listen(PORT, () => {
   console.log(`🚀 Oridium API running on PORT ${PORT}`);
 });
