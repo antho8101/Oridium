@@ -37,6 +37,28 @@ export function getCurrentWallet() {
       content.classList.remove("fade-out");
       content.classList.add("fade-in");
     }
+  
+    // 🆕 Envoie au backend pour créer le cookie
+    const address = getCurrentWallet();
+    const pseudo = getWalletPseudo();
+  
+    if (address && pseudo) {
+      fetch("https://oridium-production.up.railway.app/api/set-session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        credentials: "include", // essentiel pour autoriser les cookies cross-origin
+        body: JSON.stringify({ address, pseudo })
+      })
+      .then(res => {
+        if (!res.ok) throw new Error("Set session failed");
+        console.log("✅ Session synced to backend");
+      })
+      .catch(err => {
+        console.error("❌ Failed to set session cookie:", err);
+      });
+    }
   }
   
   export function updateWalletUI() {
