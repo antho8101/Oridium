@@ -48,20 +48,20 @@ export function getCurrentWallet() {
     const welcomeEl = document.getElementById("welcome-user");
     const connectLink = document.getElementById("wallet-link-connect");
     const createLink = document.getElementById("wallet-link-create");
+    const orSeparator = document.getElementById("wallet-or");
   
     console.log("🔍 Elements found:", {
       welcomeEl: !!welcomeEl,
       connectLink: !!connectLink,
-      createLink: !!createLink
+      createLink: !!createLink,
+      orSeparator: !!orSeparator
     });
   
     if (!wallet) {
       console.log("🔌 No wallet connected");
   
-      // Texte d’accueil sans pseudo
       welcomeEl.textContent = "Welcome";
   
-      // Affiche les deux liens
       if (connectLink) {
         connectLink.textContent = "Connect your wallet";
         connectLink.style.display = "inline";
@@ -90,13 +90,15 @@ export function getCurrentWallet() {
         };
       }
   
+      if (orSeparator) {
+        orSeparator.style.display = "inline";
+      }
+  
     } else {
       console.log("✅ Wallet connected with pseudo:", pseudo);
   
-      // Affiche le pseudo dans le welcome
       welcomeEl.textContent = `Welcome, ${pseudo || "User"}`;
   
-      // Affiche "Change wallet" à la place des deux liens
       if (connectLink) {
         connectLink.textContent = "Change wallet";
         connectLink.style.display = "inline";
@@ -113,6 +115,10 @@ export function getCurrentWallet() {
   
       if (createLink) {
         createLink.style.display = "none";
+      }
+  
+      if (orSeparator) {
+        orSeparator.style.display = "none";
       }
     }
   }  

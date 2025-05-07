@@ -92,3 +92,9 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+import { updateWalletUI } from './wallet-bridge.js';
+
+document.addEventListener("DOMContentLoaded", () => {
+  updateWalletUI();
+});
