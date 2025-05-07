@@ -18,7 +18,10 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 
 // Middlewares
-app.use(cors({ origin: true, credentials: true }));
+app.use(cors({
+  origin: 'https://www.getoridium.com',
+  credentials: true
+}));
 app.use(cookieParser());
 app.use(express.json({ limit: '5mb' }));
 
