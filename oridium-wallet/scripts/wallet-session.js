@@ -12,7 +12,7 @@ import { getBlockchain } from './helpers/getBlockchain.js';
 let walletConnected = false;
 let currentWalletAddress = null;
 
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
   const connectBtn = document.getElementById("connect-wallet-button");
   const disconnectBtn = document.getElementById("disconnect-wallet-button");
 
@@ -34,33 +34,21 @@ document.addEventListener("DOMContentLoaded", () => {
   });
 
   const savedAddress = localStorage.getItem("orid_wallet_address");
-  const savedWalletRaw = localStorage.getItem("orid_wallet_data");
-  const savedWallet = savedWalletRaw ? JSON.parse(savedWalletRaw) : null;
 
   if (savedAddress) {
     console.log("🧠 Restoring saved wallet from localStorage:", savedAddress);
-    if (savedWallet?.pseudo) {
-      const welcomeEl = document.getElementById("welcome-user");
-      if (welcomeEl) {
-        welcomeEl.textContent = `Welcome, ${savedWallet.pseudo}`;
-        welcomeEl.classList.remove("hidden");
+    await setWalletConnected(savedAddress);
+
+    try {
+      const chain = await getBlockchain();
+      if (chain) {
+        const myTransactions = getTransactionsForWallet(chain, savedAddress);
+        window.__oridTransactionList = myTransactions;
+        updateTransactionHistory(myTransactions, savedAddress);
       }
+    } catch (err) {
+      console.error("❌ Failed to reload blockchain:", err);
     }
-
-    setTimeout(async () => {
-      await setWalletConnected(savedAddress);
-
-      try {
-        const chain = await getBlockchain();
-        if (chain) {
-          const myTransactions = getTransactionsForWallet(chain, savedAddress);
-          window.__oridTransactionList = myTransactions;
-          updateTransactionHistory(myTransactions, savedAddress);
-        }
-      } catch (err) {
-        console.error("❌ Failed to reload blockchain:", err);
-      }
-    }, 200);
   } else {
     updateWalletButtons(false);
   }
