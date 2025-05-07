@@ -1,4 +1,4 @@
-import { updateWalletUI } from './wallet-bridge.js';
+import { updateWalletUI } from '../../oridium-wallet/scripts/wallet-bridge.js';
 
 console.log("📡 market-session.js loaded");
 

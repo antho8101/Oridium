@@ -2,7 +2,7 @@ import {
     getCurrentWallet,
     updateWalletUI,
     connectWallet
-  } from './wallet-bridge.js';
+  } from '../../oridium-wallet/scripts/wallet-bridge.js';
   
   document.addEventListener("DOMContentLoaded", async () => {
     // ✅ Attendre la fin de la synchro du cookie
