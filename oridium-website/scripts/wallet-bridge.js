@@ -45,42 +45,74 @@ export function getCurrentWallet() {
     const wallet = getCurrentWallet();
     const pseudo = getWalletPseudo();
   
-    const buyBtn = document.getElementById("buy-orid-btn");
-    const walletLink = document.getElementById("wallet-link");
     const welcomeEl = document.getElementById("welcome-user");
+    const connectLink = document.getElementById("wallet-link-connect");
+    const createLink = document.getElementById("wallet-link-create");
   
     console.log("🔍 Elements found:", {
-      buyBtn: !!buyBtn,
-      walletLink: !!walletLink,
-      welcomeEl: !!welcomeEl
+      welcomeEl: !!welcomeEl,
+      connectLink: !!connectLink,
+      createLink: !!createLink
     });
-  
-    if (!buyBtn || !walletLink || !welcomeEl) {
-      console.warn("❌ Missing DOM elements in updateWalletUI");
-      return;
-    }
   
     if (!wallet) {
       console.log("🔌 No wallet connected");
-      buyBtn.textContent = "Connect your wallet";
-      buyBtn.onclick = connectWallet;
   
-      walletLink.textContent = "Connect your wallet or create wallet";
-      walletLink.onclick = () => {
-        const choice = confirm("Do you already have a wallet?");
-        if (choice) connectWallet();
-        else createWallet();
-      };
+      // Texte d’accueil sans pseudo
+      welcomeEl.textContent = "Welcome";
   
-      welcomeEl.textContent = "Welcome, guest";
+      // Affiche les deux liens
+      if (connectLink) {
+        connectLink.textContent = "Connect your wallet";
+        connectLink.style.display = "inline";
+        connectLink.onclick = () => {
+          const modal = document.getElementById("connect-wallet-modal");
+          const content = modal?.querySelector(".modal-content");
+          if (modal && content) {
+            modal.classList.remove("hidden");
+            content.classList.remove("fade-out");
+            content.classList.add("fade-in");
+          }
+        };
+      }
+  
+      if (createLink) {
+        createLink.textContent = "Create wallet";
+        createLink.style.display = "inline";
+        createLink.onclick = () => {
+          const modal = document.getElementById("wallet-modal");
+          const content = modal?.querySelector(".modal-content");
+          if (modal && content) {
+            modal.classList.remove("hidden");
+            content.classList.remove("fade-out");
+            content.classList.add("fade-in");
+          }
+        };
+      }
+  
     } else {
       console.log("✅ Wallet connected with pseudo:", pseudo);
-      buyBtn.textContent = "Buy ORID";
-      buyBtn.onclick = null;
   
-      walletLink.textContent = "Change wallet";
-      walletLink.onclick = connectWallet;
-  
+      // Affiche le pseudo dans le welcome
       welcomeEl.textContent = `Welcome, ${pseudo || "User"}`;
+  
+      // Affiche "Change wallet" à la place des deux liens
+      if (connectLink) {
+        connectLink.textContent = "Change wallet";
+        connectLink.style.display = "inline";
+        connectLink.onclick = () => {
+          const modal = document.getElementById("connect-wallet-modal");
+          const content = modal?.querySelector(".modal-content");
+          if (modal && content) {
+            modal.classList.remove("hidden");
+            content.classList.remove("fade-out");
+            content.classList.add("fade-in");
+          }
+        };
+      }
+  
+      if (createLink) {
+        createLink.style.display = "none";
+      }
     }
   }  
