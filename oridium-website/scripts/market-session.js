@@ -4,25 +4,27 @@ console.log("📡 market-session.js loaded");
 
 let lastSync = localStorage.getItem("orid_sync_trigger");
 
-function getCookie(name) {
-  const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
-  return match ? decodeURIComponent(match[2]) : null;
-}
-
-function getParsedSessionCookie() {
-  const data = getCookie('orid_session');
-  if (!data) return null;
-
+// ✅ Appel côté serveur pour récupérer la session depuis le cookie sécurisé
+async function getParsedSessionFromServer() {
   try {
-    return JSON.parse(atob(data));
+    const res = await fetch('https://oridium-production.up.railway.app/api/wallet-sync', {
+      method: 'GET',
+      credentials: 'include'
+    });
+
+    const data = await res.json();
+    console.log("📥 Session from server:", data);
+
+    if (!data || !data.address) return null;
+    return data;
   } catch (err) {
-    console.warn("⚠️ Cookie decode failed:", err);
+    console.warn("⚠️ Failed to fetch session:", err);
     return null;
   }
 }
 
-function syncWalletFromSession() {
-  const session = getParsedSessionCookie();
+async function syncWalletFromSession() {
+  const session = await getParsedSessionFromServer(); // 🔁 Appel API au lieu du cookie local
   const stored = {
     address: localStorage.getItem("orid_wallet_address"),
     pseudo: (() => {
