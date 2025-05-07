@@ -1,7 +1,6 @@
 console.log("📡 market-session.js loaded");
 
-import { updateWalletUI, getCurrentWallet } from './wallet-bridge.js';
-import { displayPublicKey } from './wallet-session.js';
+import { updateWalletUI } from './wallet-bridge.js';
 
 function getCookie(name) {
   const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
@@ -21,81 +20,54 @@ function getParsedSessionCookie() {
 }
 
 function syncWalletFromCookie() {
-  return new Promise((resolve) => {
-    const session = getParsedSessionCookie();
+  const session = getParsedSessionCookie();
 
-    const stored = {
-      address: localStorage.getItem("orid_wallet_address"),
-      pseudo: (() => {
-        try {
-          const raw = localStorage.getItem("orid_wallet_data");
-          return raw ? JSON.parse(raw).pseudo : null;
-        } catch (err) {
-          return null;
-        }
-      })()
-    };
-
-    if (!session) {
-      if (stored.address || stored.pseudo) {
-        console.log("🔁 Session cookie supprimé — reset localStorage");
-        localStorage.removeItem("orid_wallet_address");
-        localStorage.removeItem("orid_wallet_data");
+  const stored = {
+    address: localStorage.getItem("orid_wallet_address"),
+    pseudo: (() => {
+      try {
+        const raw = localStorage.getItem("orid_wallet_data");
+        return raw ? JSON.parse(raw).pseudo : null;
+      } catch (err) {
+        return null;
       }
-      updateWalletUI();
-      displayPublicKey(null); // 🔧 Clear public key affichée
-      return resolve();
-    }
+    })()
+  };
 
-    if (
-      session.address !== stored.address ||
-      session.pseudo !== stored.pseudo
-    ) {
-      console.log("🔁 Changement détecté — mise à jour du localStorage");
-      localStorage.setItem("orid_wallet_address", session.address);
-      localStorage.setItem("orid_wallet_data", JSON.stringify({ pseudo: session.pseudo }));
+  // Si le cookie a été supprimé, on reset le localStorage
+  if (!session) {
+    if (stored.address || stored.pseudo) {
+      console.log("🔁 Cookie supprimé — reset localStorage");
+      localStorage.removeItem("orid_wallet_address");
+      localStorage.removeItem("orid_wallet_data");
     }
-
     updateWalletUI();
-    displayPublicKey(session.address); // 🔧 Update dynamiquement la clé publique
-    resolve();
-  });
+    return;
+  }
+
+  // Si les données ont changé → mise à jour du localStorage
+  if (
+    session.address !== stored.address ||
+    session.pseudo !== stored.pseudo
+  ) {
+    console.log("🔁 Changement détecté — update localStorage");
+    localStorage.setItem("orid_wallet_address", session.address);
+    localStorage.setItem("orid_wallet_data", JSON.stringify({ pseudo: session.pseudo }));
+  }
+
+  updateWalletUI();
 }
 
-// 🔁 Initialisation
-window.oridWalletSynced = new Promise((resolve) => {
-  document.addEventListener("DOMContentLoaded", async () => {
-    console.log("🚀 DOM chargé, tentative de reconnexion via cookie…");
-    await syncWalletFromCookie();
-    resolve();
-  });
+// 🔁 Initialisation au chargement
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("🚀 DOM chargé → tentative de sync…");
+  syncWalletFromCookie();
 });
 
-// Liens dans le header
-document.getElementById("wallet-connect")?.addEventListener("click", () => {
-  const modal = document.getElementById("connect-wallet-modal");
-  const content = modal?.querySelector(".modal-content");
-  if (modal && content) {
-    modal.classList.remove("hidden");
-    content.classList.remove("fade-out");
-    content.classList.add("fade-in");
-  }
-});
-
-document.getElementById("wallet-create")?.addEventListener("click", () => {
-  const modal = document.getElementById("wallet-modal");
-  const content = modal?.querySelector(".modal-content");
-  if (modal && content) {
-    modal.classList.remove("hidden");
-    content.classList.remove("fade-out");
-    content.classList.add("fade-in");
-  }
-});
-
-// 🔁 Écoute la mise à jour du wallet depuis une autre tab
-window.addEventListener("storage", async (event) => {
+// 🔁 Écoute les changements cross-tab
+window.addEventListener("storage", (event) => {
   if (event.key === "orid_sync_trigger") {
-    console.log("🔔 Sync trigger détecté — mise à jour wallet");
-    await syncWalletFromCookie();
+    console.log("🔔 Sync cross-tab détecté → mise à jour du wallet");
+    syncWalletFromCookie();
   }
 });
