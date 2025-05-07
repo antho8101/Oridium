@@ -1,9 +1,9 @@
-// E:\Oridium\oridium-server\api\wallet-sync.js
-
 import express from 'express';
 const router = express.Router();
 
 router.get('/', (req, res) => {
+  console.log("🍪 Received cookies:", req.cookies); // ← tu peux l’enlever une fois que c’est bon
+
   const cookie = req.cookies.orid_session;
   if (!cookie) return res.json({ status: 'disconnected' });
 
