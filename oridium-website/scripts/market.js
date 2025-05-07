@@ -4,11 +4,18 @@ import {
     connectWallet
   } from './wallet-bridge.js';
   
-  // Appel unique au chargement du DOM
   document.addEventListener("DOMContentLoaded", () => {
-    updateWalletUI();
+    // ⏳ Attendre que market-session.js ait fini la synchro depuis le cookie
+    const waitForWalletSync = setInterval(() => {
+      if (window.oridWalletReady) {
+        clearInterval(waitForWalletSync);
+        updateWalletUI(); // maintenant que localStorage est à jour
+        initBuyHandler(); // lancer l’achat
+      }
+    }, 100);
+  });
   
-    // Gestion du clic sur le bouton d'achat
+  function initBuyHandler() {
     document.getElementById("buy-orid-btn")?.addEventListener("click", async () => {
       const wallet = getCurrentWallet();
       if (!wallet) {
@@ -43,4 +50,4 @@ import {
         alert("Something went wrong.");
       }
     });
-  });  
+  }  
