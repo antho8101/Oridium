@@ -1,7 +1,12 @@
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+
 import setSessionRoute from './api/set-session.js';
+import walletSyncRoute from './api/wallet-sync.js';
+import paddleWebhook from './api/paddle-webhook.js';
+import stockRoute from './api/stock.js';
+import salesRoute from './api/sales.js';
 
 import {
   getBlockchainFromDB,
@@ -9,23 +14,30 @@ import {
   getBalanceFromDB
 } from './database.js';
 
-import paddleWebhook from './api/paddle-webhook.js';
-import stockRoute from './api/stock.js';
-import salesRoute from './api/sales.js';
-import walletSyncRoute from './api/wallet-sync.js'; // ✅ AJOUTÉ ICI
-
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// Middlewares
+// ✅ CORS CORRECTEMENT CONFIGURÉ
 app.use(cors({
-  origin: 'https://www.getoridium.com',
+  origin: function (origin, callback) {
+    const allowedOrigins = [
+      'https://www.getoridium.com',
+      'https://getoridium.com',
+      'http://localhost:3000'
+    ];
+    if (!origin || allowedOrigins.includes(origin)) {
+      callback(null, true);
+    } else {
+      callback(new Error('Not allowed by CORS'));
+    }
+  },
   credentials: true
 }));
+
 app.use(cookieParser());
 app.use(express.json({ limit: '5mb' }));
 
-// Routes API
+// ✅ ROUTES
 app.use('/api/paddle-webhook', paddleWebhook);
 app.use('/api/stock', stockRoute);
 app.use('/api', salesRoute);
@@ -43,7 +55,7 @@ function isValidHashDifficulty(hash, difficulty = 4) {
   return hash.startsWith('0'.repeat(difficulty));
 }
 
-// 🧱 Blockchain routes
+// 🔗 Blockchain routes
 app.get('/blockchain', (req, res) => {
   try {
     const blockchain = getBlockchainFromDB();
@@ -191,6 +203,7 @@ app.post('/add-block', (req, res) => {
   }
 });
 
+// ✅ Serveur lancé
 app.listen(PORT, () => {
   console.log(`🚀 Oridium API running on PORT ${PORT}`);
 });
