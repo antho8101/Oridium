@@ -17,17 +17,21 @@ import {
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// ✅ CORS CORRECTEMENT CONFIGURÉ
+// ✅ CORS CONFIGURATION (multi-origines avec sous-domaines)
+const allowedOrigins = [
+  'https://getoridium.com',
+  'https://www.getoridium.com',
+  'https://wallet.getoridium.com',
+  'https://central.getoridium.com',
+  'http://localhost:3000'
+];
+
 app.use(cors({
   origin: function (origin, callback) {
-    const allowedOrigins = [
-      'https://www.getoridium.com',
-      'https://getoridium.com',
-      'http://localhost:3000'
-    ];
     if (!origin || allowedOrigins.includes(origin)) {
       callback(null, true);
     } else {
+      console.warn("❌ Rejected by CORS:", origin);
       callback(new Error('Not allowed by CORS'));
     }
   },
