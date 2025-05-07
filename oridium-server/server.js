@@ -1,7 +1,7 @@
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
-import crypto from 'crypto';
+import setSessionRoute from './api/set-session.js';
 
 import {
   getBlockchainFromDB,
@@ -26,7 +26,8 @@ app.use(express.json({ limit: '5mb' }));
 app.use('/api/paddle-webhook', paddleWebhook);
 app.use('/api/stock', stockRoute);
 app.use('/api', salesRoute);
-app.use('/api/wallet-sync', walletSyncRoute); // ✅ AJOUTÉ ICI
+app.use('/api/wallet-sync', walletSyncRoute);
+app.use('/api/set-session', setSessionRoute);
 
 // 🔒 Blacklist
 const BLACKLIST = new Set(["0x000000000000000000000000000000000000dead"]);
