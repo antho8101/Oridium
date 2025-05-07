@@ -89,3 +89,11 @@ document.getElementById("wallet-create")?.addEventListener("click", () => {
     content.classList.add("fade-in");
   }
 });
+
+// 🔁 Écoute la mise à jour du wallet depuis une autre tab
+window.addEventListener("storage", async (event) => {
+    if (event.key === "orid_sync_trigger") {
+      console.log("🔔 Sync trigger détecté — mise à jour wallet");
+      await syncWalletFromCookie();
+    }
+  });  

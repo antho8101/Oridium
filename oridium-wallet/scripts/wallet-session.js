@@ -138,6 +138,8 @@ export async function setWalletConnected(address) {
     resetSearchInput();
     initTransactionSearch();
   }, 100);
+
+  window.localStorage.setItem("orid_sync_trigger", Date.now());
 }
 
 export function disconnectWallet() {
