@@ -121,4 +121,14 @@ export function getCurrentWallet() {
         orSeparator.style.display = "none";
       }
     }
-  }  
+  }
+  
+  export function disconnectWallet() {
+    console.log("🔓 Wallet disconnected");
+  
+    localStorage.removeItem("orid_wallet_address");
+    localStorage.removeItem("orid_wallet_data");
+  
+    updateWalletUI();
+  }
+  
