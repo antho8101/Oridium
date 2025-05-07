@@ -16,7 +16,6 @@ router.post('/', (req, res) => {
     secure: true,
     sameSite: 'None',
     path: '/',
-    domain: '.getoridium.com', // ✅ Indispensable pour que le cookie survive au cross-origin
     maxAge: 7 * 24 * 60 * 60 * 1000
   });
 
