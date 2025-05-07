@@ -1,6 +1,8 @@
+import { updateWalletUI } from './wallet-bridge.js';
+
 console.log("📡 market-session.js loaded");
 
-import { updateWalletUI } from './wallet-bridge.js';
+let lastSync = localStorage.getItem("orid_sync_trigger");
 
 function getCookie(name) {
   const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
@@ -14,30 +16,28 @@ function getParsedSessionCookie() {
   try {
     return JSON.parse(atob(data));
   } catch (err) {
-    console.warn("⚠️ Erreur de décodage du cookie orid_session:", err);
+    console.warn("⚠️ Cookie decode failed:", err);
     return null;
   }
 }
 
-function syncWalletFromCookie() {
+function syncWalletFromSession() {
   const session = getParsedSessionCookie();
-
   const stored = {
     address: localStorage.getItem("orid_wallet_address"),
     pseudo: (() => {
       try {
         const raw = localStorage.getItem("orid_wallet_data");
         return raw ? JSON.parse(raw).pseudo : null;
-      } catch (err) {
+      } catch {
         return null;
       }
     })()
   };
 
-  // Si le cookie a été supprimé, on reset le localStorage
   if (!session) {
     if (stored.address || stored.pseudo) {
-      console.log("🔁 Cookie supprimé — reset localStorage");
+      console.log("🧹 Clearing stale wallet session");
       localStorage.removeItem("orid_wallet_address");
       localStorage.removeItem("orid_wallet_data");
     }
@@ -45,12 +45,11 @@ function syncWalletFromCookie() {
     return;
   }
 
-  // Si les données ont changé → mise à jour du localStorage
   if (
     session.address !== stored.address ||
     session.pseudo !== stored.pseudo
   ) {
-    console.log("🔁 Changement détecté — update localStorage");
+    console.log("🔄 Syncing wallet session");
     localStorage.setItem("orid_wallet_address", session.address);
     localStorage.setItem("orid_wallet_data", JSON.stringify({ pseudo: session.pseudo }));
   }
@@ -58,16 +57,20 @@ function syncWalletFromCookie() {
   updateWalletUI();
 }
 
-// 🔁 Initialisation au chargement
-document.addEventListener("DOMContentLoaded", () => {
-  console.log("🚀 DOM chargé → tentative de sync…");
-  syncWalletFromCookie();
-});
+function startPolling(interval = 1500) {
+  setInterval(() => {
+    const now = localStorage.getItem("orid_sync_trigger");
+    if (now && now !== lastSync) {
+      lastSync = now;
+      console.log("🔔 Trigger detected, syncing wallet");
+      syncWalletFromSession();
+    }
+  }, interval);
+}
 
-// 🔁 Écoute les changements cross-tab
-window.addEventListener("storage", (event) => {
-  if (event.key === "orid_sync_trigger") {
-    console.log("🔔 Sync cross-tab détecté → mise à jour du wallet");
-    syncWalletFromCookie();
-  }
+// Initial sync
+document.addEventListener("DOMContentLoaded", () => {
+  console.log("🚀 DOM ready → initial sync");
+  syncWalletFromSession();
+  startPolling();
 });
