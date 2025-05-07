@@ -1,5 +1,6 @@
 import express from 'express';
 import cors from 'cors';
+import cookieParser from 'cookie-parser';
 import crypto from 'crypto';
 
 import {
@@ -11,20 +12,24 @@ import {
 import paddleWebhook from './api/paddle-webhook.js';
 import stockRoute from './api/stock.js';
 import salesRoute from './api/sales.js';
+import walletSyncRoute from './api/wallet-sync.js'; // ✅ AJOUTÉ ICI
 
-const app = express(); // ✅ doit venir AVANT tout app.use()
-
+const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors());
+// Middlewares
+app.use(cors({ origin: true, credentials: true }));
+app.use(cookieParser());
 app.use(express.json({ limit: '5mb' }));
 
+// Routes API
 app.use('/api/paddle-webhook', paddleWebhook);
 app.use('/api/stock', stockRoute);
 app.use('/api', salesRoute);
+app.use('/api/wallet-sync', walletSyncRoute); // ✅ AJOUTÉ ICI
 
+// 🔒 Blacklist
 const BLACKLIST = new Set(["0x000000000000000000000000000000000000dead"]);
-
 function isBlacklisted(block) {
   const senders = (block.transactions || []).map(tx => tx.sender);
   return senders.some(sender => sender !== "System" && BLACKLIST.has(sender));
@@ -34,6 +39,7 @@ function isValidHashDifficulty(hash, difficulty = 4) {
   return hash.startsWith('0'.repeat(difficulty));
 }
 
+// 🧱 Blockchain routes
 app.get('/blockchain', (req, res) => {
   try {
     const blockchain = getBlockchainFromDB();
@@ -46,9 +52,7 @@ app.get('/blockchain', (req, res) => {
 
 app.post('/batch-add-blocks', (req, res) => {
   const blocks = req.body;
-  if (!Array.isArray(blocks)) {
-    return res.status(400).json({ error: 'Expected an array of blocks' });
-  }
+  if (!Array.isArray(blocks)) return res.status(400).json({ error: 'Expected an array of blocks' });
 
   try {
     let blockchain = getBlockchainFromDB();
@@ -56,28 +60,21 @@ app.post('/batch-add-blocks', (req, res) => {
     let index = blockchain.length;
 
     for (const rawBlock of blocks) {
-      if (isBlacklisted(rawBlock)) {
-        return res.status(403).json({ error: 'Sender in batch is blacklisted' });
-      }
+      if (isBlacklisted(rawBlock)) return res.status(403).json({ error: 'Sender in batch is blacklisted' });
 
       const txs = rawBlock.transactions || [];
       const totalBySender = {};
       for (const tx of txs) {
         if (tx.sender === "System") continue;
-        if (!totalBySender[tx.sender]) totalBySender[tx.sender] = 0;
-        totalBySender[tx.sender] += tx.amount;
+        totalBySender[tx.sender] = (totalBySender[tx.sender] || 0) + tx.amount;
       }
 
       for (const sender in totalBySender) {
         const balance = getBalanceFromDB(sender);
-        if (balance < totalBySender[sender]) {
-          return res.status(400).json({ error: `Insufficient balance for ${sender}` });
-        }
+        if (balance < totalBySender[sender]) return res.status(400).json({ error: `Insufficient balance for ${sender}` });
       }
 
-      if (!isValidHashDifficulty(rawBlock.hash)) {
-        return res.status(400).json({ error: 'Invalid hash difficulty in batch' });
-      }
+      if (!isValidHashDifficulty(rawBlock.hash)) return res.status(400).json({ error: 'Invalid hash difficulty in batch' });
 
       const block = {
         index,
@@ -102,10 +99,7 @@ app.post('/batch-add-blocks', (req, res) => {
 
 app.get('/balance/:address', (req, res) => {
   const { address } = req.params;
-
-  if (BLACKLIST.has(address)) {
-    return res.status(403).json({ error: 'Address is blacklisted' });
-  }
+  if (BLACKLIST.has(address)) return res.status(403).json({ error: 'Address is blacklisted' });
 
   try {
     const balance = getBalanceFromDB(address);
@@ -118,10 +112,7 @@ app.get('/balance/:address', (req, res) => {
 app.post('/register-wallet', (req, res) => {
   const { address } = req.body;
   if (!address) return res.status(400).json({ error: 'Missing address' });
-
-  if (BLACKLIST.has(address)) {
-    return res.status(403).json({ error: 'Address is blacklisted' });
-  }
+  if (BLACKLIST.has(address)) return res.status(403).json({ error: 'Address is blacklisted' });
 
   try {
     const blockchain = getBlockchainFromDB();
@@ -156,30 +147,22 @@ app.post('/add-block', (req, res) => {
   const rawBlock = req.body;
 
   try {
-    if (isBlacklisted(rawBlock)) {
-      return res.status(403).json({ error: 'Sender is blacklisted' });
-    }
+    if (isBlacklisted(rawBlock)) return res.status(403).json({ error: 'Sender is blacklisted' });
 
     const txs = rawBlock.transactions || [];
-
     const totalBySender = {};
     for (const tx of txs) {
       if (tx.sender === "System") continue;
-      if (!totalBySender[tx.sender]) totalBySender[tx.sender] = 0;
-      totalBySender[tx.sender] += tx.amount;
+      totalBySender[tx.sender] = (totalBySender[tx.sender] || 0) + tx.amount;
     }
 
     for (const sender in totalBySender) {
       const balance = getBalanceFromDB(sender);
-      if (balance < totalBySender[sender]) {
-        return res.status(400).json({ error: `Insufficient balance for ${sender}` });
-      }
+      if (balance < totalBySender[sender]) return res.status(400).json({ error: `Insufficient balance for ${sender}` });
     }
 
     const isFromSystem = txs.every(tx => tx.sender === "System");
-    if (isFromSystem && !isValidHashDifficulty(rawBlock.hash)) {
-      return res.status(400).json({ error: 'Invalid hash difficulty' });
-    }
+    if (isFromSystem && !isValidHashDifficulty(rawBlock.hash)) return res.status(400).json({ error: 'Invalid hash difficulty' });
 
     const blockchain = getBlockchainFromDB();
     const lastHash = blockchain.length > 0 ? blockchain[blockchain.length - 1].hash : "0";
