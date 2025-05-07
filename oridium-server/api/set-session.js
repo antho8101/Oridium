@@ -16,8 +16,9 @@ router.post('/', (req, res) => {
     secure: true,
     sameSite: 'None',
     path: '/',
+    domain: '.getoridium.com',
     maxAge: 7 * 24 * 60 * 60 * 1000
-  });
+  });  
 
   res.json({ success: true });
 });
