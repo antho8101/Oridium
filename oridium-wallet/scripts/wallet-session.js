@@ -83,6 +83,15 @@ export async function setWalletConnected(address) {
   const savedWalletRaw = localStorage.getItem("orid_wallet_data");
   const savedWallet = savedWalletRaw ? JSON.parse(savedWalletRaw) : null;
 
+  // ✅ Affichage du pseudo dans l'interface
+  if (savedWallet?.pseudo) {
+    const welcomeEl = document.getElementById("welcome-user");
+    if (welcomeEl) {
+      welcomeEl.textContent = `Welcome, ${savedWallet.pseudo}`;
+      welcomeEl.classList.remove("hidden");
+    }
+  }
+
   if (localStorage.getItem("orid_cookie_consent")) {
     const session = btoa(JSON.stringify({
       address,
