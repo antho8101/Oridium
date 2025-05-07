@@ -8,7 +8,7 @@ router.post('/', (req, res) => {
     return res.status(400).json({ error: 'Missing address or pseudo' });
   }
 
-  // Créer la session encodée en base64
+  // Encode data en base64
   const sessionData = Buffer.from(JSON.stringify({ address, pseudo })).toString('base64');
 
   res.cookie('orid_session', sessionData, {
@@ -16,8 +16,7 @@ router.post('/', (req, res) => {
     secure: true,
     sameSite: 'None',
     path: '/',
-    domain: '.getoridium.com', // adapte si tu n’as pas de sous-domaine
-    maxAge: 7 * 24 * 60 * 60 * 1000
+    maxAge: 7 * 24 * 60 * 60 * 1000 // 7 jours
   });
 
   res.json({ success: true });

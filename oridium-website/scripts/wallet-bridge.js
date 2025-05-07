@@ -26,6 +26,28 @@ export function getCurrentWallet() {
       content.classList.remove("fade-out");
       content.classList.add("fade-in");
     }
+  
+    // 🔁 Ajouté pour synchroniser la session côté serveur
+    const address = getCurrentWallet();
+    const pseudo = getWalletPseudo();
+  
+    if (address && pseudo) {
+      fetch("https://oridium-production.up.railway.app/api/set-session", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        credentials: "include",
+        body: JSON.stringify({ address, pseudo })
+      })
+      .then(res => {
+        if (!res.ok) throw new Error("Set session failed");
+        console.log("✅ Session synced to backend (connectWallet)");
+      })
+      .catch(err => {
+        console.error("❌ Failed to set session cookie:", err);
+      });
+    }
   }
   
   export function createWallet() {
@@ -38,7 +60,7 @@ export function getCurrentWallet() {
       content.classList.add("fade-in");
     }
   
-    // 🆕 Envoie au backend pour créer le cookie
+    // 🔁 Envoie au backend pour créer le cookie
     const address = getCurrentWallet();
     const pseudo = getWalletPseudo();
   
@@ -48,12 +70,12 @@ export function getCurrentWallet() {
         headers: {
           "Content-Type": "application/json"
         },
-        credentials: "include", // essentiel pour autoriser les cookies cross-origin
+        credentials: "include",
         body: JSON.stringify({ address, pseudo })
       })
       .then(res => {
         if (!res.ok) throw new Error("Set session failed");
-        console.log("✅ Session synced to backend");
+        console.log("✅ Session synced to backend (createWallet)");
       })
       .catch(err => {
         console.error("❌ Failed to set session cookie:", err);
@@ -88,13 +110,7 @@ export function getCurrentWallet() {
         connectLink.textContent = "Connect your wallet";
         connectLink.style.display = "inline";
         connectLink.onclick = () => {
-          const modal = document.getElementById("connect-wallet-modal");
-          const content = modal?.querySelector(".modal-content");
-          if (modal && content) {
-            modal.classList.remove("hidden");
-            content.classList.remove("fade-out");
-            content.classList.add("fade-in");
-          }
+          connectWallet();
         };
       }
   
@@ -102,13 +118,7 @@ export function getCurrentWallet() {
         createLink.textContent = "Create wallet";
         createLink.style.display = "inline";
         createLink.onclick = () => {
-          const modal = document.getElementById("wallet-modal");
-          const content = modal?.querySelector(".modal-content");
-          if (modal && content) {
-            modal.classList.remove("hidden");
-            content.classList.remove("fade-out");
-            content.classList.add("fade-in");
-          }
+          createWallet();
         };
       }
   
@@ -125,13 +135,7 @@ export function getCurrentWallet() {
         connectLink.textContent = "Change wallet";
         connectLink.style.display = "inline";
         connectLink.onclick = () => {
-          const modal = document.getElementById("connect-wallet-modal");
-          const content = modal?.querySelector(".modal-content");
-          if (modal && content) {
-            modal.classList.remove("hidden");
-            content.classList.remove("fade-out");
-            content.classList.add("fade-in");
-          }
+          connectWallet();
         };
       }
   
@@ -152,5 +156,4 @@ export function getCurrentWallet() {
     localStorage.removeItem("orid_wallet_data");
   
     updateWalletUI();
-  }
-  
+  }  
