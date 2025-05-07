@@ -1,6 +1,6 @@
 console.log("📡 market-session.js loaded");
 
-import { updateWalletUI, getCurrentWallet, getWalletPseudo } from './wallet-bridge.js';
+import { updateWalletUI, getCurrentWallet } from './wallet-bridge.js';
 import { displayPublicKey } from './wallet-session.js';
 
 function getCookie(name) {
@@ -43,27 +43,26 @@ function syncWalletFromCookie() {
         localStorage.removeItem("orid_wallet_data");
       }
       updateWalletUI();
-      displayPublicKey(null);
+      displayPublicKey(null); // 🔧 Clear public key affichée
       return resolve();
     }
 
-    const hasChanged =
+    if (
       session.address !== stored.address ||
-      session.pseudo !== stored.pseudo;
-
-    if (hasChanged) {
+      session.pseudo !== stored.pseudo
+    ) {
       console.log("🔁 Changement détecté — mise à jour du localStorage");
       localStorage.setItem("orid_wallet_address", session.address);
       localStorage.setItem("orid_wallet_data", JSON.stringify({ pseudo: session.pseudo }));
     }
 
     updateWalletUI();
-    displayPublicKey(session.address);
+    displayPublicKey(session.address); // 🔧 Update dynamiquement la clé publique
     resolve();
   });
 }
 
-// 🔁 Initialisation au chargement
+// 🔁 Initialisation
 window.oridWalletSynced = new Promise((resolve) => {
   document.addEventListener("DOMContentLoaded", async () => {
     console.log("🚀 DOM chargé, tentative de reconnexion via cookie…");
@@ -72,7 +71,7 @@ window.oridWalletSynced = new Promise((resolve) => {
   });
 });
 
-// 🧠 Liens header
+// Liens dans le header
 document.getElementById("wallet-connect")?.addEventListener("click", () => {
   const modal = document.getElementById("connect-wallet-modal");
   const content = modal?.querySelector(".modal-content");
@@ -93,7 +92,7 @@ document.getElementById("wallet-create")?.addEventListener("click", () => {
   }
 });
 
-// 🔁 Sync dynamique depuis un autre onglet
+// 🔁 Écoute la mise à jour du wallet depuis une autre tab
 window.addEventListener("storage", async (event) => {
   if (event.key === "orid_sync_trigger") {
     console.log("🔔 Sync trigger détecté — mise à jour wallet");
