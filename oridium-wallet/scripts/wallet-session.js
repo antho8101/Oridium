@@ -34,9 +34,21 @@ document.addEventListener("DOMContentLoaded", async () => {
   });
 
   const savedAddress = localStorage.getItem("orid_wallet_address");
+  const savedWalletRaw = localStorage.getItem("orid_wallet_data");
+  const savedWallet = savedWalletRaw ? JSON.parse(savedWalletRaw) : null;
 
   if (savedAddress) {
     console.log("🧠 Restoring saved wallet from localStorage:", savedAddress);
+
+    // ✅ Afficher le pseudo restauré
+    if (savedWallet?.pseudo) {
+      const welcomeEl = document.getElementById("welcome-user");
+      if (welcomeEl) {
+        welcomeEl.textContent = `Welcome, ${savedWallet.pseudo}`;
+        welcomeEl.classList.remove("hidden");
+      }
+    }
+
     await setWalletConnected(savedAddress);
 
     try {
