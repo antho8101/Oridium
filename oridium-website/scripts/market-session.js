@@ -21,69 +21,71 @@ function getParsedSessionCookie() {
 }
 
 function syncWalletFromCookie() {
-  const session = getParsedSessionCookie();
+  return new Promise((resolve) => {
+    const session = getParsedSessionCookie();
 
-  const stored = {
-    address: localStorage.getItem("orid_wallet_address"),
-    pseudo: (() => {
-      try {
-        const raw = localStorage.getItem("orid_wallet_data");
-        return raw ? JSON.parse(raw).pseudo : null;
-      } catch (err) {
-        return null;
+    const stored = {
+      address: localStorage.getItem("orid_wallet_address"),
+      pseudo: (() => {
+        try {
+          const raw = localStorage.getItem("orid_wallet_data");
+          return raw ? JSON.parse(raw).pseudo : null;
+        } catch (err) {
+          return null;
+        }
+      })()
+    };
+
+    if (!session) {
+      if (stored.address || stored.pseudo) {
+        console.log("🔁 Session cookie supprimé — reset localStorage");
+        localStorage.removeItem("orid_wallet_address");
+        localStorage.removeItem("orid_wallet_data");
       }
-    })()
-  };
-
-  if (!session) {
-    if (stored.address || stored.pseudo) {
-      console.log("🔁 Session cookie supprimé — reset localStorage");
-      localStorage.removeItem("orid_wallet_address");
-      localStorage.removeItem("orid_wallet_data");
       updateWalletUI();
+      return resolve();
     }
-    return;
-  }
 
-  if (
-    session.address !== stored.address ||
-    session.pseudo !== stored.pseudo
-  ) {
-    console.log("🔁 Changement détecté — mise à jour du localStorage");
-    localStorage.setItem("orid_wallet_address", session.address);
-    localStorage.setItem("orid_wallet_data", JSON.stringify({ pseudo: session.pseudo }));
+    if (
+      session.address !== stored.address ||
+      session.pseudo !== stored.pseudo
+    ) {
+      console.log("🔁 Changement détecté — mise à jour du localStorage");
+      localStorage.setItem("orid_wallet_address", session.address);
+      localStorage.setItem("orid_wallet_data", JSON.stringify({ pseudo: session.pseudo }));
+    }
+
     updateWalletUI();
-  }
+    resolve();
+  });
 }
 
-// 🔁 Polling toutes les 3s
-setInterval(syncWalletFromCookie, 3000);
-
 // 🔁 Initialisation
-document.addEventListener("DOMContentLoaded", () => {
-  console.log("🚀 DOM chargé, tentative de reconnexion via cookie…");
-  syncWalletFromCookie();
-
-  const connectBtn = document.getElementById("wallet-connect");
-  const createBtn = document.getElementById("wallet-create");
-
-  connectBtn?.addEventListener("click", () => {
-    const modal = document.getElementById("connect-wallet-modal");
-    const content = modal?.querySelector(".modal-content");
-    if (modal && content) {
-      modal.classList.remove("hidden");
-      content.classList.remove("fade-out");
-      content.classList.add("fade-in");
-    }
+window.oridWalletSynced = new Promise((resolve) => {
+  document.addEventListener("DOMContentLoaded", async () => {
+    console.log("🚀 DOM chargé, tentative de reconnexion via cookie…");
+    await syncWalletFromCookie();
+    resolve(); // ✅ Résout la promesse globale après sync
   });
+});
 
-  createBtn?.addEventListener("click", () => {
-    const modal = document.getElementById("wallet-modal");
-    const content = modal?.querySelector(".modal-content");
-    if (modal && content) {
-      modal.classList.remove("hidden");
-      content.classList.remove("fade-out");
-      content.classList.add("fade-in");
-    }
-  });
+// Liens dans le header
+document.getElementById("wallet-connect")?.addEventListener("click", () => {
+  const modal = document.getElementById("connect-wallet-modal");
+  const content = modal?.querySelector(".modal-content");
+  if (modal && content) {
+    modal.classList.remove("hidden");
+    content.classList.remove("fade-out");
+    content.classList.add("fade-in");
+  }
+});
+
+document.getElementById("wallet-create")?.addEventListener("click", () => {
+  const modal = document.getElementById("wallet-modal");
+  const content = modal?.querySelector(".modal-content");
+  if (modal && content) {
+    modal.classList.remove("hidden");
+    content.classList.remove("fade-out");
+    content.classList.add("fade-in");
+  }
 });
