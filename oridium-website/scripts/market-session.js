@@ -24,7 +24,7 @@ async function getParsedSessionFromServer() {
 }
 
 async function syncWalletFromSession() {
-  const session = await getParsedSessionFromServer(); // 🔁 Appel API au lieu du cookie local
+  const session = await getParsedSessionFromServer();
   const stored = {
     address: localStorage.getItem("orid_wallet_address"),
     pseudo: (() => {
@@ -59,6 +59,7 @@ async function syncWalletFromSession() {
   updateWalletUI();
 }
 
+// 🔁 Polling en cas de changement forcé par localStorage
 function startPolling(interval = 1500) {
   setInterval(() => {
     const now = localStorage.getItem("orid_sync_trigger");
@@ -70,9 +71,13 @@ function startPolling(interval = 1500) {
   }, interval);
 }
 
-// Initial sync
+// ✅ Initialisation
 document.addEventListener("DOMContentLoaded", () => {
   console.log("🚀 DOM ready → initial sync");
-  syncWalletFromSession();
+
+  // 🧠 On signale aux autres scripts qu’on commence à synchroniser
+  window.oridWalletSynced = syncWalletFromSession();
+
+  // 🔁 On démarre la surveillance après l’appel initial
   startPolling();
 });
