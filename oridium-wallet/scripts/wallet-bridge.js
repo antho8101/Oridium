@@ -17,7 +17,17 @@ export function getWalletPseudo() {
   }
 }
 
+// ✅ Vérifie que l’appel vient bien du domaine wallet.*
+function isWalletDomain() {
+  return location.hostname.startsWith("wallet.");
+}
+
 function setSession(address, pseudo) {
+  if (!isWalletDomain()) {
+    console.warn("⛔ Session sync skipped (not wallet domain)");
+    return;
+  }
+
   fetch("https://oridium-production.up.railway.app/api/set-session", {
     method: "POST",
     headers: {
@@ -86,7 +96,7 @@ export function updateWalletUI() {
   if (!wallet) {
     console.log("🔌 No wallet connected");
 
-    welcomeEl.textContent = "Welcome";
+    if (welcomeEl) welcomeEl.textContent = "Welcome";
 
     if (connectLink) {
       connectLink.textContent = "Connect your wallet";
@@ -107,7 +117,7 @@ export function updateWalletUI() {
   } else {
     console.log("✅ Wallet connected with pseudo:", pseudo);
 
-    welcomeEl.textContent = `Welcome, ${pseudo || "User"}`;
+    if (welcomeEl) welcomeEl.textContent = `Welcome, ${pseudo || "User"}`;
 
     if (connectLink) {
       connectLink.textContent = "Change wallet";
