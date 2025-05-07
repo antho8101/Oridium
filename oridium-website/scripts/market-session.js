@@ -3,56 +3,66 @@ console.log("📡 market-session.js loaded");
 
 import { updateWalletUI } from './wallet-bridge.js';
 
-// Lire un cookie
 function getCookie(name) {
   const match = document.cookie.match(new RegExp('(^| )' + name + '=([^;]+)'));
   return match ? decodeURIComponent(match[2]) : null;
 }
 
-// Tentative d'auto-connexion via le cookie partagé
-export function autoConnectFromCookie() {
+function getParsedSessionCookie() {
   const data = getCookie('orid_session');
+  if (!data) return null;
 
-  if (!data) {
-    console.log("❌ Aucun cookie orid_session trouvé");
+  try {
+    return JSON.parse(atob(data));
+  } catch (err) {
+    console.warn("⚠️ Erreur de décodage du cookie orid_session:", err);
+    return null;
+  }
+}
 
-    // 💡 Synchronise l’état en local
-    localStorage.removeItem("orid_wallet_address");
-    localStorage.removeItem("orid_wallet_data");
+function syncWalletFromCookie() {
+  const session = getParsedSessionCookie();
 
-    updateWalletUI();
+  const stored = {
+    address: localStorage.getItem("orid_wallet_address"),
+    pseudo: (() => {
+      try {
+        const raw = localStorage.getItem("orid_wallet_data");
+        return raw ? JSON.parse(raw).pseudo : null;
+      } catch (err) {
+        return null;
+      }
+    })()
+  };
+
+  if (!session) {
+    if (stored.address || stored.pseudo) {
+      console.log("🔁 Session cookie supprimé — reset localStorage");
+      localStorage.removeItem("orid_wallet_address");
+      localStorage.removeItem("orid_wallet_data");
+      updateWalletUI();
+    }
     return;
   }
 
-  console.log("🍪 Cookie orid_session brut:", data);
-
-  try {
-    const parsed = JSON.parse(atob(data)); // base64 → JSON
-    console.log("✅ Données décodées du cookie:", parsed);
-
-    const { address, pseudo } = parsed;
-
-    if (address && pseudo) {
-      console.log("🔐 Session trouvée —", address, pseudo);
-
-      // Simule une connexion locale
-      localStorage.setItem("orid_wallet_address", address);
-      localStorage.setItem("orid_wallet_data", JSON.stringify({ pseudo }));
-    } else {
-      console.warn("⚠️ Adresse ou pseudo manquant dans le cookie.");
-    }
-
-  } catch (err) {
-    console.warn("⚠️ Erreur de décodage du cookie orid_session:", err);
+  if (
+    session.address !== stored.address ||
+    session.pseudo !== stored.pseudo
+  ) {
+    console.log("🔁 Changement détecté — mise à jour du localStorage");
+    localStorage.setItem("orid_wallet_address", session.address);
+    localStorage.setItem("orid_wallet_data", JSON.stringify({ pseudo: session.pseudo }));
+    updateWalletUI();
   }
-
-  updateWalletUI(); // met à jour l’interface dans tous les cas
 }
+
+// 🔁 Polling toutes les 3s
+setInterval(syncWalletFromCookie, 3000);
 
 // 🔁 Initialisation
 document.addEventListener("DOMContentLoaded", () => {
   console.log("🚀 DOM chargé, tentative de reconnexion via cookie…");
-  autoConnectFromCookie();
+  syncWalletFromCookie();
 
   const connectBtn = document.getElementById("wallet-connect");
   const createBtn = document.getElementById("wallet-create");
