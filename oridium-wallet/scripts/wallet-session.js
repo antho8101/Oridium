@@ -40,7 +40,6 @@ document.addEventListener("DOMContentLoaded", async () => {
   if (savedAddress) {
     console.log("🧠 Restoring saved wallet from localStorage:", savedAddress);
 
-    // ✅ Afficher le pseudo restauré
     if (savedWallet?.pseudo) {
       const welcomeEl = document.getElementById("welcome-user");
       if (welcomeEl) {
@@ -83,7 +82,6 @@ export async function setWalletConnected(address) {
   const savedWalletRaw = localStorage.getItem("orid_wallet_data");
   const savedWallet = savedWalletRaw ? JSON.parse(savedWalletRaw) : null;
 
-  // ✅ Affichage du pseudo dans l'interface
   if (savedWallet?.pseudo) {
     const welcomeEl = document.getElementById("welcome-user");
     if (welcomeEl) {
@@ -101,7 +99,10 @@ export async function setWalletConnected(address) {
   }
 
   updateWalletButtons(true);
-  displayPublicKey(address);
+
+  // ⏱ Attendre que le DOM soit prêt
+  setTimeout(() => displayPublicKey(address), 50);
+
   window.dispatchEvent(new Event("orid-wallet-connected"));
 
   registerWallet(address)
@@ -139,7 +140,7 @@ export async function setWalletConnected(address) {
     initTransactionSearch();
   }, 100);
 
-  window.localStorage.setItem("orid_sync_trigger", Date.now());
+  localStorage.setItem("orid_sync_trigger", Date.now());
 }
 
 export function disconnectWallet() {
@@ -203,7 +204,10 @@ export function displayPublicKey(address) {
   const el = document.getElementById("public-key-display");
   const copyIcon = document.getElementById("copy-public-key");
 
-  if (!el || !copyIcon) return;
+  if (!el || !copyIcon) {
+    console.warn("⛔ public-key-display or copy icon missing");
+    return;
+  }
 
   if (address) {
     el.textContent = address;
