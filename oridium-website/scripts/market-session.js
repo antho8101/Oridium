@@ -13,7 +13,7 @@ async function getParsedSessionFromServer() {
     const data = await res.json();
     console.log("📥 Session from server:", data);
 
-    if (!data || !data.address) return null;
+    if (!data || !data.address || data.status === "disconnected") return null;
     return data;
   } catch (err) {
     console.warn("⚠️ Failed to fetch session:", err);
