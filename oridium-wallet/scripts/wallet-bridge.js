@@ -141,5 +141,8 @@ export function disconnectWallet() {
   localStorage.removeItem("orid_wallet_address");
   localStorage.removeItem("orid_wallet_data");
 
+  // 🔔 Déclenche une synchro côté market
+  localStorage.setItem("orid_sync_trigger", Date.now().toString());
+
   updateWalletUI();
 }
