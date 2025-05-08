@@ -141,8 +141,18 @@ export function disconnectWallet() {
   localStorage.removeItem("orid_wallet_address");
   localStorage.removeItem("orid_wallet_data");
 
-  // 🔔 Déclenche une synchro côté market
-  localStorage.setItem("orid_sync_trigger", Date.now().toString());
-
-  updateWalletUI();
+  // 🔴 Supprime aussi le cookie serveur
+  fetch("https://api.getoridium.com/api/disconnect-session", {
+    method: "POST",
+    credentials: "include"
+  })
+  .then(() => {
+    console.log("🧹 Server session cleared");
+    // Déclenche une synchro côté market
+    localStorage.setItem("orid_sync_trigger", Date.now().toString());
+    updateWalletUI();
+  })
+  .catch((err) => {
+    console.error("❌ Failed to clear session:", err);
+  });
 }

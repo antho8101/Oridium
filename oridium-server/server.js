@@ -7,6 +7,7 @@ import walletSyncRoute from './api/wallet-sync.js';
 import paddleWebhook from './api/paddle-webhook.js';
 import stockRoute from './api/stock.js';
 import salesRoute from './api/sales.js';
+import disconnectSession from './api/disconnect-session.js';
 
 import {
   getBlockchainFromDB,
@@ -25,6 +26,8 @@ const allowedOrigins = [
   'https://api.getoridium.com',
   'http://localhost:3000'
 ];
+
+app.use('/api/disconnect-session', disconnectSession);
 
 app.use(cors({
   origin: function (origin, callback) {
