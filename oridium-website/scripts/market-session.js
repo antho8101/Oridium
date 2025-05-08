@@ -6,9 +6,9 @@ let lastSync = localStorage.getItem("orid_sync_trigger");
 async function getParsedSessionFromServer() {
   try {
     const res = await fetch('https://api.getoridium.com/api/wallet-sync', {
-      method: 'GET',
-      credentials: 'include'
-    });
+        method: 'GET',
+        credentials: 'include'
+      });
 
     const data = await res.json();
     console.log("📥 Session from server:", data);
