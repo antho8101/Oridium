@@ -19,10 +19,10 @@ const PORT = process.env.PORT || 3000;
 
 // ✅ CORS CONFIGURATION (multi-origines avec sous-domaines)
 const allowedOrigins = [
-  'https://getoridium.com',
   'https://www.getoridium.com',
   'https://wallet.getoridium.com',
   'https://central.getoridium.com',
+  'https://api.getoridium.com',
   'http://localhost:3000'
 ];
 

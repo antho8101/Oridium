@@ -28,7 +28,7 @@ function setSession(address, pseudo) {
     return;
   }
 
-  fetch("https://oridium-production.up.railway.app/api/set-session", {
+  fetch("https://api.getoridium.com/api/set-session", {
     method: "POST",
     headers: {
       "Content-Type": "application/json"

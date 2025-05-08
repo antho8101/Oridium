@@ -5,7 +5,7 @@ let lastSync = localStorage.getItem("orid_sync_trigger");
 // ✅ Appel côté serveur pour récupérer la session depuis le cookie sécurisé
 async function getParsedSessionFromServer() {
   try {
-    const res = await fetch('https://oridium-production.up.railway.app/api/wallet-sync', {
+    const res = await fetch('https://api.getoridium.com/api/wallet-sync', {
       method: 'GET',
       credentials: 'include'
     });
