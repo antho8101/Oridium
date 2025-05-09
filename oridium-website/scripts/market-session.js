@@ -111,12 +111,14 @@ function updateWalletUI() {
   const connectLink = document.getElementById("wallet-link-connect");
   const createLink = document.getElementById("wallet-link-create");
   const orSeparator = document.getElementById("wallet-or");
+  const buyBtn = document.querySelector(".market-buy-button");
 
   console.log("🔍 Elements found:", {
     welcomeEl: !!welcomeEl,
     connectLink: !!connectLink,
     createLink: !!createLink,
-    orSeparator: !!orSeparator
+    orSeparator: !!orSeparator,
+    buyBtn: !!buyBtn
   });
 
   if (!wallet) {
@@ -136,6 +138,14 @@ function updateWalletUI() {
     if (orSeparator) {
       orSeparator.style.display = "inline";
     }
+
+    if (buyBtn) {
+      buyBtn.textContent = "Connect your wallet to buy ORID";
+      buyBtn.classList.add("disabled");
+      buyBtn.style.opacity = "0.5";
+      buyBtn.style.pointerEvents = "none";
+    }
+
   } else {
     console.log("✅ Wallet connected with pseudo:", pseudo);
     if (welcomeEl) welcomeEl.textContent = `Welcome, ${pseudo || "User"}`;
@@ -151,6 +161,13 @@ function updateWalletUI() {
 
     if (orSeparator) {
       orSeparator.style.display = "none";
+    }
+
+    if (buyBtn) {
+      buyBtn.textContent = "Buy ORID";
+      buyBtn.classList.remove("disabled");
+      buyBtn.style.opacity = "1";
+      buyBtn.style.pointerEvents = "auto";
     }
   }
 }
