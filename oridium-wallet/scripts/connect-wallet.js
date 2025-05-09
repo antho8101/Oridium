@@ -7,7 +7,7 @@ import { registerWallet } from './orid-network.js';
 
 document.addEventListener("DOMContentLoaded", () => {
   const params = new URLSearchParams(window.location.search);
-  const modalType = params.get("modal"); // "connect" ou "create"
+  const modalType = params.get("modal");
   const logout = params.get("logout") === "1";
 
   const connectModal = document.getElementById("connect-wallet-modal");
@@ -44,7 +44,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 300);
   }
 
-  // ⛔ Déconnexion automatique
   if (logout) {
     localStorage.removeItem("orid_wallet_address");
     localStorage.removeItem("orid_wallet_data");
@@ -53,14 +52,12 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("🔌 Auto logout triggered");
   }
 
-  // ✅ Ouverture automatique modale si demandé
   if (modalType === "connect") {
     openModal(connectModal, connectModalContent);
   } else if (modalType === "create") {
     openModal(createModal, createModalContent);
   }
 
-  // ✅ Ouverture manuelle
   openConnectBtn?.addEventListener("click", () => {
     openModal(connectModal, connectModalContent);
     passwordContainer.classList.add("hidden");
@@ -96,7 +93,6 @@ document.addEventListener("DOMContentLoaded", () => {
   const disconnectBtn = document.getElementById("disconnect-wallet-button");
   disconnectBtn?.addEventListener("click", () => {
     console.log("🚪 Disconnecting wallet");
-
     localStorage.removeItem("orid_wallet_address");
     localStorage.removeItem("orid_wallet_data");
     document.cookie = "orid_session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
@@ -180,56 +176,47 @@ document.addEventListener("DOMContentLoaded", () => {
 });
 
 function showReturnToMarketModal() {
-  const overlay = document.createElement("div");
-  overlay.style.position = "fixed";
-  overlay.style.top = 0;
-  overlay.style.left = 0;
-  overlay.style.width = "100vw";
-  overlay.style.height = "100vh";
-  overlay.style.backgroundColor = "rgba(0, 0, 0, 0.6)";
-  overlay.style.zIndex = 9999;
-  overlay.style.display = "flex";
-  overlay.style.alignItems = "center";
-  overlay.style.justifyContent = "center";
-
   const modal = document.createElement("div");
-  modal.style.background = "#191A21";
-  modal.style.border = "1px solid #DCCB92";
-  modal.style.borderRadius = "30px";
-  modal.style.padding = "40px";
-  modal.style.color = "#fff";
-  modal.style.textAlign = "center";
-  modal.style.boxShadow = "0 20px 40px rgba(0,0,0,0.4)";
-  modal.style.maxWidth = "400px";
-  modal.style.fontFamily = "inherit";
+  modal.className = "modal";
+  modal.id = "return-to-market-modal";
 
-  const title = document.createElement("h2");
-  title.textContent = "✅ Wallet connected!";
-  title.style.marginBottom = "20px";
+  const content = document.createElement("div");
+  content.className = "modal-content";
 
-  const text = document.createElement("p");
-  text.textContent = "Return to the Market to complete your purchase?";
-  text.style.marginBottom = "30px";
+  const title = document.createElement("h1");
+  title.className = "logo";
+  title.textContent = "✅ Wallet connected";
+
+  const subtitle = document.createElement("p");
+  subtitle.className = "text title-thin";
+  subtitle.style.marginTop = "-10px";
+  subtitle.textContent = "Do you want to return to the Market to complete your purchase?";
+
+  const btnContainer = document.createElement("div");
+  btnContainer.className = "div-button-modale";
 
   const btnReturn = document.createElement("button");
   btnReturn.textContent = "← Back to Market";
-  btnReturn.className = "button-icon-gold";
-  btnReturn.style.marginRight = "10px";
+  btnReturn.className = "button button-gold";
   btnReturn.onclick = () => {
     window.location.href = "https://getoridium.com/market.html";
   };
 
   const btnStay = document.createElement("button");
-  btnStay.textContent = "Stay here";
-  btnStay.className = "button-icon-black";
+  btnStay.textContent = "Stay on wallet";
+  btnStay.className = "button button-menu-fit";
   btnStay.onclick = () => {
-    overlay.remove();
+    modal.classList.add("no-blur");
+    content.classList.remove("fade-in");
+    content.classList.add("fade-out");
+    setTimeout(() => modal.remove(), 300);
   };
 
-  modal.appendChild(title);
-  modal.appendChild(text);
-  modal.appendChild(btnReturn);
-  modal.appendChild(btnStay);
-  overlay.appendChild(modal);
-  document.body.appendChild(overlay);
+  btnContainer.appendChild(btnReturn);
+  btnContainer.appendChild(btnStay);
+  content.appendChild(title);
+  content.appendChild(subtitle);
+  content.appendChild(btnContainer);
+  modal.appendChild(content);
+  document.body.appendChild(modal);
 }

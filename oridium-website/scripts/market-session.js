@@ -122,7 +122,7 @@ function updateWalletUI() {
       connectLink.textContent = "Connect your wallet";
       connectLink.style.display = "inline";
       connectLink.onclick = () => {
-        window.location.href = "https://wallet.getoridium.com/?modal=connect";
+        window.location.href = "https://wallet.getoridium.com/?modal=connect&from=market";
       };
     }
 
@@ -130,7 +130,7 @@ function updateWalletUI() {
       createLink.textContent = "Create wallet";
       createLink.style.display = "inline";
       createLink.onclick = () => {
-        window.location.href = "https://wallet.getoridium.com/?modal=create";
+        window.location.href = "https://wallet.getoridium.com/?modal=create&from=market";
       };
     }
 
@@ -152,9 +152,8 @@ function updateWalletUI() {
 
     if (connectLink) {
       connectLink.textContent = "Change wallet";
-      connectLink.style.display = "inline";
       connectLink.onclick = () => {
-        window.location.href = "https://wallet.getoridium.com/?modal=connect&logout=1";
+      window.location.href = "https://wallet.getoridium.com/?modal=connect&logout=1&from=market";
       };
     }
 
