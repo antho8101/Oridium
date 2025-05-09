@@ -63,6 +63,46 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
+  function toggleWalletButtons(connected) {
+    const connectBtn = document.getElementById("connect-wallet-button");
+    const disconnectBtn = document.getElementById("disconnect-wallet-button");
+
+    if (connected) {
+      connectBtn?.classList.add("hidden");
+      disconnectBtn?.classList.remove("hidden");
+    } else {
+      connectBtn?.classList.remove("hidden");
+      disconnectBtn?.classList.add("hidden");
+    }
+  }
+
+  const wallet = localStorage.getItem("orid_wallet_address");
+  toggleWalletButtons(!!wallet);
+
+  const disconnectBtn = document.getElementById("disconnect-wallet-button");
+  disconnectBtn?.addEventListener("click", () => {
+    console.log("🚪 Disconnecting wallet");
+
+    localStorage.removeItem("orid_wallet_address");
+    localStorage.removeItem("orid_wallet_data");
+
+    document.cookie = "orid_session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    localStorage.setItem("orid_sync_trigger", Date.now());
+
+    const welcomeEl = document.getElementById("welcome-user");
+    if (welcomeEl) {
+      welcomeEl.textContent = "Welcome";
+      welcomeEl.classList.add("hidden");
+    }
+
+    toggleWalletButtons(false);
+
+    const pubKeyDisplay = document.getElementById("public-key-display");
+    if (pubKeyDisplay) pubKeyDisplay.textContent = "Connect your wallet to see your public key";
+
+    console.log("✅ Wallet disconnected");
+  });
+
   confirmBtn?.addEventListener("click", async () => {
     if (!walletData) return;
 
@@ -92,20 +132,24 @@ document.addEventListener("DOMContentLoaded", () => {
 
       console.log("✅ Wallet connected! Address:", address);
 
-      // 🛰️ Enregistrement serveur
-      registerWallet(address)
+      await registerWallet(address)
         .then(() => console.log("📡 Address sent to server successfully"))
         .catch(err => console.error("❌ Failed to notify server:", err));
 
-      // 💾 Sauvegarde complète avec pseudo dans localStorage
-      walletData.publicKey = address; // par sécurité, on l’ajoute au JSON
+      walletData.publicKey = address;
       localStorage.setItem("orid_wallet_data", JSON.stringify(walletData));
+      localStorage.setItem("orid_sync_trigger", Date.now());
+
+      document.cookie = `orid_session=${btoa(JSON.stringify({
+        address,
+        pseudo: walletData.pseudo || ""
+      }))}; path=/; SameSite=Lax`;
 
       const welcomeEl = document.getElementById("welcome-user");
       if (walletData?.pseudo && welcomeEl) {
         welcomeEl.textContent = `Welcome, ${walletData.pseudo}`;
         welcomeEl.classList.remove("hidden");
-    }
+      }
 
       closeModal();
       playWelcomeIntro();

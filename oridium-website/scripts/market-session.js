@@ -86,12 +86,14 @@ function startPolling(interval = 1500) {
   }, interval);
 }
 
-// ✅ Initialisation
-document.addEventListener("DOMContentLoaded", () => {
-  console.log("🚀 DOM ready → initial sync");
-  window.oridWalletSynced = syncWalletFromSession();
-  startPolling();
-});
+// ✅ Initialisation protégée
+if (!window.oridWalletSynced) {
+  document.addEventListener("DOMContentLoaded", () => {
+    console.log("🚀 DOM ready → initial sync");
+    window.oridWalletSynced = syncWalletFromSession();
+    startPolling();
+  });
+}
 
 function updateWalletUI() {
   console.log("🔁 updateWalletUI called");
