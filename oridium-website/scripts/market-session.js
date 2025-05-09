@@ -4,16 +4,22 @@ let lastSync = localStorage.getItem("orid_sync_trigger");
 
 // ✅ Appel côté serveur pour récupérer la session depuis le cookie sécurisé
 async function getParsedSessionFromServer() {
+  console.log("🌐 getParsedSessionFromServer called");
+
   try {
     const res = await fetch('https://api.getoridium.com/api/wallet-sync', {
-        method: 'GET',
-        credentials: 'include'
-      });
+      method: 'GET',
+      credentials: 'include'
+    });
 
     const data = await res.json();
     console.log("📥 Session from server:", data);
 
-    if (!data || !data.address || data.status === "disconnected") return null;
+    if (!data || !data.address || data.status === "disconnected") {
+      console.log("❌ Invalid or disconnected session");
+      return null;
+    }
+
     return data;
   } catch (err) {
     console.warn("⚠️ Failed to fetch session:", err);
@@ -22,6 +28,8 @@ async function getParsedSessionFromServer() {
 }
 
 async function syncWalletFromSession() {
+  console.log("🔄 syncWalletFromSession called");
+
   const session = await getParsedSessionFromServer();
   const stored = {
     address: localStorage.getItem("orid_wallet_address"),
@@ -29,17 +37,22 @@ async function syncWalletFromSession() {
       try {
         const raw = localStorage.getItem("orid_wallet_data");
         return raw ? JSON.parse(raw).pseudo : null;
-      } catch {
+      } catch (err) {
+        console.warn("⚠️ Failed to parse stored pseudo:", err);
         return null;
       }
     })()
   };
+
+  console.log("🧾 Stored values:", stored);
 
   if (!session) {
     if (stored.address || stored.pseudo) {
       console.log("🧹 Clearing stale wallet session");
       localStorage.removeItem("orid_wallet_address");
       localStorage.removeItem("orid_wallet_data");
+    } else {
+      console.log("💤 No session and nothing stored — nothing to do");
     }
     updateWalletUI();
     return;
@@ -49,9 +62,11 @@ async function syncWalletFromSession() {
     session.address !== stored.address ||
     session.pseudo !== stored.pseudo
   ) {
-    console.log("🔄 Syncing wallet session");
+    console.log("🔁 Updating wallet localStorage from session");
     localStorage.setItem("orid_wallet_address", session.address);
     localStorage.setItem("orid_wallet_data", JSON.stringify({ pseudo: session.pseudo }));
+  } else {
+    console.log("✅ Wallet already in sync");
   }
 
   updateWalletUI();
@@ -59,6 +74,8 @@ async function syncWalletFromSession() {
 
 // 🔁 Polling en cas de changement forcé par localStorage
 function startPolling(interval = 1500) {
+  console.log("⏱️ Polling started every", interval, "ms");
+
   setInterval(() => {
     const now = localStorage.getItem("orid_sync_trigger");
     if (now && now !== lastSync) {
