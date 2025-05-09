@@ -2,24 +2,19 @@ console.log("📡 market-session.js loaded");
 
 let lastSync = localStorage.getItem("orid_sync_trigger");
 
-// ✅ Appel côté serveur pour récupérer la session depuis le cookie sécurisé
 async function getParsedSessionFromServer() {
   console.log("🌐 getParsedSessionFromServer called");
-
   try {
     const res = await fetch('https://api.getoridium.com/api/wallet-sync', {
       method: 'GET',
       credentials: 'include'
     });
-
     const data = await res.json();
     console.log("📥 Session from server:", data);
-
     if (!data || !data.address || data.status === "disconnected") {
       console.log("❌ Invalid or disconnected session");
       return null;
     }
-
     return data;
   } catch (err) {
     console.warn("⚠️ Failed to fetch session:", err);
@@ -72,10 +67,8 @@ async function syncWalletFromSession() {
   updateWalletUI();
 }
 
-// 🔁 Polling en cas de changement forcé par localStorage
 function startPolling(interval = 1500) {
   console.log("⏱️ Polling started every", interval, "ms");
-
   setInterval(() => {
     const now = localStorage.getItem("orid_sync_trigger");
     if (now && now !== lastSync) {
@@ -86,7 +79,6 @@ function startPolling(interval = 1500) {
   }, interval);
 }
 
-// ✅ Initialisation protégée
 if (!window.oridWalletSynced) {
   document.addEventListener("DOMContentLoaded", () => {
     console.log("🚀 DOM ready → initial sync");
@@ -123,16 +115,23 @@ function updateWalletUI() {
 
   if (!wallet) {
     console.log("🔌 No wallet connected");
+
     if (welcomeEl) welcomeEl.textContent = "Welcome";
 
     if (connectLink) {
       connectLink.textContent = "Connect your wallet";
       connectLink.style.display = "inline";
+      connectLink.onclick = () => {
+        window.location.href = "https://wallet.getoridium.com/?modal=connect";
+      };
     }
 
     if (createLink) {
       createLink.textContent = "Create wallet";
       createLink.style.display = "inline";
+      createLink.onclick = () => {
+        window.location.href = "https://wallet.getoridium.com/?modal=create";
+      };
     }
 
     if (orSeparator) {
@@ -148,11 +147,15 @@ function updateWalletUI() {
 
   } else {
     console.log("✅ Wallet connected with pseudo:", pseudo);
+
     if (welcomeEl) welcomeEl.textContent = `Welcome, ${pseudo || "User"}`;
 
     if (connectLink) {
       connectLink.textContent = "Change wallet";
       connectLink.style.display = "inline";
+      connectLink.onclick = () => {
+        window.location.href = "https://wallet.getoridium.com/?modal=connect&logout=1";
+      };
     }
 
     if (createLink) {

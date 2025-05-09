@@ -6,9 +6,16 @@ import { setWalletConnected } from './wallet-session.js';
 import { registerWallet } from './orid-network.js';
 
 document.addEventListener("DOMContentLoaded", () => {
-  const modal = document.getElementById("connect-wallet-modal");
-  const modalContent = modal.querySelector(".modal-content");
-  const openBtn = document.getElementById("connect-wallet-button");
+  const params = new URLSearchParams(window.location.search);
+  const modalType = params.get("modal"); // "connect" ou "create"
+  const logout = params.get("logout") === "1";
+
+  const connectModal = document.getElementById("connect-wallet-modal");
+  const connectModalContent = connectModal.querySelector(".modal-content");
+  const createModal = document.getElementById("wallet-modal");
+  const createModalContent = createModal.querySelector(".modal-content");
+
+  const openConnectBtn = document.getElementById("connect-wallet-button");
 
   const fileInput = document.getElementById("connect-json-file");
   const passwordContainer = document.getElementById("connect-json-password-container");
@@ -16,24 +23,20 @@ document.addEventListener("DOMContentLoaded", () => {
   const passwordError = document.getElementById("connect-password-error");
 
   const confirmBtn = document.getElementById("connect-wallet-confirm");
-  const closeBtn = document.getElementById("close-connect-wallet-modal");
+  const closeConnectBtn = document.getElementById("close-connect-wallet-modal");
 
   let walletData = null;
 
-  openBtn?.addEventListener("click", () => {
+  function openModal(modal, modalContent) {
     modal.classList.remove("hidden");
-    passwordContainer.classList.add("hidden");
-    passwordInput.value = "";
-    passwordError.classList.add("hidden");
     modalContent.classList.remove("fade-out");
     modalContent.classList.add("fade-in");
-  });
+  }
 
-  function closeModal() {
+  function closeModal(modal, modalContent) {
     modal.classList.add("no-blur");
     modalContent.classList.remove("fade-in");
     modalContent.classList.add("fade-out");
-
     setTimeout(() => {
       modal.classList.add("hidden");
       modal.classList.remove("no-blur");
@@ -41,9 +44,36 @@ document.addEventListener("DOMContentLoaded", () => {
     }, 300);
   }
 
-  closeBtn?.addEventListener("click", closeModal);
-  modal?.addEventListener("click", (e) => {
-    if (e.target === modal) closeModal();
+  // ⛔ Déconnexion automatique
+  if (logout) {
+    localStorage.removeItem("orid_wallet_address");
+    localStorage.removeItem("orid_wallet_data");
+    document.cookie = "orid_session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+    localStorage.setItem("orid_sync_trigger", Date.now().toString());
+    console.log("🔌 Auto logout triggered");
+  }
+
+  // ✅ Ouverture automatique modale si demandé
+  if (modalType === "connect") {
+    openModal(connectModal, connectModalContent);
+  } else if (modalType === "create") {
+    openModal(createModal, createModalContent);
+  }
+
+  // ✅ Ouverture manuelle
+  openConnectBtn?.addEventListener("click", () => {
+    openModal(connectModal, connectModalContent);
+    passwordContainer.classList.add("hidden");
+    passwordInput.value = "";
+    passwordError.classList.add("hidden");
+  });
+
+  closeConnectBtn?.addEventListener("click", () => {
+    closeModal(connectModal, connectModalContent);
+  });
+
+  connectModal?.addEventListener("click", (e) => {
+    if (e.target === connectModal) closeModal(connectModal, connectModalContent);
   });
 
   fileInput?.addEventListener("change", async () => {
@@ -63,22 +93,6 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 
-  function toggleWalletButtons(connected) {
-    const connectBtn = document.getElementById("connect-wallet-button");
-    const disconnectBtn = document.getElementById("disconnect-wallet-button");
-
-    if (connected) {
-      connectBtn?.classList.add("hidden");
-      disconnectBtn?.classList.remove("hidden");
-    } else {
-      connectBtn?.classList.remove("hidden");
-      disconnectBtn?.classList.add("hidden");
-    }
-  }
-
-  const wallet = localStorage.getItem("orid_wallet_address");
-  toggleWalletButtons(!!wallet);
-
   const disconnectBtn = document.getElementById("disconnect-wallet-button");
   disconnectBtn?.addEventListener("click", () => {
     console.log("🚪 Disconnecting wallet");
@@ -93,8 +107,6 @@ document.addEventListener("DOMContentLoaded", () => {
       welcomeEl.textContent = "Welcome";
       welcomeEl.classList.add("hidden");
     }
-
-    toggleWalletButtons(false);
 
     const pubKeyDisplay = document.getElementById("public-key-display");
     if (pubKeyDisplay) pubKeyDisplay.textContent = "Connect your wallet to see your public key";
@@ -151,9 +163,13 @@ document.addEventListener("DOMContentLoaded", () => {
         welcomeEl.classList.remove("hidden");
       }
 
-      closeModal();
+      closeModal(connectModal, connectModalContent);
       playWelcomeIntro();
       setWalletConnected(address);
+
+      if (params.get("from") === "market") {
+        showReturnToMarketModal();
+      }
 
     } catch (err) {
       console.warn("❌ Failed to connect wallet:", err);
@@ -162,3 +178,58 @@ document.addEventListener("DOMContentLoaded", () => {
     }
   });
 });
+
+function showReturnToMarketModal() {
+  const overlay = document.createElement("div");
+  overlay.style.position = "fixed";
+  overlay.style.top = 0;
+  overlay.style.left = 0;
+  overlay.style.width = "100vw";
+  overlay.style.height = "100vh";
+  overlay.style.backgroundColor = "rgba(0, 0, 0, 0.6)";
+  overlay.style.zIndex = 9999;
+  overlay.style.display = "flex";
+  overlay.style.alignItems = "center";
+  overlay.style.justifyContent = "center";
+
+  const modal = document.createElement("div");
+  modal.style.background = "#191A21";
+  modal.style.border = "1px solid #DCCB92";
+  modal.style.borderRadius = "30px";
+  modal.style.padding = "40px";
+  modal.style.color = "#fff";
+  modal.style.textAlign = "center";
+  modal.style.boxShadow = "0 20px 40px rgba(0,0,0,0.4)";
+  modal.style.maxWidth = "400px";
+  modal.style.fontFamily = "inherit";
+
+  const title = document.createElement("h2");
+  title.textContent = "✅ Wallet connected!";
+  title.style.marginBottom = "20px";
+
+  const text = document.createElement("p");
+  text.textContent = "Return to the Market to complete your purchase?";
+  text.style.marginBottom = "30px";
+
+  const btnReturn = document.createElement("button");
+  btnReturn.textContent = "← Back to Market";
+  btnReturn.className = "button-icon-gold";
+  btnReturn.style.marginRight = "10px";
+  btnReturn.onclick = () => {
+    window.location.href = "https://getoridium.com/market.html";
+  };
+
+  const btnStay = document.createElement("button");
+  btnStay.textContent = "Stay here";
+  btnStay.className = "button-icon-black";
+  btnStay.onclick = () => {
+    overlay.remove();
+  };
+
+  modal.appendChild(title);
+  modal.appendChild(text);
+  modal.appendChild(btnReturn);
+  modal.appendChild(btnStay);
+  overlay.appendChild(modal);
+  document.body.appendChild(overlay);
+}
