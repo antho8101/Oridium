@@ -25,6 +25,12 @@ document.addEventListener("DOMContentLoaded", () => {
   const confirmBtn = document.getElementById("connect-wallet-confirm");
   const closeConnectBtn = document.getElementById("close-connect-wallet-modal");
 
+  const goToMarketBtn = document.getElementById("go-to-market");
+        goToMarketBtn?.addEventListener("click", () => {
+        window.location.href = "https://www.getoridium.com/market.html";
+});
+
+
   let walletData = null;
 
   function openModal(modal, modalContent) {
