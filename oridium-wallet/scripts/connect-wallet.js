@@ -85,9 +85,8 @@ document.addEventListener("DOMContentLoaded", () => {
 
     localStorage.removeItem("orid_wallet_address");
     localStorage.removeItem("orid_wallet_data");
-
     document.cookie = "orid_session=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
-    localStorage.setItem("orid_sync_trigger", Date.now());
+    localStorage.setItem("orid_sync_trigger", Date.now().toString());
 
     const welcomeEl = document.getElementById("welcome-user");
     if (welcomeEl) {
@@ -137,8 +136,9 @@ document.addEventListener("DOMContentLoaded", () => {
         .catch(err => console.error("❌ Failed to notify server:", err));
 
       walletData.publicKey = address;
+      localStorage.setItem("orid_wallet_address", address);
       localStorage.setItem("orid_wallet_data", JSON.stringify(walletData));
-      localStorage.setItem("orid_sync_trigger", Date.now());
+      localStorage.setItem("orid_sync_trigger", Date.now().toString());
 
       document.cookie = `orid_session=${btoa(JSON.stringify({
         address,
