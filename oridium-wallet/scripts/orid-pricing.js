@@ -1,6 +1,6 @@
 // scripts/orid-pricing.js
 
-let currentOridValueUSD = 720;
+let currentOridValueUSD = 0;
 
 export function getOridPriceUSD() {
   return currentOridValueUSD;
@@ -24,13 +24,26 @@ export function updateOridUSDDisplay() {
     if (usdEl) usdEl.textContent = `$${usdValue.toFixed(2)}`;
   }
 }
+
 // ✅ Réagit à la connexion wallet
 document.addEventListener("orid-wallet-connected", () => {
   updateOridUSDDisplay();
 });
 
 // ✅ Init DOM une fois chargé
-document.addEventListener("DOMContentLoaded", () => {
+document.addEventListener("DOMContentLoaded", async () => {
+  try {
+    const res = await fetch("https://api.getoridium.com/api/price");
+    const data = await res.json();
+    if (data && typeof data.price === "number") {
+      setOridPriceUSD(data.price);
+    } else {
+      console.warn("⚠️ Invalid ORID price data:", data);
+    }
+  } catch (err) {
+    console.error("❌ Failed to fetch ORID price from server:", err);
+  }
+
   setTimeout(updateOridUSDDisplay, 200);
 });
 

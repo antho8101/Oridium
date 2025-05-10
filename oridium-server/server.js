@@ -5,9 +5,9 @@ import cookieParser from 'cookie-parser';
 import setSessionRoute from './api/set-session.js';
 import walletSyncRoute from './api/wallet-sync.js';
 import paddleWebhook from './api/paddle-webhook.js';
-import stockRoute from './api/stock.js';
 import salesRoute from './api/sales.js';
 import disconnectSession from './api/disconnect-session.js';
+import priceRoute from './api/price.js';
 
 import {
   getBlockchainFromDB,
@@ -28,6 +28,7 @@ const allowedOrigins = [
 ];
 
 app.use('/api/disconnect-session', disconnectSession);
+app.use('/api/price', priceRoute);
 
 app.use(cors({
   origin: function (origin, callback) {
@@ -46,7 +47,6 @@ app.use(express.json({ limit: '5mb' }));
 
 // ✅ ROUTES
 app.use('/api/paddle-webhook', paddleWebhook);
-app.use('/api/stock', stockRoute);
 app.use('/api', salesRoute);
 app.use('/api/wallet-sync', walletSyncRoute);
 app.use('/api/set-session', setSessionRoute);

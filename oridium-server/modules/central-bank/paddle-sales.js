@@ -1,6 +1,14 @@
 import axios from 'axios';
 import dotenv from 'dotenv';
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { withdraw } from './stock.js';
+
 dotenv.config();
+
+const __dirname = path.dirname(fileURLToPath(import.meta.url));
+const historyPath = path.join(__dirname, '../../data/history.json');
 
 /**
  * Crée un lien de paiement dynamique Paddle pour un pack ORID
@@ -50,8 +58,27 @@ export async function createPaddlePayLink({ price, userId, oridAmount }) {
  * @param {number} oridAmount - Montant à créditer
  */
 export async function creditOrid(userId, oridAmount) {
-  // ⛏️ À adapter selon ta logique de banque centrale
-  console.log(`💰 Crédits ORID : ${oridAmount} pour wallet ${userId}`);
-  // Appelle ici ta fonction d'injection dans le stock, ex:
-  // await injectOridToWallet(userId, oridAmount);
+  try {
+    console.log(`💸 Retrait du stock : ${oridAmount} ORID pour ${userId}`);
+    withdraw(oridAmount);
+
+    console.log(`📝 Ajout au journal d'historique...`);
+    let history = [];
+    if (fs.existsSync(historyPath)) {
+      const raw = fs.readFileSync(historyPath, 'utf-8').trim();
+      if (raw) history = JSON.parse(raw);
+    }
+
+    history.push({
+      timestamp: new Date().toISOString(),
+      wallet: userId,
+      amount: oridAmount
+    });
+
+    fs.writeFileSync(historyPath, JSON.stringify(history, null, 2));
+    console.log(`✅ ORID crédités à ${userId} (amount: ${oridAmount})`);
+  } catch (err) {
+    console.error('❌ Erreur lors du crédit d’ORID :', err.message);
+    throw err;
+  }
 }
