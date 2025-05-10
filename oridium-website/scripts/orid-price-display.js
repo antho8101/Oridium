@@ -64,10 +64,15 @@ function updateHeaderDisplay(price) {
   lastPrice = price;
 }
 
-document.addEventListener("DOMContentLoaded", async () => {
+async function refreshOridPrice() {
   const price = await fetchOridPrice();
   if (price !== null) {
     updateMarketDisplay(price);
     updateHeaderDisplay(price);
   }
+}
+
+document.addEventListener("DOMContentLoaded", () => {
+  refreshOridPrice();
+  setInterval(refreshOridPrice, 5000);
 });
