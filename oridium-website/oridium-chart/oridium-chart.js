@@ -1,10 +1,10 @@
-document.addEventListener("DOMContentLoaded", function () {
+document.addEventListener("DOMContentLoaded", async function () {
   if (typeof ApexCharts === "undefined") {
     console.error("❌ ApexCharts is not defined. Make sure apexcharts.min.js is loaded before this script.");
     return;
   }
 
-  const rawData = generateData();
+  let rawData = await fetchLiveChartData();
   const defaultRange = "7d";
   let currentFilteredData = filterDataByRange(rawData, defaultRange);
 
@@ -50,6 +50,27 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 });
+
+async function fetchLiveChartData() {
+  try {
+    const res = await fetch("https://api.getoridium.com/api/price-history");
+    const data = await res.json();
+
+    if (!Array.isArray(data)) {
+      console.warn("❌ Invalid data received from API");
+      return generateFallbackData(); // fallback
+    }
+
+    return data.map(entry => {
+      const ts = new Date(entry.timestamp).getTime();
+      const val = parseFloat(entry.price);
+      return [ts, val];
+    });
+  } catch (err) {
+    console.warn("❌ Failed to fetch live chart data:", err);
+    return generateFallbackData();
+  }
+}
 
 function getChartOptions(data) {
   return {
@@ -112,7 +133,7 @@ function getChartOptions(data) {
   };
 }
 
-function generateData() {
+function generateFallbackData() {
   const now = Date.now();
   const data = [];
   for (let i = 0; i < 90; i++) {

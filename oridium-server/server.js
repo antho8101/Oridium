@@ -8,6 +8,7 @@ import paddleWebhook from './api/paddle-webhook.js';
 import salesRoute from './api/sales.js';
 import disconnectSession from './api/disconnect-session.js';
 import priceRoute from './api/price.js';
+import priceHistoryRoute from './api/price-history.js';
 
 import {
   getBlockchainFromDB,
@@ -26,6 +27,8 @@ const allowedOrigins = [
   'https://api.getoridium.com',
   'http://localhost:3000'
 ];
+
+app.use('/api/price-history', priceHistoryRoute);
 
 app.use(cors({
   origin: function (origin, callback) {

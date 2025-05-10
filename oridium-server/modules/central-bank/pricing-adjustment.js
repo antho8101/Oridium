@@ -72,6 +72,22 @@ function savePrice(priceObj) {
   fs.writeFileSync(pricingPath, JSON.stringify(data, null, 2));
 }
 
+function appendToPriceHistory(price) {
+  const historyPath = path.join(__dirname, '../../data/pricing-history.json');
+  let history = [];
+  if (fs.existsSync(historyPath)) {
+    const raw = fs.readFileSync(historyPath, 'utf-8').trim();
+    if (raw) history = JSON.parse(raw);
+  }
+
+  history.push({
+    timestamp: new Date().toISOString(),
+    price: parseFloat(price.toFixed(6))
+  });
+
+  fs.writeFileSync(historyPath, JSON.stringify(history.slice(-1000), null, 2)); // conserve les 1000 derniers points max
+}
+
 function adjustPrice() {
   const stock = getStock();
   const sales = getRecentSales();
