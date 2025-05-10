@@ -27,9 +27,6 @@ const allowedOrigins = [
   'http://localhost:3000'
 ];
 
-app.use('/api/disconnect-session', disconnectSession);
-app.use('/api/price', priceRoute);
-
 app.use(cors({
   origin: function (origin, callback) {
     if (!origin || allowedOrigins.includes(origin)) {
@@ -46,6 +43,8 @@ app.use(cookieParser());
 app.use(express.json({ limit: '5mb' }));
 
 // ✅ ROUTES
+app.use('/api/disconnect-session', disconnectSession);
+app.use('/api/price', priceRoute);
 app.use('/api/paddle-webhook', paddleWebhook);
 app.use('/api', salesRoute);
 app.use('/api/wallet-sync', walletSyncRoute);
