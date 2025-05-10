@@ -96,6 +96,15 @@
     font-weight: 300;
     line-height: normal;
   }
+
+  .market-status-close {
+    color: #D40C0C;
+    font-family: "Space Grotesk", sans-serif;
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+  }
   
   /* Petit point blanc séparateur */
   .market-separator-dot {
