@@ -19,7 +19,7 @@ import {
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-// ✅ CORS CONFIGURATION (multi-origines avec sous-domaines)
+// ✅ CORS CONFIGURATION (placée AVANT les routes)
 const allowedOrigins = [
   'https://www.getoridium.com',
   'https://wallet.getoridium.com',
@@ -27,8 +27,6 @@ const allowedOrigins = [
   'https://api.getoridium.com',
   'http://localhost:3000'
 ];
-
-app.use('/api/price-history', priceHistoryRoute);
 
 app.use(cors({
   origin: function (origin, callback) {
@@ -46,8 +44,9 @@ app.use(cookieParser());
 app.use(express.json({ limit: '5mb' }));
 
 // ✅ ROUTES
-app.use('/api/disconnect-session', disconnectSession);
+app.use('/api/price-history', priceHistoryRoute);
 app.use('/api/price', priceRoute);
+app.use('/api/disconnect-session', disconnectSession);
 app.use('/api/paddle-webhook', paddleWebhook);
 app.use('/api', salesRoute);
 app.use('/api/wallet-sync', walletSyncRoute);
