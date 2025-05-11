@@ -1,0 +1,16 @@
+[
+    {
+      "index": 0,
+      "timestamp": 1715443200000,
+      "transactions": [
+        {
+          "sender": "System",
+          "receiver": "0xGENESIS",
+          "amount": 1000000
+        }
+      ],
+      "previousHash": "0",
+      "hash": "0000000000000000000000000000000000000000000000000000000000000000",
+      "nonce": 0
+    }
+  ]  
