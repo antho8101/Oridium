@@ -199,19 +199,8 @@ app.post('/register-wallet', (req, res) => {
     );
 
     if (!alreadyExists) {
-      const lastBlock = blockchain[blockchain.length - 1];
-      const newBlock = {
-        index: blockchain.length,
-        timestamp: Date.now(),
-        transactions: [],
-        previousHash: lastBlock?.hash || "0",
-        hash: "init",
-        nonce: 0,
-      };
-
-      addBlockToDB(newBlock);
-      console.log(`🆕 Wallet ${address} registered`);
-    }
+      console.warn(`⚠️ Wallet ${address} not found in chain. No block created (waiting for mining or import).`);
+    }    
 
     res.json({ success: true });
   } catch (err) {
