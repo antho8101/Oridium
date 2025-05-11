@@ -132,8 +132,14 @@ app.post('/batch-add-blocks', (req, res) => {
   if (!Array.isArray(blocks)) return res.status(400).json({ error: 'Expected an array of blocks' });
 
   try {
+    console.log("📩 Reçu un batch de blocs :", JSON.stringify(blocks, null, 2));
+
     let blockchain = getBlockchainFromDB();
-    const lastHash = blockchain.length > 0 ? blockchain[blockchain.length - 1].hash : "0";
+    console.log("🔎 Taille de la blockchain actuelle :", blockchain.length);
+
+    let lastHash = blockchain.length > 0 ? blockchain[blockchain.length - 1]?.hash || "0" : "0";
+    console.log("🔗 Hash attendu :", lastHash);
+    console.log("🔗 Hash fourni :", blocks[0].previousHash);
 
     if (blocks[0].previousHash !== lastHash) {
       return res.status(400).json({ error: 'Invalid previousHash. Chain fork detected.' });
@@ -175,6 +181,7 @@ app.post('/batch-add-blocks', (req, res) => {
 
     res.json({ success: true });
   } catch (err) {
+    console.error("❌ ERREUR critique dans /batch-add-blocks :", err);
     res.status(500).json({ error: 'Batch server error' });
   }
 });
