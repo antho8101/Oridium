@@ -1,7 +1,10 @@
-// server.js
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
+import fs from 'fs';
+import path from 'path';
+import fetch from 'node-fetch';
+import dotenv from 'dotenv';
 
 import setSessionRoute from './api/set-session.js';
 import walletSyncRoute from './api/wallet-sync.js';
@@ -17,10 +20,55 @@ import {
   getBalanceFromDB
 } from './database.js';
 
-import { adjustPrice } from './modules/central-bank/pricing-adjustment.js'; // 🔁 ajout pour cron auto
+import { adjustPrice } from './modules/central-bank/pricing-adjustment.js';
+
+dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const blockchainPath = path.join('./data/blockchain.json');
+
+// 🛡️ Restaurer automatiquement la blockchain depuis Gist si absente ou vide
+async function restoreBlockchainIfNeeded() {
+  try {
+    if (fs.existsSync(blockchainPath)) {
+      const content = fs.readFileSync(blockchainPath, 'utf-8').trim();
+      if (content && content !== '[]') {
+        console.log("✅ Blockchain locale détectée");
+        return;
+      }
+    }
+
+    const GIST_ID = "b44f157d4ec982344bac9ff13f099462";
+    const GITHUB_TOKEN = process.env.GIST_TOKEN;
+
+    if (!GITHUB_TOKEN) {
+      console.warn("⚠️ GIST_TOKEN manquant dans les variables d'environnement");
+      return;
+    }
+
+    const res = await fetch(`https://api.github.com/gists/${GIST_ID}`, {
+      headers: {
+        "Authorization": `token ${GITHUB_TOKEN}`,
+        "Accept": "application/vnd.github.v3+json"
+      }
+    });
+
+    const data = await res.json();
+    const rawContent = data.files["blockchain.json"]?.content;
+
+    if (rawContent) {
+      fs.writeFileSync(blockchainPath, rawContent);
+      console.log("📥 Blockchain restaurée depuis le Gist");
+    } else {
+      console.warn("⚠️ Aucune blockchain trouvée dans le Gist");
+    }
+  } catch (err) {
+    console.error("❌ Erreur restauration blockchain :", err.message);
+  }
+}
+
+await restoreBlockchainIfNeeded();
 
 // ✅ CORS CONFIGURATION (placée AVANT les routes)
 const allowedOrigins = [
@@ -219,7 +267,7 @@ app.post('/add-block', (req, res) => {
 setInterval(() => {
   console.log("⏱️ Tâche automatique : adjustPrice() toutes les 30 min");
   adjustPrice();
-}, 30 * 60 * 1000); // 30 min en ms
+}, 30 * 60 * 1000);
 
 // ✅ Serveur lancé
 app.listen(PORT, () => {
