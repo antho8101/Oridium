@@ -11,6 +11,13 @@ document.addEventListener("DOMContentLoaded", async function () {
   const chart = new ApexCharts(document.querySelector("#chart"), getChartOptions(currentFilteredData));
   chart.render();
 
+  // 🔁 Auto-refresh chart every 5 minutes
+  setInterval(async () => {
+    rawData = await fetchLiveChartData();
+    currentFilteredData = filterDataByRange(rawData, defaultRange);
+    chart.updateSeries([{ name: "ORID", data: currentFilteredData }]);
+  }, 5 * 60 * 1000);
+
   document.querySelectorAll(".oridium-chart-toolbar .chart-btn").forEach(btn => {
     if (btn.dataset.range === defaultRange) {
       btn.classList.add("active");

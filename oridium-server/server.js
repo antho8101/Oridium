@@ -28,7 +28,8 @@ const allowedOrigins = [
   'https://wallet.getoridium.com',
   'https://central.getoridium.com',
   'https://api.getoridium.com',
-  'http://localhost:3000'
+  'http://localhost:3000',
+  'https://oridium-website-c23t205iq-antho8101s-projects.vercel.app'
 ];
 
 app.use(cors({
