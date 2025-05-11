@@ -239,7 +239,7 @@ function dynamicBatchLoop() {
       if (result.success) {
         const accepted = cleaned.length;
         oridiumEarned += accepted * 0.0001;
-        document.getElementById("oridium-earned").textContent = `${oridiumEarned.toFixed(4)} ORID`;
+        document.getElementById("oridium-earned").textContent = oridiumEarned.toFixed(4);
 
         updateBalance();
         lastSentHash = cleaned[cleaned.length - 1].hash;

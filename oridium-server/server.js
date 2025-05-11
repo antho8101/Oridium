@@ -29,7 +29,15 @@ const app = express();
 const PORT = process.env.PORT || 3000;
 const blockchainPath = path.join('./data/blockchain.json');
 
-// 🛡️ Restaurer automatiquement la blockchain depuis Gist si absente ou vide
+function saveBlockchainToDisk(chain) {
+  try {
+    fs.writeFileSync(blockchainPath, JSON.stringify(chain, null, 2));
+    console.log("💾 Blockchain sauvegardée sur disque.");
+  } catch (err) {
+    console.error("❌ Erreur sauvegarde blockchain :", err.message);
+  }
+}
+
 async function restoreBlockchainIfNeeded() {
   try {
     if (fs.existsSync(blockchainPath)) {
@@ -71,7 +79,6 @@ async function restoreBlockchainIfNeeded() {
 
 await restoreBlockchainIfNeeded();
 
-// ✅ CORS CONFIGURATION (placée AVANT les routes)
 const allowedOrigins = [
   'https://www.getoridium.com',
   'https://wallet.getoridium.com',
@@ -96,7 +103,6 @@ app.use(cors({
 app.use(cookieParser());
 app.use(express.json({ limit: '5mb' }));
 
-// ✅ ROUTES
 app.use('/api/price-history', priceHistoryRoute);
 app.use('/api/price', priceRoute);
 app.use('/api/disconnect-session', disconnectSession);
@@ -105,7 +111,6 @@ app.use('/api', salesRoute);
 app.use('/api/wallet-sync', walletSyncRoute);
 app.use('/api/set-session', setSessionRoute);
 
-// 🔒 Blacklist
 const BLACKLIST = new Set(["0x000000000000000000000000000000000000dead"]);
 function isBlacklisted(block) {
   const senders = (block.transactions || []).map(tx => tx.sender);
@@ -116,7 +121,6 @@ function isValidHashDifficulty(hash, difficulty = 4) {
   return hash.startsWith('0'.repeat(difficulty));
 }
 
-// 🔗 Blockchain routes
 app.get('/blockchain', (req, res) => {
   try {
     const blockchain = getBlockchainFromDB();
@@ -179,6 +183,7 @@ app.post('/batch-add-blocks', (req, res) => {
       console.log(`📦 Block ${block.index} added`);
     }
 
+    saveBlockchainToDisk(getBlockchainFromDB()); // 👈 Sauvegarde ici
     res.json({ success: true });
   } catch (err) {
     console.error("❌ ERREUR critique dans /batch-add-blocks :", err);
@@ -256,6 +261,7 @@ app.post('/add-block', (req, res) => {
     };
 
     addBlockToDB(block);
+    saveBlockchainToDisk(getBlockchainFromDB()); // 👈 Sauvegarde ici aussi
     console.log(`📦 Block ${block.index} added`);
     res.json({ success: true });
 
@@ -265,7 +271,6 @@ app.post('/add-block', (req, res) => {
   }
 });
 
-// 🔍 Endpoint debug blockchain
 app.get('/debug-blockchain', (req, res) => {
   try {
     const raw = fs.readFileSync(blockchainPath, 'utf-8');
@@ -276,13 +281,11 @@ app.get('/debug-blockchain', (req, res) => {
   }
 });
 
-// 🕒 Tâche cron : ajustement du prix toutes les 30 minutes
 setInterval(() => {
   console.log("⏱️ Tâche automatique : adjustPrice() toutes les 30 min");
   adjustPrice();
 }, 30 * 60 * 1000);
 
-// ✅ Serveur lancé
 app.listen(PORT, () => {
   console.log(`🚀 Oridium API running on PORT ${PORT}`);
 });
