@@ -221,7 +221,7 @@ function dynamicBatchLoop() {
 
     console.log("🚀 Sending batch of", cleaned.length, "blocks:", cleaned);
 
-    fetch("https://oridium-production.up.railway.app/batch-add-blocks", {
+    fetch("https://api.getoridium.com/batch-add-blocks", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(cleaned)
