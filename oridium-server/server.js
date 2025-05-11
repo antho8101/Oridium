@@ -1,3 +1,4 @@
+// server.js
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
@@ -132,7 +133,12 @@ app.post('/batch-add-blocks', (req, res) => {
 
   try {
     let blockchain = getBlockchainFromDB();
-    let lastHash = blockchain.length > 0 ? blockchain[blockchain.length - 1].hash : "0";
+    const lastHash = blockchain.length > 0 ? blockchain[blockchain.length - 1].hash : "0";
+
+    if (blocks[0].previousHash !== lastHash) {
+      return res.status(400).json({ error: 'Invalid previousHash. Chain fork detected.' });
+    }
+
     let index = blockchain.length;
 
     for (const rawBlock of blocks) {
@@ -200,7 +206,7 @@ app.post('/register-wallet', (req, res) => {
 
     if (!alreadyExists) {
       console.warn(`⚠️ Wallet ${address} not found in chain. No block created (waiting for mining or import).`);
-    }    
+    }
 
     res.json({ success: true });
   } catch (err) {
@@ -249,6 +255,17 @@ app.post('/add-block', (req, res) => {
   } catch (err) {
     console.error("❌ Error in /add-block:", err);
     res.status(500).json({ error: 'Add block server error' });
+  }
+});
+
+// 🔍 Endpoint debug blockchain
+app.get('/debug-blockchain', (req, res) => {
+  try {
+    const raw = fs.readFileSync(blockchainPath, 'utf-8');
+    res.setHeader('Content-Type', 'application/json');
+    res.send(raw);
+  } catch (err) {
+    res.status(500).json({ error: "Failed to read blockchain file" });
   }
 });
 
