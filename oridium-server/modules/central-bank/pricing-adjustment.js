@@ -70,6 +70,7 @@ function savePrice(priceObj) {
     updatedAt: new Date().toISOString()
   };
   fs.writeFileSync(pricingPath, JSON.stringify(data, null, 2));
+  console.log("✅ Nouveau prix enregistré dans pricing.json :", data.price);
 }
 
 function appendToPriceHistory(price) {
@@ -86,6 +87,10 @@ function appendToPriceHistory(price) {
   });
 
   fs.writeFileSync(historyPath, JSON.stringify(history.slice(-1000), null, 2));
+  console.log("📈 Point ajouté à pricing-history.json");
+
+  const latest = history.slice(-5);
+  console.log("📉 Derniers points du chart :", latest);
 }
 
 function adjustPrice() {
@@ -114,6 +119,7 @@ function adjustPrice() {
 }
 
 if (process.argv[1].endsWith('pricing-adjustment.js')) {
+  console.log("⏱️ [CRON] adjustPrice() déclenché à", new Date().toISOString());
   adjustPrice();
 }
 
