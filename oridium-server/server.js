@@ -1,3 +1,4 @@
+// server.js
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
@@ -15,6 +16,8 @@ import {
   addBlockToDB,
   getBalanceFromDB
 } from './database.js';
+
+import { adjustPrice } from './modules/central-bank/pricing-adjustment.js'; // 🔁 ajout pour cron auto
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -210,6 +213,12 @@ app.post('/add-block', (req, res) => {
     res.status(500).json({ error: 'Add block server error' });
   }
 });
+
+// 🕒 Tâche cron : ajustement du prix toutes les 30 minutes
+setInterval(() => {
+  console.log("⏱️ Tâche automatique : adjustPrice() toutes les 30 min");
+  adjustPrice();
+}, 30 * 60 * 1000); // 30 min en ms
 
 // ✅ Serveur lancé
 app.listen(PORT, () => {

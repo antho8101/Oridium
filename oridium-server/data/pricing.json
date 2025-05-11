@@ -1,9 +1,9 @@
 {
-  "price": 0.50,
+  "price": 0.5,
   "currency": "USD",
-  "basePrice": 1.00,
-  "minPrice": 0.50,
-  "maxPrice": 100000.00,
+  "basePrice": 1,
+  "minPrice": 0.5,
+  "maxPrice": 100000,
   "lastAdjustedFrom": "demand",
-  "updatedAt": "2025-05-02T23:56:52.623Z"
+  "updatedAt": "2025-05-11T08:55:51.579Z"
 }
