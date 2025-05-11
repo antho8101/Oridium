@@ -35,7 +35,7 @@ function updateBalance() {
 
   getBalance(address).then(balance => {
     document.querySelectorAll('.balance-amount').forEach(el => {
-      el.textContent = `${balance.toFixed(4)} ORID`;
+      el.textContent = `${balance.toFixed(4)}`;
     });
 
     const usdElement = document.querySelector('.orid-value-usd');
