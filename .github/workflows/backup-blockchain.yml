@@ -1,0 +1,29 @@
+name: 🛡️ Backup Blockchain to Gist
+
+on:
+  schedule:
+    - cron: "*/5 * * * *" # Toutes les 5 minutes
+  workflow_dispatch: # Déclenchable manuellement
+
+jobs:
+  backup:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+
+      - name: Install Node.js
+        uses: actions/setup-node@v3
+        with:
+          node-version: "18"
+
+      - name: Upload blockchain.json to Gist
+        run: |
+          GIST_ID="b44f157d4ec982344bac9ff13f099462"  # ← Remplace par TON vrai ID de Gist
+          FILE="oridium-server/data/blockchain.json"
+          [ -f "$FILE" ] || echo "[]" > $FILE
+          curl -X PATCH "https://api.github.com/gists/$GIST_ID" \
+            -H "Authorization: token ${{ secrets.GIST_TOKEN }}" \
+            -H "Content-Type: application/json" \
+            -d "{\"files\": {\"blockchain.json\": {\"content\": \"$(jq -c . $FILE)\"}}}"
