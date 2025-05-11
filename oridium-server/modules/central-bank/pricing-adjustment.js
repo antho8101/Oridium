@@ -46,7 +46,7 @@ function calculateDynamicPrice(stockRemaining, stockInitial, secondsSinceMarketO
   console.log("Stock restant :", stockRemaining);
   console.log("Vendus :", stockInitial - stockRemaining);
   console.log("Ratio vendu :", ratioSold.toFixed(2));
-  console.log("Temps écoulé depuis ouverture :", (timeMinutes).toFixed(2), "minutes");
+  console.log("Temps écoulé depuis ouverture :", timeMinutes.toFixed(2), "minutes");
   console.log("Temps depuis dernière vente :", (secondsSinceLastSale / 60).toFixed(2), "minutes");
   console.log("Boost de demande :", demandBoost.toFixed(3));
   console.log("Pénalité cooldown :", cooldownPenalty.toFixed(2));
@@ -85,7 +85,7 @@ function appendToPriceHistory(price) {
     price: parseFloat(price.toFixed(6))
   });
 
-  fs.writeFileSync(historyPath, JSON.stringify(history.slice(-1000), null, 2)); // conserve les 1000 derniers points max
+  fs.writeFileSync(historyPath, JSON.stringify(history.slice(-1000), null, 2));
 }
 
 function adjustPrice() {
@@ -110,6 +110,7 @@ function adjustPrice() {
   );
 
   savePrice(newPricing);
+  appendToPriceHistory(newPricing.price);
 }
 
 if (process.argv[1].endsWith('pricing-adjustment.js')) {

@@ -1,8 +1,17 @@
 {
-    "build": {
-      "command": "npm install"
-    },
-    "deploy": {
-      "startCommand": "node oridium-server/server.js"
-    }
-  }  
+  "build": {
+    "command": "npm install"
+  },
+  "deploy": {
+    "startCommand": "node oridium-server/server.js"
+  },
+  "cron": {
+    "jobs": [
+      {
+        "name": "orid-price-update",
+        "schedule": "*/30 * * * *",
+        "command": "node oridium-server/modules/central-bank/pricing-adjustment.js"
+      }
+    ]
+  }
+}

@@ -4,6 +4,7 @@ import fs from 'fs';
 import path from 'path';
 import { fileURLToPath } from 'url';
 import { withdraw } from './stock.js';
+import { adjustPrice } from './pricing-adjustment.js'; // ✅ ajout
 
 dotenv.config();
 
@@ -77,6 +78,8 @@ export async function creditOrid(userId, oridAmount) {
 
     fs.writeFileSync(historyPath, JSON.stringify(history, null, 2));
     console.log(`✅ ORID crédités à ${userId} (amount: ${oridAmount})`);
+
+    await adjustPrice(); // ✅ recalcul immédiat du prix après crédit
   } catch (err) {
     console.error('❌ Erreur lors du crédit d’ORID :', err.message);
     throw err;
