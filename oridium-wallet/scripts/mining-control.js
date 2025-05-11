@@ -55,7 +55,7 @@ function startMining() {
                   .catch(err => console.error("❌ Failed to send block:", err));
 
                 minedOridium += 0.0001;
-                document.getElementById("oridium-earned").innerText = minedOridium.toFixed(4) + " ORID";
+                document.getElementById("oridium-earned").textContent = oridiumEarned.toFixed(4);
                 logStatus("One Oridium Mined ! 🚀");
             }
         };
