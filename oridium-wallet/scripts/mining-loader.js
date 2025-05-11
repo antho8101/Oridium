@@ -35,11 +35,7 @@ function updateBalance() {
 
   getBalance(address).then(balance => {
     document.querySelectorAll('.balance-amount').forEach(el => {
-      if (el.closest('.wallet-balance')) {
-        el.textContent = `${balance.toFixed(4)} ORID`;
-      } else {
-        el.textContent = balance.toFixed(4);
-      }
+      el.textContent = `${balance.toFixed(4)} ORID`;
     });
 
     const usdElement = document.querySelector('.orid-value-usd');
@@ -48,17 +44,15 @@ function updateBalance() {
       usdElement.textContent = `$${valueInUSD.toFixed(2)}`;
     }
 
-    fetch("https://oridium-production.up.railway.app/blockchain")
+    fetch("https://api.getoridium.com/blockchain")
       .then(res => res.ok ? res.json() : Promise.reject(res.status))
       .then(chain => {
         const lastTs = parseInt(localStorage.getItem("orid_last_alert_ts") || "0");
         const lastAlertedHash = localStorage.getItem("orid_last_alert_hash");
 
         for (const block of chain) {
-          if (block.timestamp <= lastTs) continue;
-          if (block.hash === lastAlertedHash) continue;
+          if (block.timestamp <= lastTs || block.hash === lastAlertedHash) continue;
 
-          // ✅ Nouvelle logique : on alerte même si je suis sender, tant qu’il y a une réception vers moi
           const hasIncoming = block.transactions.some(tx =>
             tx.receiver?.toLowerCase() === lowerAddress &&
             tx.sender?.toLowerCase() !== "system"
@@ -77,13 +71,12 @@ function updateBalance() {
               showOridAlert(pseudo, tx.amount, tx.receiver);
               localStorage.setItem("orid_last_alert_ts", block.timestamp.toString());
               localStorage.setItem("orid_last_alert_hash", block.hash);
-              break; // 🔒 une seule alerte par bloc
+              break;
             }
           }
         }
       })
-      .catch(() => { /* silence */ });
-
+      .catch(() => {});
   }).catch(err => {
     console.error("❌ Failed to update balance:", err);
   });
@@ -103,7 +96,21 @@ export function stopBalancePolling() {
   pollingInterval = null;
 }
 
-function toggleMining() {
+async function resetLastHashIfServerIsEmpty() {
+  try {
+    const res = await fetch("https://api.getoridium.com/blockchain");
+    const chain = await res.json();
+    if (Array.isArray(chain) && chain.length === 0) {
+      console.warn("⚠️ Server blockchain empty. Resetting local lastSentHash to 0");
+      lastSentHash = "0";
+      localStorage.setItem("orid_last_sent_hash", "0");
+    }
+  } catch (err) {
+    console.error("❌ Could not verify blockchain state:", err);
+  }
+}
+
+async function toggleMining() {
   const playIcon = document.getElementById("icon-play");
   const pauseIcon = document.getElementById("icon-pause");
   const statusText = document.getElementById("mining-status");
@@ -121,6 +128,7 @@ function toggleMining() {
     if (pauseIcon) pauseIcon.style.display = "none";
     if (statusText) statusText.textContent = "Mining is paused ⏸️";
   } else {
+    await resetLastHashIfServerIsEmpty();
     startMining();
     if (playIcon) playIcon.style.display = "none";
     if (pauseIcon) pauseIcon.style.display = "inline";
@@ -229,7 +237,6 @@ function dynamicBatchLoop() {
     .then(res => res.json())
     .then(result => {
       if (result.success) {
-        const myAddress = getConnectedWalletAddress();
         const accepted = cleaned.length;
         oridiumEarned += accepted * 0.0001;
         document.getElementById("oridium-earned").textContent = `${oridiumEarned.toFixed(4)} ORID`;
@@ -238,6 +245,7 @@ function dynamicBatchLoop() {
         lastSentHash = cleaned[cleaned.length - 1].hash;
         localStorage.setItem("orid_last_sent_hash", lastSentHash);
       } else {
+        console.error("❌ Rejected batch:", result);
         pendingBlocks.push(...blocksToSend);
         stopMining();
         showNetworkBusyModal(10);
