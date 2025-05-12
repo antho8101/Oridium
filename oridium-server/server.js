@@ -196,12 +196,12 @@ app.post('/batch-add-blocks', async (req, res) => {
   }
 });
 
-app.get('/balance/:address', (req, res) => {
+app.get('/balance/:address', async (req, res) => {
   const { address } = req.params;
   if (BLACKLIST.has(address)) return res.status(403).json({ error: 'Address is blacklisted' });
 
   try {
-    const balance = getBalanceFromDB(address);
+    const balance = await getBalanceFromDB(address); // ✅ await ici
     res.json({ address, balance });
   } catch (err) {
     res.status(500).json({ error: 'Failed to get balance' });
