@@ -4,10 +4,11 @@ const API_BASE = "https://oridium-production.up.railway.app";
 export async function getBlockchain() {
   try {
     const res = await fetch(`${API_BASE}/blockchain`);
+    if (!res.ok) throw new Error(`Status ${res.status}`);
     return await res.json();
   } catch (err) {
     console.error("❌ Failed to fetch blockchain:", err);
-    return [];
+    return []; // ✅ Toujours retourner un tableau
   }
 }
 

@@ -52,10 +52,12 @@ document.addEventListener("DOMContentLoaded", async () => {
 
     try {
       const chain = await getBlockchain();
-      if (chain) {
+      if (Array.isArray(chain)) {
         const myTransactions = getTransactionsForWallet(chain, savedAddress);
         window.__oridTransactionList = myTransactions;
         updateTransactionHistory(myTransactions, savedAddress);
+      } else {
+        console.warn("⚠️ Blockchain data is not an array:", chain);
       }
     } catch (err) {
       console.error("❌ Failed to reload blockchain:", err);
