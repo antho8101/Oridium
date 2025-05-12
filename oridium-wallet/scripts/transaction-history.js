@@ -58,6 +58,17 @@ export function updateTransactionHistory(transactions, myAddress) {
   }
 }
 
+export async function fetchTransactionHistory(address) {
+  try {
+    const res = await fetch(`https://api.getoridium.com/history/${address}`);
+    const data = await res.json();
+    return Array.isArray(data.transactions) ? data.transactions : [];
+  } catch (err) {
+    console.error("❌ Failed to fetch transaction history from server:", err);
+    return [];
+  }
+}
+
 // 🔗 Utilitaire pour raccourcir une adresse
 function shortenAddress(address) {
   if (!address) return "";
@@ -66,3 +77,4 @@ function shortenAddress(address) {
 
 // 🧹 Pour pouvoir appeler updateTransactionHistory depuis la console
 window.updateTransactionHistory = updateTransactionHistory;
+window.fetchTransactionHistory = fetchTransactionHistory;

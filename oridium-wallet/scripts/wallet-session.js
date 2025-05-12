@@ -51,16 +51,11 @@ document.addEventListener("DOMContentLoaded", async () => {
     await setWalletConnected(savedAddress);
 
     try {
-      const chain = await getBlockchain();
-      if (Array.isArray(chain)) {
-        const myTransactions = getTransactionsForWallet(chain, savedAddress);
-        window.__oridTransactionList = myTransactions;
-        updateTransactionHistory(myTransactions, savedAddress);
-      } else {
-        console.warn("⚠️ Blockchain data is not an array:", chain);
-      }
+      const myTransactions = await fetchTransactionHistory(savedAddress); // 🔁 remplace getBlockchain + filtre
+      window.__oridTransactionList = myTransactions;
+      updateTransactionHistory(myTransactions, savedAddress);
     } catch (err) {
-      console.error("❌ Failed to reload blockchain:", err);
+      console.error("❌ Failed to reload transaction history:", err);
     }
   } else {
     updateWalletButtons(false);
