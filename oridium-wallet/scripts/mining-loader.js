@@ -34,13 +34,15 @@ function updateBalance() {
   const lowerAddress = address.toLowerCase();
 
   getBalance(address).then(balance => {
+    const numericBalance = Number(balance) || 0; // 🔐 Sécurisation
+
     document.querySelectorAll('.balance-amount').forEach(el => {
-      el.textContent = `${balance.toFixed(4)}`;
+      el.textContent = `${numericBalance.toFixed(4)}`;
     });
 
     const usdElement = document.querySelector('.orid-value-usd');
     if (usdElement) {
-      const valueInUSD = balance * getOridPriceUSD();
+      const valueInUSD = numericBalance * getOridPriceUSD();
       usdElement.textContent = `$${valueInUSD.toFixed(2)}`;
     }
 
