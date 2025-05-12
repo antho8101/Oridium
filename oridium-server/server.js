@@ -205,13 +205,13 @@ app.get('/balance/:address', (req, res) => {
   }
 });
 
-app.post('/register-wallet', (req, res) => {
+app.post('/register-wallet', async (req, res) => {
   const { address } = req.body;
   if (!address) return res.status(400).json({ error: 'Missing address' });
   if (BLACKLIST.has(address)) return res.status(403).json({ error: 'Address is blacklisted' });
 
   try {
-    const blockchain = getBlockchainFromDB();
+    const blockchain = await getBlockchainFromDB(); // ✅ await ajouté
     const alreadyExists = blockchain.some(block =>
       (block.transactions || []).some(tx =>
         tx.sender?.toLowerCase() === address.toLowerCase() || tx.receiver?.toLowerCase() === address.toLowerCase()
@@ -224,6 +224,7 @@ app.post('/register-wallet', (req, res) => {
 
     res.json({ success: true });
   } catch (err) {
+    console.error("❌ Failed to register wallet:", err.message);
     res.status(500).json({ error: 'Failed to register wallet' });
   }
 });
