@@ -322,7 +322,11 @@ async function pollIncomingTransactions(interval = 5000) {
     try {
       const res = await fetch("https://oridium-production.up.railway.app/blockchain");
       const chain = await res.json();
-      analyzeIncomingBlocks(chain, address);
+      if (Array.isArray(chain)) {
+        analyzeIncomingBlocks(chain, address);
+      } else {
+        console.warn("⚠️ Invalid blockchain data during polling:", chain);
+      }
     } catch (err) {
       console.error("❌ Erreur lors du polling des transactions entrantes :", err);
     }
