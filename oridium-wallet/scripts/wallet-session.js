@@ -138,19 +138,42 @@ export async function setWalletConnected(address) {
 export function disconnectWallet() {
   walletConnected = false;
   currentWalletAddress = null;
+
+  // 🔐 Supprimer les données locales
   localStorage.removeItem("orid_wallet_address");
   localStorage.removeItem("orid_wallet_data");
 
+  // 🔘 Reset des boutons
   updateWalletButtons(false);
+
+  // 🔒 Réinitialiser l'affichage de la clé publique
   displayPublicKey(null);
+
+  // 💸 Réinitialiser le solde affiché
   updateBalanceUI(0);
 
+  // 🧹 Réinitialiser la liste des transactions
+  const container = document.querySelector(".transaction-list");
+  if (container) container.innerHTML = "";
+
+  // 💥 Réinitialiser la variable globale des transactions
+  window.__oridTransactionList = [];
+
+  // 🔄 Réafficher les bons éléments UI
+  const placeholder = document.getElementById("no-transaction-placeholder");
+  const bottom = document.querySelector(".transaction-bottom");
+
+  if (placeholder) placeholder.style.display = "block";
+  if (bottom) bottom.style.display = "none";
+
+  // 👋 Cacher le pseudo utilisateur
   const welcomeEl = document.getElementById("welcome-user");
   if (welcomeEl) {
     welcomeEl.classList.add("hidden");
     welcomeEl.textContent = "";
   }
 
+  // 🧽 Supprimer le cookie de session
   document.cookie = "orid_session=; path=/; domain=.getoridium.com; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
 }
 
