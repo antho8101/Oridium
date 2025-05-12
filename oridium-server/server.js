@@ -133,21 +133,23 @@ app.get('/blockchain', async (req, res) => {
   }
 });
 
-app.post('/batch-add-blocks', (req, res) => {
+app.post('/batch-add-blocks', async (req, res) => {
   const blocks = req.body;
   if (!Array.isArray(blocks)) return res.status(400).json({ error: 'Expected an array of blocks' });
 
   try {
     console.log("📩 Reçu un batch de blocs :", JSON.stringify(blocks, null, 2));
 
-    let blockchain = getBlockchainFromDB();
+    const blockchain = await getBlockchainFromDB(); // ✅ await ici
     console.log("🔎 Taille de la blockchain actuelle :", blockchain.length);
 
     let lastHash = blockchain.length > 0 ? blockchain[blockchain.length - 1]?.hash || "0" : "0";
     console.log("🔗 Hash attendu :", lastHash);
     console.log("🔗 Hash fourni :", blocks[0].previousHash);
 
-    if (blocks[0].previousHash !== lastHash) {
+    if (blockchain.length === 0 && blocks[0].previousHash === "0") {
+      console.warn("⚠️ Blockchain vide, acceptation forcée du premier batch");
+    } else if (blocks[0].previousHash !== lastHash) {
       return res.status(400).json({ error: 'Invalid previousHash. Chain fork detected.' });
     }
 
@@ -164,7 +166,7 @@ app.post('/batch-add-blocks', (req, res) => {
       }
 
       for (const sender in totalBySender) {
-        const balance = getBalanceFromDB(sender);
+        const balance = await getBalanceFromDB(sender);
         if (balance < totalBySender[sender]) return res.status(400).json({ error: `Insufficient balance for ${sender}` });
       }
 
@@ -179,13 +181,14 @@ app.post('/batch-add-blocks', (req, res) => {
         nonce: rawBlock.nonce
       };
 
-      addBlockToDB(block);
+      await addBlockToDB(block);
       lastHash = rawBlock.hash;
       index++;
       console.log(`📦 Block ${block.index} added`);
     }
 
-    saveBlockchainToDisk(getBlockchainFromDB());
+    const updated = await getBlockchainFromDB();
+    saveBlockchainToDisk(updated);
     res.json({ success: true });
   } catch (err) {
     console.error("❌ ERREUR critique dans /batch-add-blocks :", err);
