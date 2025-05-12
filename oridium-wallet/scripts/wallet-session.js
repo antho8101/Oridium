@@ -101,10 +101,7 @@ export async function setWalletConnected(address) {
   }
 
   updateWalletButtons(true);
-
-  // ⏱ Attendre que le DOM soit prêt
   setTimeout(() => displayPublicKey(address), 50);
-
   window.dispatchEvent(new Event("orid-wallet-connected"));
 
   registerWallet(address)
@@ -116,9 +113,8 @@ export async function setWalletConnected(address) {
     updateBalanceUI(balance);
 
     const chain = window.blockchain;
-    if (chain) {
-      let myTransactions = getTransactionsForWallet(chain, address);
-
+    if (Array.isArray(chain)) {
+      const myTransactions = getTransactionsForWallet(chain, address);
       const uniqueTransactions = [];
       const seen = new Set();
       for (const tx of myTransactions) {
@@ -132,7 +128,6 @@ export async function setWalletConnected(address) {
       window.__oridTransactionList = uniqueTransactions;
       updateTransactionHistory(uniqueTransactions, address);
     }
-
   } catch (err) {
     console.error("❌ Failed to fetch balance from server:", err);
   }
@@ -184,7 +179,7 @@ export function updateWalletButtons(isConnected) {
 }
 
 export function updateBalanceUI(balance) {
-  const numericBalance = Number(balance) || 0; // 👈 Sécurisation ici
+  const numericBalance = Number(balance) || 0;
 
   const elements = document.querySelectorAll(".balance-amount");
   elements.forEach(el => {
@@ -203,15 +198,10 @@ export function updateBalanceUI(balance) {
 }
 
 export function displayPublicKey(address) {
-  console.log("🔍 displayPublicKey called with:", address);
-
   const el = document.getElementById("public-key-display");
   const copyIcon = document.getElementById("copy-public-key");
 
-  if (!el || !copyIcon) {
-    console.warn("⛔ public-key-display or copy icon missing");
-    return;
-  }
+  if (!el || !copyIcon) return;
 
   if (address) {
     el.textContent = address;
@@ -239,7 +229,6 @@ export function displayPublicKey(address) {
 export function showAccessDeniedModal() {
   const modal = document.getElementById("access-denied-modal");
   const connectModal = document.getElementById("connect-wallet-modal");
-
   if (!modal || !connectModal) return;
 
   const content = modal.querySelector(".modal-content");
@@ -283,6 +272,21 @@ window.addEventListener("message", (event) => {
 });
 
 let previousBalance = 0;
+
+async function pollWalletBalance(interval = 5000) {
+  setInterval(async () => {
+    const address = getConnectedWalletAddress();
+    if (!address) return;
+
+    const currentBalance = await getBalance(address);
+    if (Number(currentBalance) !== Number(previousBalance)) {
+      previousBalance = Number(currentBalance);
+      updateBalanceUI(currentBalance);
+      console.log("🔄 Balance updated via polling:", Number(currentBalance).toFixed(4));
+    }
+  }, interval);
+}
+
 async function pollIncomingTransactions(interval = 5000) {
   setInterval(async () => {
     const address = getConnectedWalletAddress();
@@ -307,31 +311,12 @@ window.addEventListener("orid-wallet-connected", () => {
   if (!address) return;
 
   getBalance(address).then(balance => {
-    previousBalance = balance;
+    previousBalance = Number(balance);
     updateBalanceUI(balance);
     pollWalletBalance();
     pollIncomingTransactions();
   });
 });
-
-async function pollIncomingTransactions(interval = 5000) {
-  setInterval(async () => {
-    const address = getConnectedWalletAddress();
-    if (!address) return;
-
-    try {
-      const res = await fetch("https://oridium-production.up.railway.app/blockchain");
-      const chain = await res.json();
-      if (Array.isArray(chain)) {
-        analyzeIncomingBlocks(chain, address);
-      } else {
-        console.warn("⚠️ Invalid blockchain data during polling:", chain);
-      }
-    } catch (err) {
-      console.error("❌ Erreur lors du polling des transactions entrantes :", err);
-    }
-  }, interval);
-}
 
 window.disconnectWallet = disconnectWallet;
 window.setWalletConnected = setWalletConnected;
