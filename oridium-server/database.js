@@ -1,67 +1,46 @@
 // database.js
-import Database from 'better-sqlite3';
-import fs from 'fs';
-import path from 'path';
+import { MongoClient } from 'mongodb';
+import dotenv from 'dotenv';
 
-// 📦 Initialise la base
-const DB_PATH = path.resolve('./database.sqlite');
-const db = new Database(DB_PATH);
+dotenv.config();
 
-// 🧱 Création de la table blocks si elle n'existe pas
-db.exec(`
-  CREATE TABLE IF NOT EXISTS blocks (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    "index" INTEGER,
-    timestamp INTEGER,
-    transactions TEXT,
-    previousHash TEXT,
-    hash TEXT,
-    nonce INTEGER
-  );
-`);
+const uri = process.env.MONGODB_URI; // 👉 mets ton URI dans .env
+const client = new MongoClient(uri);
+const dbName = 'oridium';
+const collectionName = 'blocks';
+
+let db, blocks;
+
+export async function initDatabase() {
+  try {
+    await client.connect();
+    db = client.db(dbName);
+    blocks = db.collection(collectionName);
+    console.log("📦 MongoDB connecté et prêt !");
+  } catch (err) {
+    console.error("❌ Connexion MongoDB échouée :", err);
+  }
+}
 
 // ➕ Ajouter un bloc
-export function addBlockToDB(block) {
-  // 🔁 Récupère l'index le plus élevé
-  const lastIndexRow = db.prepare('SELECT MAX("index") AS max FROM blocks').get();
-  const index = (lastIndexRow?.max ?? -1) + 1;
-
-  const stmt = db.prepare(`
-    INSERT INTO blocks ("index", timestamp, transactions, previousHash, hash, nonce)
-    VALUES (?, ?, ?, ?, ?, ?)
-  `);
-
-  stmt.run(
-    index,
-    block.timestamp,
-    JSON.stringify(block.transactions || []),
-    block.previousHash,
-    block.hash,
-    block.nonce
-  );
+export async function addBlockToDB(block) {
+  const last = await blocks.find().sort({ index: -1 }).limit(1).toArray();
+  const nextIndex = last.length > 0 ? last[0].index + 1 : 0;
+  await blocks.insertOne({ ...block, index: nextIndex });
 }
 
 // 🔄 Obtenir toute la blockchain
-export function getBlockchainFromDB() {
-  const rows = db.prepare('SELECT * FROM blocks ORDER BY "index" ASC').all();
-  return rows.map(row => ({
-    index: row.index,
-    timestamp: row.timestamp,
-    transactions: JSON.parse(row.transactions),
-    previousHash: row.previousHash,
-    hash: row.hash,
-    nonce: row.nonce
-  }));
+export async function getBlockchainFromDB() {
+  return await blocks.find().sort({ index: 1 }).toArray();
 }
 
 // 💰 Calculer le solde d'une adresse
-export function getBalanceFromDB(address) {
-  const rows = db.prepare('SELECT transactions FROM blocks').all();
+export async function getBalanceFromDB(address) {
+  const allBlocks = await blocks.find().toArray();
   let balance = 0;
 
-  for (const row of rows) {
-    const txs = JSON.parse(row.transactions || "[]");
-    for (const tx of txs) {
+  for (const block of allBlocks) {
+    for (const tx of block.transactions || []) {
       if (tx.sender === address) balance -= tx.amount;
       if (tx.receiver === address) balance += tx.amount;
     }

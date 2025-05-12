@@ -1,4 +1,3 @@
-// server.js
 import express from 'express';
 import cors from 'cors';
 import cookieParser from 'cookie-parser';
@@ -16,6 +15,7 @@ import priceRoute from './api/price.js';
 import priceHistoryRoute from './api/price-history.js';
 
 import {
+  connectToMongoDB, // 👈 AJOUTÉ
   getBlockchainFromDB,
   addBlockToDB,
   getBalanceFromDB
@@ -24,6 +24,8 @@ import {
 import { adjustPrice } from './modules/central-bank/pricing-adjustment.js';
 
 dotenv.config();
+
+await connectToMongoDB(); // 👈 AJOUTÉ ICI
 
 const app = express();
 const PORT = process.env.PORT || 3000;
@@ -183,7 +185,7 @@ app.post('/batch-add-blocks', (req, res) => {
       console.log(`📦 Block ${block.index} added`);
     }
 
-    saveBlockchainToDisk(getBlockchainFromDB()); // 👈 Sauvegarde ici
+    saveBlockchainToDisk(getBlockchainFromDB());
     res.json({ success: true });
   } catch (err) {
     console.error("❌ ERREUR critique dans /batch-add-blocks :", err);
@@ -212,7 +214,7 @@ app.post('/register-wallet', (req, res) => {
     const blockchain = getBlockchainFromDB();
     const alreadyExists = blockchain.some(block =>
       (block.transactions || []).some(tx =>
-        tx.sender === address || tx.receiver === address
+        tx.sender?.toLowerCase() === address.toLowerCase() || tx.receiver?.toLowerCase() === address.toLowerCase()
       )
     );
 
@@ -261,7 +263,7 @@ app.post('/add-block', (req, res) => {
     };
 
     addBlockToDB(block);
-    saveBlockchainToDisk(getBlockchainFromDB()); // 👈 Sauvegarde ici aussi
+    saveBlockchainToDisk(getBlockchainFromDB());
     console.log(`📦 Block ${block.index} added`);
     res.json({ success: true });
 
