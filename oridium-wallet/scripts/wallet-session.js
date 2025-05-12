@@ -182,18 +182,20 @@ export function updateWalletButtons(isConnected) {
 }
 
 export function updateBalanceUI(balance) {
+  const numericBalance = Number(balance) || 0; // 👈 Sécurisation ici
+
   const elements = document.querySelectorAll(".balance-amount");
   elements.forEach(el => {
     if (el.closest(".wallet-balance")) {
-      el.textContent = `${balance.toFixed(4)} ORID`;
+      el.textContent = `${numericBalance.toFixed(4)} ORID`;
     } else {
-      el.textContent = balance.toFixed(4);
+      el.textContent = numericBalance.toFixed(4);
     }
   });
 
   const usdElement = document.querySelector(".orid-value-usd");
   if (usdElement) {
-    const valueInUSD = balance * getOridPriceUSD();
+    const valueInUSD = numericBalance * getOridPriceUSD();
     usdElement.textContent = `$${valueInUSD.toFixed(2)}`;
   }
 }
