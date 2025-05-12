@@ -283,16 +283,21 @@ window.addEventListener("message", (event) => {
 });
 
 let previousBalance = 0;
-async function pollWalletBalance(interval = 5000) {
+async function pollIncomingTransactions(interval = 5000) {
   setInterval(async () => {
     const address = getConnectedWalletAddress();
     if (!address) return;
 
-    const currentBalance = await getBalance(address);
-    if (currentBalance !== previousBalance) {
-      previousBalance = currentBalance;
-      updateBalanceUI(currentBalance);
-      console.log("🔄 Balance updated via polling:", currentBalance.toFixed(4));
+    try {
+      const res = await fetch("https://oridium-production.up.railway.app/blockchain");
+      const chain = await res.json();
+      if (Array.isArray(chain)) {
+        analyzeIncomingBlocks(chain, address);
+      } else {
+        console.warn("⚠️ Invalid blockchain data during polling:", chain);
+      }
+    } catch (err) {
+      console.error("❌ Erreur lors du polling des transactions entrantes :", err);
     }
   }, interval);
 }
