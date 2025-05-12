@@ -15,7 +15,7 @@ import priceRoute from './api/price.js';
 import priceHistoryRoute from './api/price-history.js';
 
 import {
-  connectToMongoDB, // 👈 AJOUTÉ
+  initDatabase, // 👈 AJOUTÉ
   getBlockchainFromDB,
   addBlockToDB,
   getBalanceFromDB
@@ -25,7 +25,7 @@ import { adjustPrice } from './modules/central-bank/pricing-adjustment.js';
 
 dotenv.config();
 
-await connectToMongoDB(); // 👈 AJOUTÉ ICI
+await initDatabase(); // 👈 AJOUTÉ ICI
 
 const app = express();
 const PORT = process.env.PORT || 3000;
