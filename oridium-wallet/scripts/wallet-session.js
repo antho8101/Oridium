@@ -12,64 +12,63 @@ import { getBlockchain } from './helpers/getBlockchain.js';
 let walletConnected = false;
 let currentWalletAddress = null;
 
-document.addEventListener("DOMContentLoaded", async () => {
-  const connectBtn = document.getElementById("connect-wallet-button");
-  const disconnectBtn = document.getElementById("disconnect-wallet-button");
+export async function setWalletConnected(address) {
+  walletConnected = true;
+  currentWalletAddress = address;
+  localStorage.setItem("orid_wallet_address", address);
 
-  connectBtn?.addEventListener("click", () => {
-    if (!walletConnected) {
-      const modal = document.getElementById("connect-wallet-modal");
-      const modalContent = modal?.querySelector(".modal-content");
-      if (modal && modalContent) {
-        modal.classList.remove("hidden");
-        modalContent.classList.remove("fade-out");
-        modalContent.classList.add("fade-in");
-      }
-    }
-  });
-
-  disconnectBtn?.addEventListener("click", () => {
-    disconnectWallet();
-    console.log("👋 Wallet disconnected");
-  });
-
-  const savedAddress = localStorage.getItem("orid_wallet_address");
   const savedWalletRaw = localStorage.getItem("orid_wallet_data");
   const savedWallet = savedWalletRaw ? JSON.parse(savedWalletRaw) : null;
 
-  if (savedAddress) {
-    console.log("🧠 Restoring saved wallet from localStorage:", savedAddress);
-
-    if (savedWallet?.pseudo) {
-      const welcomeEl = document.getElementById("welcome-user");
-      if (welcomeEl) {
-        welcomeEl.textContent = `Welcome, ${savedWallet.pseudo}`;
-        welcomeEl.classList.remove("hidden");
-      }
+  if (savedWallet?.pseudo) {
+    const welcomeEl = document.getElementById("welcome-user");
+    if (welcomeEl) {
+      welcomeEl.textContent = `Welcome, ${savedWallet.pseudo}`;
+      welcomeEl.classList.remove("hidden");
     }
-
-    await setWalletConnected(savedAddress);
-
-    try {
-      const myTransactions = await fetchTransactionHistory(savedAddress); // 🔁 remplace getBlockchain + filtre
-      window.__oridTransactionList = myTransactions;
-      updateTransactionHistory(myTransactions, savedAddress);
-    } catch (err) {
-      console.error("❌ Failed to reload transaction history:", err);
-    }
-  } else {
-    updateWalletButtons(false);
   }
 
-  if (!localStorage.getItem("orid_cookie_consent")) {
-    document.getElementById("cookie-banner").style.display = "flex";
+  if (localStorage.getItem("orid_cookie_consent")) {
+    const session = btoa(JSON.stringify({
+      address,
+      pseudo: savedWallet?.pseudo || "User"
+    }));
+    document.cookie = `orid_session=${session}; path=/; domain=.getoridium.com; secure; samesite=strict`;
   }
 
-  document.getElementById("accept-cookies").addEventListener("click", () => {
-    localStorage.setItem("orid_cookie_consent", "true");
-    document.getElementById("cookie-banner").style.display = "none";
-  });
-});
+  updateWalletButtons(true);
+  setTimeout(() => displayPublicKey(address), 50);
+  window.dispatchEvent(new Event("orid-wallet-connected"));
+
+  // 📡 Inscription serveur
+  registerWallet(address)
+    .then(() => console.log("📡 Wallet registered on server:", address))
+    .catch(err => console.error("❌ Error during wallet registration:", err));
+
+  // 🪙 Charger le solde
+  try {
+    const balance = await getBalance(address);
+    updateBalanceUI(balance);
+  } catch (err) {
+    console.error("❌ Failed to fetch balance from server:", err);
+  }
+
+  // 🔄 Charger historique transactions depuis le serveur
+  try {
+    const myTransactions = await fetchTransactionHistory(address);
+    window.__oridTransactionList = myTransactions;
+    updateTransactionHistory(myTransactions, address);
+  } catch (err) {
+    console.error("❌ Failed to fetch transaction history after reconnect:", err);
+  }
+
+  setTimeout(() => {
+    resetSearchInput();
+    initTransactionSearch();
+  }, 100);
+
+  localStorage.setItem("orid_sync_trigger", Date.now());
+}
 
 export async function setWalletConnected(address) {
   walletConnected = true;
