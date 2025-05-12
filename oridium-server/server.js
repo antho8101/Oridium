@@ -208,6 +208,32 @@ app.get('/balance/:address', async (req, res) => {
   }
 });
 
+app.get('/history/:address', async (req, res) => {
+  const { address } = req.params;
+
+  try {
+    const blockchain = await getBlockchainFromDB();
+    const transactions = [];
+
+    for (const block of blockchain) {
+      for (const tx of block.transactions || []) {
+        if (tx.sender === address || tx.receiver === address) {
+          transactions.push({
+            ...tx,
+            blockTimestamp: block.timestamp,
+            blockIndex: block.index
+          });
+        }
+      }
+    }
+
+    res.json({ address, transactions });
+  } catch (err) {
+    console.error("❌ Failed to fetch transaction history:", err);
+    res.status(500).json({ error: 'Failed to get history' });
+  }
+});
+
 app.post('/register-wallet', async (req, res) => {
   const { address } = req.body;
   if (!address) return res.status(400).json({ error: 'Missing address' });
@@ -284,6 +310,32 @@ app.get('/debug-blockchain', (req, res) => {
     res.send(raw);
   } catch (err) {
     res.status(500).json({ error: "Failed to read blockchain file" });
+  }
+});
+
+app.get('/history/:address', async (req, res) => {
+  const { address } = req.params;
+
+  try {
+    const blockchain = await getBlockchainFromDB();
+    const transactions = [];
+
+    for (const block of blockchain) {
+      for (const tx of block.transactions || []) {
+        if (tx.sender === address || tx.receiver === address) {
+          transactions.push({
+            ...tx,
+            blockTimestamp: block.timestamp,
+            blockIndex: block.index
+          });
+        }
+      }
+    }
+
+    res.json({ address, transactions });
+  } catch (err) {
+    console.error("❌ Failed to fetch transaction history:", err);
+    res.status(500).json({ error: 'Failed to get history' });
   }
 });
 
