@@ -123,9 +123,9 @@ function isValidHashDifficulty(hash, difficulty = 4) {
   return hash.startsWith('0'.repeat(difficulty));
 }
 
-app.get('/blockchain', (req, res) => {
+app.get('/blockchain', async (req, res) => {
   try {
-    const blockchain = getBlockchainFromDB();
+    const blockchain = await getBlockchainFromDB();
     res.json(blockchain);
   } catch (err) {
     console.error('❌ Error fetching blockchain:', err);

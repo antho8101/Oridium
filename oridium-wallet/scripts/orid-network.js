@@ -17,7 +17,7 @@ export async function getBalance(address) {
   try {
     const res = await fetch(`${API_BASE}/balance/${address}`);
     const data = await res.json();
-    return data.balance || 0;
+    return typeof data.balance === "number" ? data.balance : 0;
   } catch (err) {
     console.error("❌ Failed to fetch balance:", err);
     return 0;
