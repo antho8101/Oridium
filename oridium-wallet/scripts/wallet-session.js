@@ -1,3 +1,4 @@
+
 // wallet-session.js
 
 import { getBalance, registerWallet } from "./orid-network.js";
@@ -60,70 +61,6 @@ export async function setWalletConnected(address) {
     updateTransactionHistory(myTransactions, address);
   } catch (err) {
     console.error("❌ Failed to fetch transaction history after reconnect:", err);
-  }
-
-  setTimeout(() => {
-    resetSearchInput();
-    initTransactionSearch();
-  }, 100);
-
-  localStorage.setItem("orid_sync_trigger", Date.now());
-}
-
-export async function setWalletConnected(address) {
-  walletConnected = true;
-  currentWalletAddress = address;
-  localStorage.setItem("orid_wallet_address", address);
-
-  const savedWalletRaw = localStorage.getItem("orid_wallet_data");
-  const savedWallet = savedWalletRaw ? JSON.parse(savedWalletRaw) : null;
-
-  if (savedWallet?.pseudo) {
-    const welcomeEl = document.getElementById("welcome-user");
-    if (welcomeEl) {
-      welcomeEl.textContent = `Welcome, ${savedWallet.pseudo}`;
-      welcomeEl.classList.remove("hidden");
-    }
-  }
-
-  if (localStorage.getItem("orid_cookie_consent")) {
-    const session = btoa(JSON.stringify({
-      address,
-      pseudo: savedWallet?.pseudo || "User"
-    }));
-    document.cookie = `orid_session=${session}; path=/; domain=.getoridium.com; secure; samesite=strict`;
-  }
-
-  updateWalletButtons(true);
-  setTimeout(() => displayPublicKey(address), 50);
-  window.dispatchEvent(new Event("orid-wallet-connected"));
-
-  registerWallet(address)
-    .then(() => console.log("📡 Wallet registered on server:", address))
-    .catch(err => console.error("❌ Error during wallet registration:", err));
-
-  try {
-    const balance = await getBalance(address);
-    updateBalanceUI(balance);
-
-    const chain = window.blockchain;
-    if (Array.isArray(chain)) {
-      const myTransactions = getTransactionsForWallet(chain, address);
-      const uniqueTransactions = [];
-      const seen = new Set();
-      for (const tx of myTransactions) {
-        const key = `${tx.blockTimestamp}-${tx.sender}-${tx.receiver}-${tx.amount}`;
-        if (!seen.has(key)) {
-          seen.add(key);
-          uniqueTransactions.push(tx);
-        }
-      }
-
-      window.__oridTransactionList = uniqueTransactions;
-      updateTransactionHistory(uniqueTransactions, address);
-    }
-  } catch (err) {
-    console.error("❌ Failed to fetch balance from server:", err);
   }
 
   setTimeout(() => {
