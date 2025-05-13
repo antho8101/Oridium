@@ -10,8 +10,8 @@ document.querySelectorAll('a[href^="#"]').forEach(anchor => {
     if (target) {
       gsap.to(window, {
         duration: 1.4,
-        scrollTo: { y: target, offsetY: 50 },
-        ease: "back.out(1.5)"
+        scrollTo: { y: target, offsetY: -30 },
+        ease: "back.out(0.5)"
       });
     }
   });
