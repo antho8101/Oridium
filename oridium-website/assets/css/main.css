@@ -44,6 +44,7 @@ body {
   background: var(--Oridium-bg, #0E0F14);
   color: var(--Oridium, #DCCB92);
   font-family: 'Space Grotesk', sans-serif;
+  scroll-behavior: smooth;
 }
 
 .page-wrapper {
