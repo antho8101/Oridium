@@ -131,6 +131,12 @@
     line-height: normal;
     white-space: pre-line;
   }
+
+  .page-wrapper-legal {
+    display: flex;
+    flex-direction: column;
+    flex-grow: 1;
+  }
   
   
   /* === RESPONSIVE === */
