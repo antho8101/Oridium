@@ -1,0 +1,94 @@
+/* terms-of-use.css */
+
+.terms-section {
+    display: flex;
+    padding: 60px 0px;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    gap: 60px;
+    align-self: stretch;
+    border-top: 1px solid var(--Oridium, #DCCB92);
+    border-bottom: 1px solid var(--Oridium, #DCCB92);
+    background: var(--background-clear-black, radial-gradient(50% 50% at 50% 50%, #3A3C44 0%, #1F212C 100%));
+    box-shadow: 0px 8px 12px 6px rgba(0, 0, 0, 0.15), 0px 4px 4px 0px rgba(0, 0, 0, 0.30);
+  }
+  
+  .terms-title {
+    align-self: stretch;
+    color: var(--Pure-White, #FFF);
+    text-align: center;
+    font-family: "Space Grotesk";
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+  }
+  
+  .terms-columns {
+    display: flex;
+    width: 920px;
+    align-items: flex-start;
+    gap: 30px;
+    justify-content: center;
+  }
+  
+  .terms-column {
+    display: flex;
+    flex-direction: column;
+    gap: 30px;
+    flex: 1;
+  }
+  
+  .terms-card {
+    display: flex;
+    padding: 30px;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 30px;
+    align-self: stretch;
+    border-radius: 30px;
+    border: 1px solid var(--Oridium, #DCCB92);
+    background: var(--clear-black, #282A36);
+  }
+  
+  .terms-card-title {
+    align-self: stretch;
+    color: var(--Oridium, #DCCB92);
+    font-family: "Space Grotesk";
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+  }
+  
+  .terms-card-text {
+    align-self: stretch;
+    color: var(--Pure-White, #FFF);
+    font-family: "Space Grotesk";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+  }
+
+  /* Highlighted statement card */
+.terms-card.highlight {
+    background: var(--Oridium, #DCCB92);
+    border: 1px solid var(--Oridium, #DCCB92);
+  }
+  
+  .terms-card.highlight .terms-card-title,
+  .terms-card.highlight .terms-card-text {
+    color: var(--clear-black, #282A36);
+  }  
+  
+  /* Responsive */
+  @media (max-width: 1024px) {
+    .terms-columns {
+      flex-direction: column;
+      width: 100%;
+      padding: 0 20px;
+    }
+  }
+  

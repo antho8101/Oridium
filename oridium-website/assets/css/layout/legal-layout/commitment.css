@@ -1,0 +1,76 @@
+/* legal-top-section.css */
+
+.legal-top-section {
+    position: relative;
+    padding-bottom: 60px;
+    background: radial-gradient(50% 50% at 50% 50%, #393427 0%, #191A21 100%);
+    background-size: cover;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 60px;
+  }
+  
+  /* Pattern overlay */
+  .legal-top-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url('https://github.com/antho8101/Oridium/blob/main/oridium-website/assets/pattern.png?raw=true');
+    background-repeat: repeat;
+    background-size: 100px 100px;
+    opacity: 0.25;
+    z-index: 1;
+    pointer-events: none;
+  }
+  
+  /* Tout le contenu au-dessus du pattern */
+  .legal-top-section > * {
+    position: relative;
+    z-index: 2;
+  }
+  
+  .commitment-section {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    max-width: 920px;
+  }
+  
+  .commitment-section .title {
+    font-size: 48px;
+    font-weight: 700;
+    text-align: center;
+    color: var(--Pure-White, #FFF);
+    font-family: "Space Grotesk";
+    margin: 0;
+  }
+  
+  .commitment-section .text {
+    font-size: 18px;
+    font-weight: 300;
+    line-height: 1.8;
+    color: #ffffffcc;
+    font-family: "Space Grotesk";
+    white-space: pre-line;
+  }
+  
+  @media (max-width: 1200px) {
+    .legal-top-section {
+      padding: 60px 30px;
+    }
+  }
+  
+  @media (max-width: 1024px) {
+    .legal-top-section {
+      padding: 60px 20px;
+      gap: 30px;
+    }
+  
+    .commitment-section .title {
+      font-size: 36px;
+    }
+  }
+  
