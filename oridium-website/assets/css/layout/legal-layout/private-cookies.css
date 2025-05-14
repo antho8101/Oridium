@@ -1,0 +1,168 @@
+/* legal-bottom-section.css */
+
+.legal-bottom-section {
+    position: relative;
+    padding-top: 60px;
+    padding-bottom: 60px;
+    background: radial-gradient(50% 50% at 50% 50%, #393427 0%, #191A21 100%);
+    background-size: cover;
+    overflow: hidden;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 60px;
+  }
+  
+  /* Pattern overlay */
+  .legal-bottom-section::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: url('https://github.com/antho8101/Oridium/blob/main/oridium-website/assets/pattern.png?raw=true');
+    background-repeat: repeat;
+    background-size: 100px 100px;
+    opacity: 0.25;
+    z-index: 1;
+    pointer-events: none;
+  }
+  
+  /* Tout le contenu au-dessus du pattern */
+  .legal-bottom-section > * {
+    position: relative;
+    z-index: 2;
+  }
+  
+  
+  /* === PRIVATE + COOKIES WRAPPER === */
+  .private-cookies-wrapper {
+    display: flex;
+    max-width: 920px;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 60px;
+    flex-wrap: wrap;
+  }
+  
+  
+  /* === PRIVATE LIFE BLOCK === */
+  .private-life-block {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 30px;
+    max-width: 520px;
+  }
+  
+  .private-life-block .title {
+    align-self: stretch;
+    color: var(--Pure-White, #FFF);
+    font-family: "Space Grotesk";
+    font-size: 48px;
+    font-style: normal;
+    font-weight: 700;
+    line-height: normal;
+    margin: 0;
+  }
+  
+  .private-life-block .subtitle {
+    align-self: stretch;
+    color: var(--Pure-White, #FFF);
+    font-family: "Space Grotesk";
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+    margin: 0;
+  }
+  
+  .private-life-block .text {
+    align-self: stretch;
+    color: var(--Pure-White, #FFF);
+    font-family: "Space Grotesk";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    white-space: pre-line;
+    margin: 0;
+  }
+  
+  
+  /* === COOKIES BLOCK === */
+  .cookies-block {
+    display: flex;
+    width: 303px;
+    padding: 35px;
+    flex-direction: column;
+    align-items: flex-end;
+    gap: 30px;
+    flex-shrink: 0;
+    border-radius: 30px;
+    border: 1px solid var(--Oridium, #DCCB92);
+    background: var(--clear-black, #282A36);
+    box-sizing: border-box;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .cookies-block:hover {
+    transform: translateY(-6px);
+    box-shadow: 0px 12px 16px rgba(0, 0, 0, 0.25), 0px 6px 6px rgba(0, 0, 0, 0.3);
+  }
+  
+  .cookies-block .cookies-title {
+    align-self: stretch;
+    color: var(--Oridium, #DCCB92);
+    text-align: center;
+    font-family: "Space Grotesk";
+    font-size: 20px;
+    font-style: normal;
+    font-weight: 300;
+    line-height: normal;
+  }
+  
+  .cookies-block .cookies-text {
+    align-self: stretch;
+    color: var(--Pure-White, #FFF);
+    text-align: center;
+    font-family: "Space Grotesk";
+    font-size: 14px;
+    font-style: normal;
+    font-weight: 400;
+    line-height: normal;
+    white-space: pre-line;
+  }
+  
+  
+  /* === RESPONSIVE === */
+  @media (max-width: 1200px) {
+    .legal-bottom-section {
+      padding: 60px 30px;
+    }
+  }
+  
+  @media (max-width: 1024px) {
+    .legal-bottom-section {
+      padding: 60px 20px;
+      gap: 30px;
+    }
+  
+    .private-cookies-wrapper {
+      flex-direction: column;
+      align-items: center;
+      gap: 60px;
+    }
+  
+    .private-life-block {
+      align-items: center;
+      text-align: center;
+    }
+  
+    .private-life-block .text {
+      text-align: center;
+    }
+  
+    .cookies-block {
+      width: 100%;
+      max-width: 340px;
+    }
+  }  
