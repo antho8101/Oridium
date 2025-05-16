@@ -6,12 +6,63 @@ import { getOridPriceUSD } from "./orid-pricing.js";
 import { showOridAlert } from './orid-alert.js';
 import { analyzeIncomingBlocks } from "./incoming-transactions.js";
 import { resetSearchInput, initTransactionSearch } from './transaction-search.js';
-import { updateTransactionHistory } from './transaction-history.js';
+import { updateTransactionHistory, fetchTransactionHistory } from './transaction-history.js';
 import { getTransactionsForWallet } from './helpers/getTransactionsForWallet.js';
 import { getBlockchain } from './helpers/getBlockchain.js';
 
 let walletConnected = false;
 let currentWalletAddress = null;
+
+document.addEventListener("DOMContentLoaded", async () => {
+  const connectBtn = document.getElementById("connect-wallet-button");
+  const disconnectBtn = document.getElementById("disconnect-wallet-button");
+
+  connectBtn?.addEventListener("click", () => {
+    if (!walletConnected) {
+      const modal = document.getElementById("connect-wallet-modal");
+      const modalContent = modal?.querySelector(".modal-content");
+      if (modal && modalContent) {
+        modal.classList.remove("hidden");
+        modalContent.classList.remove("fade-out");
+        modalContent.classList.add("fade-in");
+      }
+    }
+  });
+
+  disconnectBtn?.addEventListener("click", () => {
+    disconnectWallet();
+    console.log("👋 Wallet disconnected");
+  });
+
+  const savedAddress = localStorage.getItem("orid_wallet_address");
+  const savedWalletRaw = localStorage.getItem("orid_wallet_data");
+  const savedWallet = savedWalletRaw ? JSON.parse(savedWalletRaw) : null;
+
+  if (savedAddress) {
+    console.log("🧠 Restoring saved wallet from localStorage:", savedAddress);
+
+    if (savedWallet?.pseudo) {
+      const welcomeEl = document.getElementById("welcome-user");
+      if (welcomeEl) {
+        welcomeEl.textContent = `Welcome, ${savedWallet.pseudo}`;
+        welcomeEl.classList.remove("hidden");
+      }
+    }
+
+    await setWalletConnected(savedAddress);
+  } else {
+    updateWalletButtons(false);
+  }
+
+  if (!localStorage.getItem("orid_cookie_consent")) {
+    document.getElementById("cookie-banner").style.display = "flex";
+  }
+
+  document.getElementById("accept-cookies")?.addEventListener("click", () => {
+    localStorage.setItem("orid_cookie_consent", "true");
+    document.getElementById("cookie-banner").style.display = "none";
+  });
+});
 
 export async function setWalletConnected(address) {
   walletConnected = true;
@@ -41,12 +92,10 @@ export async function setWalletConnected(address) {
   setTimeout(() => displayPublicKey(address), 50);
   window.dispatchEvent(new Event("orid-wallet-connected"));
 
-  // 📡 Inscription serveur
   registerWallet(address)
     .then(() => console.log("📡 Wallet registered on server:", address))
     .catch(err => console.error("❌ Error during wallet registration:", err));
 
-  // 🪙 Charger le solde
   try {
     const balance = await getBalance(address);
     updateBalanceUI(balance);
@@ -54,7 +103,6 @@ export async function setWalletConnected(address) {
     console.error("❌ Failed to fetch balance from server:", err);
   }
 
-  // 🔄 Charger historique transactions depuis le serveur
   try {
     const myTransactions = await fetchTransactionHistory(address);
     window.__oridTransactionList = myTransactions;
@@ -75,41 +123,30 @@ export function disconnectWallet() {
   walletConnected = false;
   currentWalletAddress = null;
 
-  // 🔐 Supprimer les données locales
   localStorage.removeItem("orid_wallet_address");
   localStorage.removeItem("orid_wallet_data");
 
-  // 🔘 Reset des boutons
   updateWalletButtons(false);
-
-  // 🔒 Réinitialiser l'affichage de la clé publique
   displayPublicKey(null);
-
-  // 💸 Réinitialiser le solde affiché
   updateBalanceUI(0);
 
-  // 🧹 Réinitialiser la liste des transactions
   const container = document.querySelector(".transaction-list");
   if (container) container.innerHTML = "";
 
-  // 💥 Réinitialiser la variable globale des transactions
   window.__oridTransactionList = [];
 
-  // 🔄 Réafficher les bons éléments UI
   const placeholder = document.getElementById("no-transaction-placeholder");
   const bottom = document.querySelector(".transaction-bottom");
 
   if (placeholder) placeholder.style.display = "block";
   if (bottom) bottom.style.display = "none";
 
-  // 👋 Cacher le pseudo utilisateur
   const welcomeEl = document.getElementById("welcome-user");
   if (welcomeEl) {
     welcomeEl.classList.add("hidden");
     welcomeEl.textContent = "";
   }
 
-  // 🧽 Supprimer le cookie de session
   document.cookie = "orid_session=; path=/; domain=.getoridium.com; expires=Thu, 01 Jan 1970 00:00:00 UTC;";
 }
 
