@@ -69,7 +69,7 @@ function setupMaxButton() {
     const input = document.querySelector(".market-buy-input");
     if (!input) return;
 
-    input.value = `${currentStock.toFixed(4)} ORID`;
+    input.value = `${currentStock.toFixed(4)}`;
     updateTotalPriceDisplay(currentStock);
   });
 }
@@ -87,8 +87,17 @@ function setupInputListener() {
   });
 }
 
+function initializeDefaultInput() {
+  const input = document.querySelector(".market-buy-input");
+  if (input && currentPrice) {
+    input.value = "1";
+    updateTotalPriceDisplay(1);
+  }
+}
+
 document.addEventListener("DOMContentLoaded", async () => {
   await fetchPriceAndStock();
+  initializeDefaultInput();
   setupMaxButton();
   setupInputListener();
 });
