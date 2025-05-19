@@ -278,6 +278,26 @@ async function pollWalletBalance(interval = 5000) {
   }, interval);
 }
 
+async function checkIfBanned(walletAddress) {
+  try {
+    const res = await fetch(`https://api.getoridium.com/api/ban/check/${walletAddress}`);
+    const { banned } = await res.json();
+
+    if (banned) showBannedModal();
+  } catch (err) {
+    console.error("❌ Failed to check ban status:", err);
+  }
+}
+
+function showBannedModal() {
+  const modal = document.getElementById("banned-wallet-modal");
+  if (modal) {
+    modal.classList.remove("hidden");
+    document.body.style.overflow = 'hidden'; // Bloque le scroll
+  }
+}
+
+
 async function pollIncomingTransactions(interval = 5000) {
   setInterval(async () => {
     const address = getConnectedWalletAddress();

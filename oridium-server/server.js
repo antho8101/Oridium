@@ -15,6 +15,7 @@ import priceRoute from './api/price.js';
 import priceHistoryRoute from './api/price-history.js';
 
 import stockRoute from './api/stock.js';
+import banCheckRoute from './api/ban-check.js';
 
 import {
   initDatabase, // 👈 AJOUTÉ
@@ -115,6 +116,7 @@ app.use('/api', salesRoute);
 app.use('/api/wallet-sync', walletSyncRoute);
 app.use('/api/set-session', setSessionRoute);
 app.use('/api/stock', stockRoute);
+app.use('/api/ban', banCheckRoute);
 
 const BLACKLIST = new Set(["0x000000000000000000000000000000000000dead"]);
 function isBlacklisted(block) {

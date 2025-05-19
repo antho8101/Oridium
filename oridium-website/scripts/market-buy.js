@@ -2,6 +2,7 @@
 
 let currentPrice = null;
 let currentStock = null;
+const maxPerUser = 30; // 👈 Limite utilisateur
 
 async function fetchPriceAndStock() {
   try {
@@ -69,14 +70,19 @@ function setupMaxButton() {
     const input = document.querySelector(".market-buy-input");
     if (!input) return;
 
-    input.value = `${currentStock.toFixed(4)}`;
-    updateTotalPriceDisplay(currentStock);
+    const maxBuy = Math.min(currentStock, maxPerUser);
+    input.value = `${maxBuy.toFixed(4)}`;
+    updateTotalPriceDisplay(maxBuy);
   });
 }
 
 function setupInputListener() {
   const input = document.querySelector(".market-buy-input");
   if (!input) return;
+
+  input.addEventListener("focus", () => {
+    if (input.value === "1") input.value = "";
+  });
 
   input.addEventListener("input", () => {
     const val = input.value.replace(/[^\d.]/g, '');

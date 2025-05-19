@@ -6,7 +6,8 @@ import {
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
-// 🧠 Récupérer dynamiquement la clé API depuis la route backend
+const ADMIN_SECRET = "__ADMIN_SECRET__";
+
 async function getFirebaseConfig() {
   const res = await fetch('/api/get-api-key');
   const data = await res.json();
@@ -24,7 +25,6 @@ async function getFirebaseConfig() {
 const app = initializeApp(await getFirebaseConfig());
 const auth = getAuth(app);
 
-// 🔑 HTML elements
 const loginForm = document.getElementById("login-form");
 const emailInput = document.getElementById("email");
 const passwordInput = document.getElementById("password");
@@ -33,7 +33,6 @@ const dashboard = document.getElementById("dashboard");
 const loginContainer = document.getElementById("login-container");
 const logoutBtn = document.getElementById("logout");
 
-// 🔁 Auth logic
 loginForm.addEventListener("submit", (e) => {
   e.preventDefault();
   const email = emailInput.value;
@@ -52,6 +51,7 @@ onAuthStateChanged(auth, (user) => {
   if (visible) {
     refreshStockDisplay();
     updateCountdown();
+    loadBannedWallets();
   }
 });
 
@@ -59,7 +59,6 @@ logoutBtn.addEventListener("click", () => {
   signOut(auth);
 });
 
-// 📦 Rafraîchit le stock disponible
 async function refreshStockDisplay() {
   try {
     const res = await fetch("https://api.getoridium.com/api/stock");
@@ -73,7 +72,6 @@ async function refreshStockDisplay() {
 
 document.getElementById("refresh-stock").addEventListener("click", refreshStockDisplay);
 
-// ⏳ Mise à jour du compte à rebours
 async function updateCountdown() {
   try {
     const res = await fetch("https://api.getoridium.com/api/stock");
@@ -99,7 +97,6 @@ async function updateCountdown() {
   }
 }
 
-// 🚀 Envoi manuel d’ORID
 document.getElementById("send-orid-form").addEventListener("submit", async (e) => {
   e.preventDefault();
   const wallet = document.getElementById("target-wallet").value;
@@ -123,5 +120,80 @@ document.getElementById("send-orid-form").addEventListener("submit", async (e) =
   } catch (err) {
     status.textContent = "❌ Erreur réseau lors de l’envoi.";
     console.error(err);
+  }
+});
+
+// 🧱 Gère les actions ban/unban + liste
+async function loadBannedWallets() {
+  try {
+    const res = await fetch("https://api.getoridium.com/api/ban/list", {
+      headers: { Authorization: `Bearer ${ADMIN_SECRET}` }
+    });
+    const { wallets } = await res.json();
+    const list = document.getElementById("banned-wallets-list");
+    list.innerHTML = "";
+    wallets.forEach(addr => {
+      const li = document.createElement("li");
+      li.textContent = addr.address;
+      list.appendChild(li);
+    });
+  } catch (err) {
+    console.error("❌ Erreur chargement banlist:", err);
+  }
+}
+
+document.getElementById("refresh-banned").addEventListener("click", loadBannedWallets);
+
+document.getElementById("ban-wallet-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const address = document.getElementById("ban-wallet").value;
+  const status = document.getElementById("ban-status");
+
+  try {
+    const res = await fetch("https://api.getoridium.com/api/ban", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${ADMIN_SECRET}`
+      },
+      body: JSON.stringify({ address })
+    });
+
+    const result = await res.json();
+    if (result.success) {
+      status.textContent = "✅ Wallet banni.";
+      loadBannedWallets();
+    } else {
+      status.textContent = "❌ " + result.error;
+    }
+  } catch (err) {
+    status.textContent = "❌ Erreur réseau.";
+  }
+});
+
+document.getElementById("unban-wallet-form").addEventListener("submit", async (e) => {
+  e.preventDefault();
+  const address = document.getElementById("unban-wallet").value;
+  const status = document.getElementById("unban-status");
+
+  try {
+    const res = await fetch("https://api.getoridium.com/api/ban/unban", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${ADMIN_SECRET}`
+      },
+      body: JSON.stringify({ address })
+    });
+
+    const result = await res.json();
+    if (result.success) {
+      status.textContent = "✅ Wallet débanni.";
+      loadBannedWallets();
+    } else {
+      status.textContent = "❌ " + result.error;
+    }
+  } catch (err) {
+    status.textContent = "❌ Erreur réseau.";
   }
 });
