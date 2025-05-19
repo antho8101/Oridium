@@ -128,7 +128,7 @@ async function loadBannedWallets() {
     const { wallets } = await res.json();
     const list = document.getElementById("banned-wallets-list");
     list.innerHTML = "";
-    wallets.forEach(addr => {
+    wallets.forEach((addr) => {
       const li = document.createElement("li");
       li.textContent = addr.address;
       list.appendChild(li);
