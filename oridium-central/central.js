@@ -124,7 +124,7 @@ document.getElementById("send-orid-form").addEventListener("submit", async (e) =
 // 🔒 via proxy sécurisé
 async function loadBannedWallets() {
   try {
-    const res = await fetch("/api/ban-proxy/list");
+    const res = await fetch("/api/ban-proxy/");
     const { wallets } = await res.json();
     const list = document.getElementById("banned-wallets-list");
     list.innerHTML = "";
