@@ -6,7 +6,7 @@ import {
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
-const ADMIN_SECRET = "__ADMIN_SECRET__";
+const ADMIN_SECRET = window.ADMIN_SECRET;
 
 async function getFirebaseConfig() {
   const res = await fetch('/api/get-api-key');
