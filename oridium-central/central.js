@@ -6,8 +6,6 @@ import {
   onAuthStateChanged
 } from "https://www.gstatic.com/firebasejs/11.6.1/firebase-auth.js";
 
-const ADMIN_SECRET = window.ADMIN_SECRET;
-
 async function getFirebaseConfig() {
   const res = await fetch('/api/get-api-key');
   const data = await res.json();
@@ -49,7 +47,6 @@ onAuthStateChanged(auth, async (user) => {
   loginContainer.style.display = visible ? "none" : "block";
 
   if (visible) {
-    ADMIN_SECRET = await getAdminSecret(); // injecté ici
     refreshStockDisplay();
     updateCountdown();
     loadBannedWallets();
@@ -124,18 +121,10 @@ document.getElementById("send-orid-form").addEventListener("submit", async (e) =
   }
 });
 
-async function getAdminSecret() {
-  const res = await fetch('/api/get-admin-secret');
-  const data = await res.json();
-  return data.adminSecret;
-}
-
-// 🧱 Gère les actions ban/unban + liste
+// 🔒 via proxy sécurisé
 async function loadBannedWallets() {
   try {
-    const res = await fetch("https://api.getoridium.com/api/ban/list", {
-      headers: { Authorization: `Bearer ${ADMIN_SECRET}` }
-    });
+    const res = await fetch("/api/ban-proxy/list");
     const { wallets } = await res.json();
     const list = document.getElementById("banned-wallets-list");
     list.innerHTML = "";
@@ -157,12 +146,9 @@ document.getElementById("ban-wallet-form").addEventListener("submit", async (e) 
   const status = document.getElementById("ban-status");
 
   try {
-    const res = await fetch("https://api.getoridium.com/api/ban", {
+    const res = await fetch("/api/ban-proxy", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${ADMIN_SECRET}`
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ address })
     });
 
@@ -184,12 +170,9 @@ document.getElementById("unban-wallet-form").addEventListener("submit", async (e
   const status = document.getElementById("unban-status");
 
   try {
-    const res = await fetch("https://api.getoridium.com/api/ban/unban", {
+    const res = await fetch("/api/ban-proxy/unban", {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-        Authorization: `Bearer ${ADMIN_SECRET}`
-      },
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ address })
     });
 
