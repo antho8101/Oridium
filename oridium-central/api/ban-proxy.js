@@ -4,7 +4,7 @@ export default async function handler(req, res) {
   // 🔁 On récupère le chemin dynamique
   const subPath = req.url.replace(/^\/api\/ban-proxy/, '');
 
-  const finalURL = `https://api.getoridium.com/api/ban${subPath}`;
+  const finalURL = `https://api.getoridium.com/api/ban${subPath || '/list'}`;
 
   try {
     const response = await fetch(finalURL, {
