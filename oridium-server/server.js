@@ -14,6 +14,8 @@ import disconnectSession from './api/disconnect-session.js';
 import priceRoute from './api/price.js';
 import priceHistoryRoute from './api/price-history.js';
 
+import stockRoute from './api/stock.js';
+
 import {
   initDatabase, // 👈 AJOUTÉ
   getBlockchainFromDB,
@@ -112,6 +114,7 @@ app.use('/api/paddle-webhook', paddleWebhook);
 app.use('/api', salesRoute);
 app.use('/api/wallet-sync', walletSyncRoute);
 app.use('/api/set-session', setSessionRoute);
+app.use('/api/stock', stockRoute);
 
 const BLACKLIST = new Set(["0x000000000000000000000000000000000000dead"]);
 function isBlacklisted(block) {
