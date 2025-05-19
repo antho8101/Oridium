@@ -43,12 +43,13 @@ loginForm.addEventListener("submit", (e) => {
     .catch((error) => (loginError.textContent = "❌ " + error.message));
 });
 
-onAuthStateChanged(auth, (user) => {
+onAuthStateChanged(auth, async (user) => {
   const visible = !!user;
   dashboard.style.display = visible ? "block" : "none";
   loginContainer.style.display = visible ? "none" : "block";
 
   if (visible) {
+    ADMIN_SECRET = await getAdminSecret(); // injecté ici
     refreshStockDisplay();
     updateCountdown();
     loadBannedWallets();
@@ -122,6 +123,12 @@ document.getElementById("send-orid-form").addEventListener("submit", async (e) =
     console.error(err);
   }
 });
+
+async function getAdminSecret() {
+  const res = await fetch('/api/get-admin-secret');
+  const data = await res.json();
+  return data.adminSecret;
+}
 
 // 🧱 Gère les actions ban/unban + liste
 async function loadBannedWallets() {
