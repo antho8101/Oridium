@@ -124,7 +124,7 @@ document.getElementById("send-orid-form").addEventListener("submit", async (e) =
 // 🔒 via proxy sécurisé
 async function loadBannedWallets() {
   try {
-    const res = await fetch("/api/ban-proxy/");
+    const res = await fetch("/api/ban");
     const { wallets } = await res.json();
     const list = document.getElementById("banned-wallets-list");
     list.innerHTML = "";
@@ -170,7 +170,7 @@ document.getElementById("unban-wallet-form").addEventListener("submit", async (e
   const status = document.getElementById("unban-status");
 
   try {
-    const res = await fetch("/api/ban-proxy/unban", {
+    const res = await fetch("/api/ban/unban", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ address })
