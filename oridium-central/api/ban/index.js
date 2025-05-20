@@ -1,6 +1,6 @@
 import { MongoClient } from 'mongodb';
 
-const uri = process.env.MONGODB_URI; // 👉 définie dans Vercel
+const uri = process.env.MONGODB_URI;
 const dbName = 'Cluster0'; // ✅ base utilisée dans ton URI
 const collectionName = 'banned_wallets';
 
