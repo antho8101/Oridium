@@ -146,7 +146,7 @@ document.getElementById("ban-wallet-form").addEventListener("submit", async (e) 
   const status = document.getElementById("ban-status");
 
   try {
-    const res = await fetch("/api/ban-proxy", {
+    const res = await fetch("/api/ban", {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ address })
