@@ -129,7 +129,7 @@ We welcome pull requests and ideas from the community!
 
 💬 [Telegram](https://t.me/oridium_official)
 
-👾 [Discord](https://discord.gg/7GHERXBD)
+👾 [Discord](https://discord.gg/huHj8sPjKq)
 
 🌍 Official website: Coming soon
 
